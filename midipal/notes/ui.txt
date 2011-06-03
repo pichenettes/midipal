@@ -1,0 +1,205 @@
+LED1: incoming MIDI byte
+LED2: outgoing MIDI byte
+
+Click: alternate between edit / page modes.
+
+Boot with encoder pressed: wait for incoming MIDI update or choose which firmware to start.
+
+
+Firmware:
+  01234567
+* 0xfe flt   0xfe filter
+* monitor    MIDI monitor
+* bpm cntr   BPM counter
+* clock      BPM source
+* cc knob    CC knob
+* ear game   ear training game
+* euclide    euclidian pattern generator
+* drums      drum pattern generator
+* arpeggio   arpeggiator
+* sequencr   sequencer
+* cc seq     CC sequencer
+* chordmem   chord memory
+* chaos!     chaos!
+
+
+0xfe filter
+
+	01234567
+	flt> on<
+
+
+BPM counter
+
+	01234567
+	120.0000
+
+
+BPM source
+
+	01234567
+	>120.00<
+
+
+CC knob
+
+	01234567
+	val>127<
+
+	01234567
+	cc >  7<
+
+
+Ear training game
+
+	01234567
+	lvl>  1<
+
+	01234567
+	num>  3<
+
+	01234567
+	10   80%
+
+	01234567
+	100  70%
+
+	01234567
+	all  60%
+
+
+Euclidian pattern generator
+
+	01234567
+	bpm>120<
+
+	01234567
+	chn> 10<
+
+	01234567
+	not> C1<
+
+	
+	Each octave: one instrument
+	Press 1 note: stop
+	Press 2 notes: pattern
+	C = 1
+	C# = 2
+	D = 3
+	D# = 4
+	E = 5
+	F = 6
+	F# = 7
+	G = 8
+	G# = 10
+	A = 12
+	A# = 14
+	B = 16
+
+
+Drum pattern generator
+
+	01234567
+	bpm>120<
+
+	01234567
+	chn> 10<
+
+	01234567
+	bd > C1<
+
+	01234567
+	sd > D1<
+
+	01234567
+	hh >G#1<
+
+	01234567
+	prc> C2<
+
+	Octave1: 11 drum patterns
+	Octave2: 11 snare pattern
+	Octave3: 11 hh patterns
+	Octave4: 11 perc patterns
+
+
+Arpeggiator
+
+	01234567
+	bpm>120<
+
+	01234567
+	dir>u&d<
+
+	01234567
+	oct>  4<
+
+	01234567
+	pat>  5<
+
+	01234567
+	len> 63<
+	
+	01234567
+	ltc>off<
+
+
+Sequencer
+
+	01234567
+	bpm>120<
+
+	01234567
+	stp> 16<
+
+	01234567
+	 0 >C#4<
+
+	01234567
+	 1 >C#4<
+	
+	...
+
+	01234567
+	ltc>off<
+
+	01234567
+	len> 63<
+
+
+Sequencer
+
+	01234567
+	bpm>120<
+
+	01234567
+	stp> 16<
+
+	01234567
+	 0 >127<
+
+	01234567
+	 1 > 63<
+
+	...
+
+	01234567
+	ltc>off<
+
+	01234567
+	CC >  7<
+
+
+Chord memory
+
+	01234567
+	play!
+
+	01234567
+	record?
+
+
+Chaos!
+
+	01234567
+	amt>127<
