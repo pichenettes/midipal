@@ -1,0 +1,3 @@
+[submodule "avrlib"]
+	path = avrlib
+	url = git@github.com:pichenettes/avril.git
