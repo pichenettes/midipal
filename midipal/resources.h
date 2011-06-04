@@ -41,10 +41,45 @@ extern const prog_uint16_t* lookup_table_table[];
 
 extern const prog_uint8_t* character_table[];
 
-extern const prog_uint8_t chr_res_special_characters[] PROGMEM;
+extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_MIDIPAL_ 0  // midipal!
-#define CHR_RES_SPECIAL_CHARACTERS 0
-#define CHR_RES_SPECIAL_CHARACTERS_SIZE 56
+#define STR_RES_SNDOFF 1  // sndOff
+#define STR_RES_RSTCTR 2  // rstCtr
+#define STR_RES_NOTOFF 3  // notOff
+#define STR_RES_OMNOFF 4  // omnOff
+#define STR_RES_OMNION 5  // omniOn
+#define STR_RES_MONOON 6  // monoOn
+#define STR_RES_POLYON 7  // polyOn
+#define STR_RES_SYSX__ 8  // sysx..
+#define STR_RES__SYSX_ 9  // .sysx.
+#define STR_RES___SYSX 10  // ..sysx
+#define STR_RES_START 11  // start
+#define STR_RES_STOP 12  // stop
+#define STR_RES_CONT_ 13  // cont.
+#define STR_RES_RESET 14  // reset
+#define STR_RES_CHN 15  // chn
+#define STR_RES_ALL 16  // all
+#define STR_RES_1 17  // 1
+#define STR_RES_2 18  // 2
+#define STR_RES_3 19  // 3
+#define STR_RES_4 20  // 4
+#define STR_RES_5 21  // 5
+#define STR_RES_6 22  // 6
+#define STR_RES_7 23  // 7
+#define STR_RES_8 24  // 8
+#define STR_RES_9 25  // 9
+#define STR_RES_10 26  // 10
+#define STR_RES_11 27  // 11
+#define STR_RES_12 28  // 12
+#define STR_RES_13 29  // 13
+#define STR_RES_14 30  // 14
+#define STR_RES_15 31  // 15
+#define STR_RES_16 32  // 16
+#define STR_RES_FLT 33  // flt
+#define STR_RES_OFF 34  // off
+#define STR_RES_ON 35  // on
+#define CHR_RES_DIGITS_10 0
+#define CHR_RES_DIGITS_10_SIZE 56
 typedef avrlib::ResourcesManager<
     ResourceId,
     avrlib::ResourcesTables<

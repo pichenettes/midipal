@@ -38,6 +38,18 @@ class Ui {
   static void Poll();
   static void DoEvents();
   
+  static void PrintKeyValuePair(
+      uint8_t key_res_id,
+      uint8_t value_res_id,
+      uint8_t value,
+      uint8_t selected);
+
+  static void Clear();
+  static void PrintChannel(char* buffer, uint8_t channel);
+  static void PrintHex(char* buffer, uint8_t value);
+  static void PrintNote(char* buffer, uint8_t note);
+  static void Refresh();
+
  private:
   static RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> encoder_;
   static EventQueue<32> queue_;

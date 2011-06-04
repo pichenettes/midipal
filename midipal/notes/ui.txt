@@ -49,6 +49,9 @@ CC knob
 	01234567
 	cc >  7<
 
+	01234567
+	chn>  1<
+
 
 Ear training game
 
@@ -67,6 +70,9 @@ Ear training game
 	01234567
 	all  60%
 
+	01234567
+	chn>  1<
+
 
 Euclidian pattern generator
 
@@ -75,6 +81,9 @@ Euclidian pattern generator
 
 	01234567
 	chn> 10<
+	
+	01234567
+	inc> 10<
 
 	01234567
 	not> C1<
@@ -104,6 +113,9 @@ Drum pattern generator
 
 	01234567
 	chn> 10<
+	
+	01234567
+	inc> 10<
 
 	01234567
 	bd > C1<
@@ -127,6 +139,9 @@ Arpeggiator
 
 	01234567
 	bpm>120<
+	
+	01234567
+	chn> 10<
 
 	01234567
 	dir>u&d<
@@ -148,6 +163,9 @@ Sequencer
 
 	01234567
 	bpm>120<
+	
+	01234567
+	chn> 10<
 
 	01234567
 	stp> 16<
@@ -171,6 +189,9 @@ Sequencer
 
 	01234567
 	bpm>120<
+	
+	01234567
+	chn> 10<
 
 	01234567
 	stp> 16<
@@ -193,13 +214,19 @@ Sequencer
 Chord memory
 
 	01234567
-	play!
+	mod>go!<
 
 	01234567
 	record?
+	
+	01234567
+	chn>  1<
 
 
 Chaos!
 
 	01234567
 	amt>127<
+
+	01234567
+	chn>  1<

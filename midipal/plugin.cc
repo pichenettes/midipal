@@ -15,19 +15,32 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Midipal project.
+// Base class implemented by all the "Plug-ins" running on the Midipal.
 
-#include "midipal/display.h"
+#include "midipal/plugin.h"
+
+#include <avr/eeprom.h>
+
+#include "avrlib/serial.h"
+
+#include "midipal/hardware_config.h"
 
 namespace midipal {
+  
+using namespace avrlib;
+  
+Serial<MidiPort, 31250, DISABLED, POLLED> midi_out;
 
-/* extern */
-Lcd lcd;
+uint8_t PlugIn::LoadSetting(uint8_t setting_id) {
+  return eeprom_read_byte((uint8_t*)(setting_id));
+}
 
-/* extern */
-BufferedDisplay<Lcd> display;
+void PlugIn::SaveSetting(uint8_t setting_id, uint8_t value) {
+  eeprom_write_byte((uint8_t*)(setting_id), value);
+}
 
-/* extern */
-char line_buffer[kLcdWidth + 1];
+void PlugIn::SendNow(uint8_t byte) {
+  midi_out.Overwrite(byte);
+}
 
 }  // namespace midipal

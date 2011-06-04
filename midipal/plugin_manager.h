@@ -15,19 +15,31 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Midipal project.
+// Base class implemented by all the "Plug-ins" running on the Midipal.
 
-#include "midipal/display.h"
+#ifndef MIDIPAL_PLUGIN_MANAGER_H_
+#define MIDIPAL_PLUGIN_MANAGER_H_
+
+#include "midipal/plugin.h"
 
 namespace midipal {
 
-/* extern */
-Lcd lcd;
+class PlugInManager {
+ public:
+  PlugInManager() { }
+  
+  static void set_active_plugin(uint8_t index);
+  static PlugIn* active_plugin() { return active_plugin_; }
+  
+ private:
+  static PlugIn* active_plugin_;
+  static uint8_t active_plugin_index_;
+  
+  DISALLOW_COPY_AND_ASSIGN(PlugInManager);
+};
 
-/* extern */
-BufferedDisplay<Lcd> display;
-
-/* extern */
-char line_buffer[kLcdWidth + 1];
+extern PlugInManager plugin_manager;
 
 }  // namespace midipal
+
+#endif // MIDIPAL_PLUGIN_MANAGER_H_

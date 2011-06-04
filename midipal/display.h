@@ -31,9 +31,16 @@ using avrlib::Hd44780Lcd;
 
 namespace midipal {
 
-typedef Hd44780Lcd<LcdRsLine, LcdEnableLine, LcdDataBus> Lcd;
+typedef Hd44780Lcd<
+    LcdRsLine,
+    LcdEnableLine,
+    LcdDataBus,
+    kLcdWidth,
+    kLcdHeight> Lcd;
 extern Lcd lcd;
 extern BufferedDisplay<Lcd> display;
+
+extern char line_buffer[];
 
 }  // namespace midipal
 

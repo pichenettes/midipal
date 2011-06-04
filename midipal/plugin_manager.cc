@@ -14,20 +14,31 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // -----------------------------------------------------------------------------
-//
-// Instance of the display class, configured for the Midipal project.
 
-#include "midipal/display.h"
+#include "midipal/plugin_manager.h"
+
+#include "midipal/plugins/active_sensing_filter.h"
+#include "midipal/plugins/monitor.h"
 
 namespace midipal {
 
-/* extern */
-Lcd lcd;
+plugins::MidiMonitor midi_monitor;
+plugins::ActiveSensingFilter active_sensing_filter;
+
+PlugIn* registry[] = {
+  &midi_monitor,
+  &active_sensing_filter
+};
 
 /* extern */
-BufferedDisplay<Lcd> display;
+PlugInManager plugin_manager;
 
-/* extern */
-char line_buffer[kLcdWidth + 1];
+/* static */
+PlugIn* PlugInManager::active_plugin_;
+
+/* static */
+void PlugInManager::set_active_plugin(uint8_t index) {
+  active_plugin_ = registry[index];
+}
 
 }  // namespace midipal

@@ -21,6 +21,8 @@
 
 #include "midi/midi.h"
 #include "midipal/display.h"
+#include "midipal/midi_handler.h"
+#include "midipal/plugin_manager.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -30,6 +32,11 @@ using namespace midipal;
 
 // Midi input.
 Serial<MidiPort, 31250, BUFFERED, POLLED> midi_io;
+MidiStreamParser<MidiHandler> midi_parser;
+
+ISR(USART0_RX_vect) {
+  midi_parser.PushByte(SerialInput<MidiPort>::ImmediateRead());
+}
 
 static uint8_t sub_clock;
 static uint8_t sub_clock_2;
@@ -51,17 +58,21 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  midi_io.Init();
-  ui.Init();
+  plugin_manager.set_active_plugin(0);
 
+  display.Init();
+  ui.Init();
+  
   // Initialize all the PWM outputs to 39kHz, phase correct mode.
   Timer<2>::set_prescaler(1);
   Timer<2>::set_mode(TIMER_FAST_PWM);
   Timer<2>::Start();
-  
+
   lcd.Init();
-  display.Init();
-  lcd.SetCustomCharMapRes(character_table[0], 7, 1);
+  
+  plugin_manager.active_plugin()->OnLoad();
+
+  midi_io.Init();
 }
 
 int main(void) {

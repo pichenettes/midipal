@@ -1,4 +1,4 @@
-// Copyright 2011 Olivier Gillet.
+// Copyright 2009 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -15,19 +15,31 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Midipal project.
+// Active sensing filter.
 
-#include "midipal/display.h"
+#ifndef MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
+#define MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
 
-namespace midipal {
+#include "midipal/plugin.h"
 
-/* extern */
-Lcd lcd;
+namespace midipal { namespace plugins {
 
-/* extern */
-BufferedDisplay<Lcd> display;
+class ActiveSensingFilter : public PlugIn {
+ public:
+  ActiveSensingFilter() : enabled_(0), editing_(0) { }
 
-/* extern */
-char line_buffer[kLcdWidth + 1];
+  virtual void OnLoad();
 
-}  // namespace midipal
+  virtual void OnRawByte(uint8_t byte);
+  virtual void OnIncrement(int8_t increment);
+  virtual void OnClick();
+  
+ private:
+  uint8_t enabled_;
+  uint8_t editing_;
+  DISALLOW_COPY_AND_ASSIGN(ActiveSensingFilter);
+};
+
+} }  // namespace midipal::plugins
+
+#endif // MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
