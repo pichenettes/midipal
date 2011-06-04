@@ -20,6 +20,7 @@
 #include "avrlib/timer.h"
 
 #include "midi/midi.h"
+#include "midipal/clock.h"
 #include "midipal/display.h"
 #include "midipal/midi_handler.h"
 #include "midipal/plugin_manager.h"
@@ -40,14 +41,16 @@ ISR(USART0_RX_vect) {
 
 static uint8_t sub_clock;
 static uint8_t sub_clock_2;
+static uint16_t clock_counter;
 
 TIMER_2_TICK {
+  clock.Tick();
   sub_clock = (sub_clock + 1) & 31;
   if (sub_clock == 0) {  // 2kHz
     lcd.Tick();
     ui.Poll();
     sub_clock_2 = ~sub_clock_2;
-    if (sub_clock_2) { // 1kHz
+    if (sub_clock_2) {  // 1kHz
       TickSystemClock();
     }
   }
@@ -58,7 +61,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(0);
+  plugin_manager.set_active_plugin(2);
 
   display.Init();
   ui.Init();

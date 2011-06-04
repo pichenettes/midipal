@@ -79,6 +79,9 @@ class PlugIn {
   virtual void OnIncrement(int8_t increment) { }
   virtual void OnClick() { }
   
+  // Called when nothing has happened for 50ms.
+  virtual void OnIdle() { }
+  
   // Event handlers for clock.
   virtual void OnInternalClock() { }
 

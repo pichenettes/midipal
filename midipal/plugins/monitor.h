@@ -68,7 +68,6 @@ class Monitor : public PlugIn {
   
  private:
   void PrintString(uint8_t channel, uint8_t res_id);
-  void Clear();
 
   uint8_t edit_mode_;  // Set to one when the user is editing the channel
   uint8_t monitored_channel_;

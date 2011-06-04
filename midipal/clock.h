@@ -1,4 +1,4 @@
-// Copyright 2011 Olivier Gillet.
+// Copyright 2009 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -14,34 +14,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // -----------------------------------------------------------------------------
+//
+// Instance of the display class, configured for the Shruti-1 project.
 
-#include "midipal/plugin_manager.h"
+#ifndef MIDIPAL_CLOCK_H_
+#define MIDIPAL_CLOCK_H_
 
-#include "midipal/plugins/active_sensing_filter.h"
-#include "midipal/plugins/bpm_meter.h"
-#include "midipal/plugins/monitor.h"
+#include "avrlib/base.h"
 
 namespace midipal {
 
-plugins::ActiveSensingFilter active_sensing_filter;
-plugins::BpmMeter bpm_meter;
-plugins::Monitor monitor;
+class Clock {
+ public:
+  static inline void Reset() {
+    clock_ = 0;    
+  }
 
-PlugIn* registry[] = {
-  &monitor,
-  &active_sensing_filter,
-  &bpm_meter
+  static inline void Tick() {
+    ++clock_;
+  }
+
+  static uint32_t value() {
+    return clock_;
+  }
+
+ private:
+  static uint32_t clock_;
 };
 
-/* extern */
-PlugInManager plugin_manager;
-
-/* static */
-PlugIn* PlugInManager::active_plugin_;
-
-/* static */
-void PlugInManager::set_active_plugin(uint8_t index) {
-  active_plugin_ = registry[index];
-}
+extern Clock clock;
 
 }  // namespace midipal
+
+#endif // MIDIPAL_CLOCK_H_

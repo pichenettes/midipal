@@ -62,6 +62,11 @@ void Ui::DoEvents() {
       plugin_manager.active_plugin()->OnClick();
     }
   }
+  
+  if (queue_.idle_time_ms() > 50) {
+    queue_.Touch();
+    plugin_manager.active_plugin()->OnIdle();
+  }
 }
 
 static const prog_char note_names[] PROGMEM = " CC# DD# E FF# GG# AA# B";
