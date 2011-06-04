@@ -40,6 +40,15 @@ void PlugIn::SaveSetting(uint8_t setting_id, uint8_t value) {
   eeprom_write_byte((uint8_t*)(setting_id), value);
 }
 
+uint16_t PlugIn::LoadSettingWord(uint8_t setting_id) {
+  return eeprom_read_word((uint16_t*)(setting_id));
+}
+
+void PlugIn::SaveSettingWord(uint8_t setting_id, uint16_t value) {
+  eeprom_write_word((uint16_t*)(setting_id), value);
+}
+
+
 void PlugIn::SendNow(uint8_t byte) {
   midi_out.Overwrite(byte);
 }

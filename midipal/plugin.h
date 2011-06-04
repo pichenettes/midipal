@@ -43,6 +43,8 @@ enum EepromSetting {
   
   SETTING_EAR_TRAINING_LEVEL = 32,
   SETTING_EAR_TRAINING_NUM_NOTES,
+  SETTING_EAR_TRAINING_NUM_GAMES = 34,
+  SETTING_EAR_TRAINING_NUM_ATTEMPTS = 36,
 };
 
 class PlugIn {
@@ -106,6 +108,8 @@ class PlugIn {
   // Can be used to save/load settings in EEPROM.
   uint8_t LoadSetting(uint8_t setting_id);
   void SaveSetting(uint8_t setting_id, uint8_t value);
+  uint16_t LoadSettingWord(uint8_t setting_id);
+  void SaveSettingWord(uint8_t setting_id, uint16_t value);
   
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);

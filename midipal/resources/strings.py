@@ -57,6 +57,8 @@ all
 flt
 off
 on
+no
+yes
 
 run
 bpm
@@ -77,4 +79,8 @@ max
 
 lvl
 num
+rst
+sorry...
+perfect!
+not bad!
 """

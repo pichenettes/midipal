@@ -61,6 +61,8 @@ static const prog_char str_res_16[] PROGMEM = "16";
 static const prog_char str_res_flt[] PROGMEM = "flt";
 static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
+static const prog_char str_res_no[] PROGMEM = "no";
+static const prog_char str_res_yes[] PROGMEM = "yes";
 static const prog_char str_res_run[] PROGMEM = "run";
 static const prog_char str_res_bpm[] PROGMEM = "bpm";
 static const prog_char str_res_grv[] PROGMEM = "grv";
@@ -77,6 +79,10 @@ static const prog_char str_res_min[] PROGMEM = "min";
 static const prog_char str_res_max[] PROGMEM = "max";
 static const prog_char str_res_lvl[] PROGMEM = "lvl";
 static const prog_char str_res_num[] PROGMEM = "num";
+static const prog_char str_res_rst[] PROGMEM = "rst";
+static const prog_char str_res_sorry___[] PROGMEM = "sorry...";
+static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
+static const prog_char str_res_not_bad_[] PROGMEM = "not bad!";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -116,6 +122,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res_flt,
   str_res_off,
   str_res_on,
+  str_res_no,
+  str_res_yes,
   str_res_run,
   str_res_bpm,
   str_res_grv,
@@ -132,6 +140,10 @@ PROGMEM const prog_char* string_table[] = {
   str_res_max,
   str_res_lvl,
   str_res_num,
+  str_res_rst,
+  str_res_sorry___,
+  str_res_perfect_,
+  str_res_not_bad_,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

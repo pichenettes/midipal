@@ -147,6 +147,14 @@ void Ui::PrintKeyValuePair(
 }
 
 /* static */
+void Ui::PrintString(uint8_t res_id) {
+  ResourcesManager::LoadStringResource(res_id, &line_buffer[0], 8);
+  AlignRight(&line_buffer[0], 8);
+  display.Print(0, line_buffer);
+}
+
+
+/* static */
 void Ui::Clear() {
   memset(line_buffer, ' ', kLcdWidth);
 }
@@ -180,7 +188,7 @@ void Ui::PrintNote(char* buffer, uint8_t note) {
 }
 
 /* static */
-void Ui::Refresh() {
+void Ui::RefreshScreen() {
   display.Print(0, line_buffer);
 }
 

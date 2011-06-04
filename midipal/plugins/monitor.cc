@@ -43,7 +43,7 @@ void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.PrintChannel(&line_buffer[0], channel);
   ui.PrintNote(&line_buffer[2], note);
   ui.PrintHex(&line_buffer[6], velocity);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -52,7 +52,7 @@ void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.PrintNote(&line_buffer[2], note);
   line_buffer[6] = '-';
   line_buffer[7] = '-';
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -61,7 +61,7 @@ void Monitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.PrintNote(&line_buffer[2], note);
   line_buffer[6] = 'a';
   ui.PrintHex(&line_buffer[7], velocity);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
@@ -71,7 +71,7 @@ void Monitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
   line_buffer[3] = 'f';
   line_buffer[4] = 't';
   ui.PrintHex(&line_buffer[6], velocity);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnControlChange(
@@ -85,7 +85,7 @@ void Monitor::OnControlChange(
   line_buffer[2] = '#';
   ui.PrintHex(&line_buffer[3], controller);
   ui.PrintHex(&line_buffer[6], value);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnProgramChange(uint8_t channel, uint8_t program) {
@@ -95,7 +95,7 @@ void Monitor::OnProgramChange(uint8_t channel, uint8_t program) {
   line_buffer[3] = 'g';
   line_buffer[4] = 'm';
   ui.PrintHex(&line_buffer[6], program);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
@@ -104,7 +104,7 @@ void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
   line_buffer[2] = 'b';
   ui.PrintHex(&line_buffer[4], pitch_bend >> 8);
   ui.PrintHex(&line_buffer[6], pitch_bend & 0xff);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
@@ -115,7 +115,7 @@ void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
   ui.PrintChannel(&line_buffer[0], channel);
   ResourcesManager::LoadStringResource(res_id, &line_buffer[2], 6);
   AlignRight(&line_buffer[2], 6);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnAllSoundOff(uint8_t channel) {
@@ -133,7 +133,7 @@ void Monitor::OnLocalControl(uint8_t channel, uint8_t state) {
   line_buffer[3] = 'o';
   line_buffer[4] = 'c';
   ui.PrintHex(&line_buffer[6], state);
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnAllNotesOff(uint8_t channel) {
@@ -178,7 +178,7 @@ void Monitor::OnClock() {
   }
   
   line_buffer[1] = 0xa5;
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnStart() {
@@ -199,7 +199,7 @@ void Monitor::OnActiveSensing() {
   }
   
   line_buffer[1] = '*';
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void Monitor::OnReset() {

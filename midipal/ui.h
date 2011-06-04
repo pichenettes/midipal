@@ -55,7 +55,8 @@ class Ui {
   static void PrintChannel(char* buffer, uint8_t channel);
   static void PrintHex(char* buffer, uint8_t value);
   static void PrintNote(char* buffer, uint8_t note);
-  static void Refresh();
+  static void PrintString(uint8_t res_id);
+  static void RefreshScreen();
   
   static void AddPage(
       uint8_t key_res_id,

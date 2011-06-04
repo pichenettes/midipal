@@ -39,7 +39,9 @@ class EarTrainingGame : public PlugIn {
   virtual void SetParameter(uint8_t key, uint8_t value);
   virtual uint8_t GetParameter(uint8_t key);
   virtual void OnInternalClockStep();
+  virtual uint8_t OnRedraw();
   virtual uint8_t OnClick();
+  virtual uint8_t OnIncrement(int8_t value);
   
  private:
   void GenerateChallenge();
@@ -51,9 +53,16 @@ class EarTrainingGame : public PlugIn {
   uint8_t record_ptr_;
   uint8_t play_ptr_;
   uint8_t wait_;
+  uint8_t attempts_;
+  uint8_t new_challenge_;
+  uint8_t show_score_;
 
   uint8_t level_;
   uint8_t num_notes_;
+  uint8_t confirm_reset_;
+  uint16_t num_games_;
+  uint16_t num_attempts_;
+  uint8_t seeded_;
   
   DISALLOW_COPY_AND_ASSIGN(EarTrainingGame);
 };

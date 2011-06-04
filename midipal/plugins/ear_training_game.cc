@@ -20,8 +20,10 @@
 #include "midipal/plugins/ear_training_game.h"
 
 #include "avrlib/random.h"
+#include "avrlib/string.h"
 
 #include "midipal/clock.h"
+#include "midipal/display.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -58,10 +60,15 @@ void EarTrainingGame::OnLoad() {
   num_notes_ = LoadSetting(SETTING_EAR_TRAINING_NUM_NOTES);
   ui.AddPage(STR_RES_LVL, 0, 1, 5);
   ui.AddPage(STR_RES_NUM, 0, 2, 4);
+  ui.AddPage(STR_RES_RST, STR_RES_NO, 0, 1);
   GenerateChallenge();
   clock.Update(130, 0, 0);
   clock.Start();
   StartChallenge();
+  seeded_ = 0;
+  num_games_ = LoadSettingWord(SETTING_EAR_TRAINING_NUM_GAMES);
+  num_attempts_ = LoadSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS);
+  confirm_reset_ = 0;
 }
 
 void EarTrainingGame::OnRawMidiData(
@@ -70,6 +77,10 @@ void EarTrainingGame::OnRawMidiData(
    uint8_t data_size,
    uint8_t accepted_channel) {
   Send(status, data, data_size);
+  if (!seeded_) {
+    Random::Seed(clock.value());
+    seeded_ = 1;
+  }
 }
 
 
@@ -79,12 +90,19 @@ void EarTrainingGame::GenerateChallenge() {
   root += ResourcesManager::Lookup<uint8_t, uint8_t>(
       random_octave, (Random::GetByte() & 0x07) + 8 * (level_ - 1));
   played_notes_[0] = root;
-  for (uint8_t i = 1; i < num_notes_; ++i) {
+  for (uint8_t i = 1; i < 8; ++i) {
     int8_t interval = ResourcesManager::Lookup<int8_t, uint8_t>(
         random_interval, (Random::GetByte() & 0x0f) + 16 * (level_ - 1));
     int8_t sign = ResourcesManager::Lookup<int8_t, uint8_t>(
         random_sign, (Random::GetByte() & 0x03) + 4 * (level_ - 1));
     played_notes_[i] = root + interval * sign;
+  }
+  new_challenge_ = 1;
+  if (attempts_) {
+    ++num_games_;
+    num_attempts_ += attempts_;
+    SaveSettingWord(SETTING_EAR_TRAINING_NUM_GAMES, num_games_);
+    SaveSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS, num_attempts_);
   }
 }
 
@@ -92,6 +110,10 @@ void EarTrainingGame::StartChallenge() {
   play_ptr_ = 0;
   record_ptr_ = 0;
   step_counter_ = 0xff;
+  if (new_challenge_) {
+    attempts_ = 0;
+  }
+  new_challenge_ = 0;
 }
 
 void EarTrainingGame::OnInternalClockStep() {
@@ -125,7 +147,9 @@ void EarTrainingGame::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) 
           break;
         }
       }
-      if (correct) {
+      ++attempts_;
+      show_score_ = 1;
+      if (correct || attempts_ == 9) {
         GenerateChallenge();
       }
       wait_ = 8;
@@ -134,8 +158,60 @@ void EarTrainingGame::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) 
 }
 
 uint8_t EarTrainingGame::OnClick() {
-  GenerateChallenge();
+  if (confirm_reset_ == 1) {
+    confirm_reset_ = 0;
+    show_score_ = 1;
+    num_games_ = 0;
+    num_attempts_ = 0;
+    SaveSettingWord(SETTING_EAR_TRAINING_NUM_GAMES, 0);
+    SaveSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS, 0);
+  } else {
+    show_score_ = 0;
+  }
   return 0;
+}
+
+uint8_t EarTrainingGame::OnIncrement(int8_t value) {
+  show_score_ = 0;
+  return 0;
+}
+
+uint8_t EarTrainingGame::OnRedraw() {
+  if (show_score_) {
+    ui.Clear();
+    
+    if (wait_) {
+      if (new_challenge_) {
+        if (attempts_ == 1) {
+          ui.PrintString(STR_RES_PERFECT_);
+        } else if (attempts_ == 9) {
+          ui.PrintString(STR_RES_SORRY___);
+        } else {
+          ui.PrintString(STR_RES_NOT_BAD_);
+        }
+      } else {
+        line_buffer[0] = 't';
+        line_buffer[1] = 'r';
+        line_buffer[2] = 'y';
+        line_buffer[5] = '1' + attempts_;
+      }
+    } else {
+      line_buffer[0] = 'a';
+      line_buffer[1] = 'v';
+      line_buffer[2] = 'g';
+      line_buffer[3] = ' ';
+      uint32_t score = (num_attempts_ == 0)
+          ? 100
+          : num_games_ * 100 / num_attempts_;
+      UnsafeItoa(score, 3, &line_buffer[4]);
+      AlignRight(&line_buffer[4], 3);
+      line_buffer[7] = '%';
+    }
+    ui.RefreshScreen();
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 

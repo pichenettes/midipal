@@ -33,7 +33,7 @@ using namespace avrlib;
 void BpmMeter::OnLoad() {
   active_page_ = 0;
   refresh_bpm_ = 1;
-  ui.Refresh();
+  ui.RefreshScreen();
 }
 
 void BpmMeter::Reset() {
@@ -98,7 +98,7 @@ uint8_t BpmMeter::OnRedraw() {
   if (active_page_ < 2) {
     if (refresh_bpm_ || active_page_ == 1) {
       PrintBpm();
-      ui.Refresh();
+      ui.RefreshScreen();
       if (active_page_ == 0) {
         Reset();
       }
@@ -109,7 +109,7 @@ uint8_t BpmMeter::OnRedraw() {
     line_buffer[0] = 't';
     UnsafeItoa(num_ticks_, 7, &line_buffer[1]);
     AlignRight(&line_buffer[1], 7);
-    ui.Refresh();
+    ui.RefreshScreen();
   }
   return 1;
 }
@@ -125,7 +125,7 @@ uint8_t BpmMeter::OnIncrement(int8_t increment) {
   }
   refresh_bpm_ = 1;
   OnIdle();
-  ui.Refresh();
+  ui.RefreshScreen();
   return 1;
 }
 

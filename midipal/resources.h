@@ -85,22 +85,28 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_FLT 33  // flt
 #define STR_RES_OFF 34  // off
 #define STR_RES_ON 35  // on
-#define STR_RES_RUN 36  // run
-#define STR_RES_BPM 37  // bpm
-#define STR_RES_GRV 38  // grv
-#define STR_RES_AMT 39  // amt
-#define STR_RES_SWG 40  // swg
-#define STR_RES_SHF 41  // shf
-#define STR_RES_PSH 42  // psh
-#define STR_RES_LAG 43  // lag
-#define STR_RES_HUM 44  // hum
-#define STR_RES_MNK 45  // mnk
-#define STR_RES_VAL 46  // val
-#define STR_RES_CC_ 47  // cc#
-#define STR_RES_MIN 48  // min
-#define STR_RES_MAX 49  // max
-#define STR_RES_LVL 50  // lvl
-#define STR_RES_NUM 51  // num
+#define STR_RES_NO 36  // no
+#define STR_RES_YES 37  // yes
+#define STR_RES_RUN 38  // run
+#define STR_RES_BPM 39  // bpm
+#define STR_RES_GRV 40  // grv
+#define STR_RES_AMT 41  // amt
+#define STR_RES_SWG 42  // swg
+#define STR_RES_SHF 43  // shf
+#define STR_RES_PSH 44  // psh
+#define STR_RES_LAG 45  // lag
+#define STR_RES_HUM 46  // hum
+#define STR_RES_MNK 47  // mnk
+#define STR_RES_VAL 48  // val
+#define STR_RES_CC_ 49  // cc#
+#define STR_RES_MIN 50  // min
+#define STR_RES_MAX 51  // max
+#define STR_RES_LVL 52  // lvl
+#define STR_RES_NUM 53  // num
+#define STR_RES_RST 54  // rst
+#define STR_RES_SORRY___ 55  // sorry...
+#define STR_RES_PERFECT_ 56  // perfect!
+#define STR_RES_NOT_BAD_ 57  // not bad!
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_GROOVE_SWING 1
