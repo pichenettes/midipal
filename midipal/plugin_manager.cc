@@ -22,11 +22,11 @@
 
 namespace midipal {
 
-plugins::MidiMonitor midi_monitor;
+plugins::Monitor monitor;
 plugins::ActiveSensingFilter active_sensing_filter;
 
 PlugIn* registry[] = {
-  &midi_monitor,
+  &monitor,
   &active_sensing_filter
 };
 

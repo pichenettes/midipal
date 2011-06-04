@@ -15,9 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI monitor plug-in.
-
-#include "avrlib/string.h"
+// Active Sensing filter plug-in.
 
 #include "midipal/plugins/active_sensing_filter.h"
 #include "midipal/resources.h"
@@ -29,7 +27,7 @@ using namespace avrlib;
 
 void ActiveSensingFilter::OnLoad() {
   enabled_ = LoadSetting(SETTING_0XFE_FILTER_ENABLED) != 0;
-  OnIncrement(0);
+  OnIncrement(0);  // Forces a screen refresh
 }
 
 void ActiveSensingFilter::OnRawByte(uint8_t byte) {

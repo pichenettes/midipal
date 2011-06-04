@@ -24,9 +24,9 @@
 
 namespace midipal { namespace plugins {
 
-class MidiMonitor : public PlugIn {
+class Monitor : public PlugIn {
  public:
-  MidiMonitor() 
+  Monitor() 
     : monitored_channel_(0),
       edit_mode_(0) { }
 
@@ -62,16 +62,9 @@ class MidiMonitor : public PlugIn {
   virtual void OnReset();
 
   virtual uint8_t CheckChannel(uint8_t channel);
-  virtual void OnRawByte(uint8_t byte);
-  virtual void OnRawMidiData(
-     uint8_t status,
-     uint8_t* data,
-     uint8_t data_size,
-     uint8_t accepted_channel);
      
   virtual void OnIncrement(int8_t increment);
   virtual void OnClick();
-  virtual void OnInternalClock();
   
  private:
   void PrintString(uint8_t channel, uint8_t res_id);
@@ -80,7 +73,7 @@ class MidiMonitor : public PlugIn {
   uint8_t edit_mode_;  // Set to one when the user is editing the channel
   uint8_t monitored_channel_;
   
-  DISALLOW_COPY_AND_ASSIGN(MidiMonitor);
+  DISALLOW_COPY_AND_ASSIGN(Monitor);
 };
 
 } }  // namespace midipal::plugins

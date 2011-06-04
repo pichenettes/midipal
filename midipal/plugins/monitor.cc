@@ -28,14 +28,14 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-void MidiMonitor::OnLoad() {
+void Monitor::OnLoad() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
   monitored_channel_ = LoadSetting(SETTING_MONITOR_CHANNEL);
   ui.Clear();
   ui.Refresh();
 }
 
-void MidiMonitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   // 01234567
   // 1 C#7 7f
   ui.Clear();
@@ -45,7 +45,7 @@ void MidiMonitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   ui.PrintNote(&line_buffer[2], note);
@@ -54,7 +54,7 @@ void MidiMonitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+void Monitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   ui.PrintNote(&line_buffer[2], note);
@@ -63,7 +63,7 @@ void MidiMonitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) 
   ui.Refresh();
 }
 
-void MidiMonitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
+void Monitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   line_buffer[2] = 'a';
@@ -73,7 +73,7 @@ void MidiMonitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnControlChange(
+void Monitor::OnControlChange(
     uint8_t channel,
     uint8_t controller,
     uint8_t value) {
@@ -87,7 +87,7 @@ void MidiMonitor::OnControlChange(
   ui.Refresh();
 }
 
-void MidiMonitor::OnProgramChange(uint8_t channel, uint8_t program) {
+void Monitor::OnProgramChange(uint8_t channel, uint8_t program) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   line_buffer[2] = 'p';
@@ -97,7 +97,7 @@ void MidiMonitor::OnProgramChange(uint8_t channel, uint8_t program) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
+void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   line_buffer[2] = 'b';
@@ -106,7 +106,7 @@ void MidiMonitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
   ui.Refresh();
 }
 
-void MidiMonitor::PrintString(uint8_t channel, uint8_t res_id) {
+void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
   if (edit_mode_) {
     return;
   }
@@ -117,15 +117,15 @@ void MidiMonitor::PrintString(uint8_t channel, uint8_t res_id) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnAllSoundOff(uint8_t channel) {
+void Monitor::OnAllSoundOff(uint8_t channel) {
   PrintString(channel, STR_RES_SNDOFF);
 }
 
-void MidiMonitor::OnResetAllControllers(uint8_t channel) {
+void Monitor::OnResetAllControllers(uint8_t channel) {
   PrintString(channel, STR_RES_RSTCTR);
 }
 
-void MidiMonitor::OnLocalControl(uint8_t channel, uint8_t state) {
+void Monitor::OnLocalControl(uint8_t channel, uint8_t state) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   line_buffer[2] = 'l';
@@ -135,43 +135,43 @@ void MidiMonitor::OnLocalControl(uint8_t channel, uint8_t state) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnAllNotesOff(uint8_t channel) {
+void Monitor::OnAllNotesOff(uint8_t channel) {
   PrintString(channel, STR_RES_NOTOFF);
 }
 
-void MidiMonitor::OnOmniModeOff(uint8_t channel) {
+void Monitor::OnOmniModeOff(uint8_t channel) {
   PrintString(channel, STR_RES_OMNOFF);
 }
 
-void MidiMonitor::OnOmniModeOn(uint8_t channel) {
+void Monitor::OnOmniModeOn(uint8_t channel) {
   PrintString(channel, STR_RES_OMNION);
 }
 
-void MidiMonitor::OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
+void Monitor::OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
   PrintString(channel, STR_RES_MONOON);
 }
 
-void MidiMonitor::OnPolyModeOn(uint8_t channel) {
+void Monitor::OnPolyModeOn(uint8_t channel) {
   PrintString(channel, STR_RES_POLYON);
 }
 
-void MidiMonitor::OnSysExStart() {
+void Monitor::OnSysExStart() {
   PrintString(0xff, STR_RES_SYSX__);
 }
 
-void MidiMonitor::OnSysExByte(uint8_t sysex_byte) {
+void Monitor::OnSysExByte(uint8_t sysex_byte) {
   PrintString(0xff, STR_RES__SYSX_);
 }
 
-void MidiMonitor::OnSysExEnd() {
+void Monitor::OnSysExEnd() {
   PrintString(0xff, STR_RES___SYSX);
 }
 
-void MidiMonitor::OnBozoByte(uint8_t bozo_byte) {
+void Monitor::OnBozoByte(uint8_t bozo_byte) {
 
 }
 
-void MidiMonitor::OnClock() {
+void Monitor::OnClock() {
   if (edit_mode_) {
     return;
   }
@@ -180,19 +180,19 @@ void MidiMonitor::OnClock() {
   ui.Refresh();
 }
 
-void MidiMonitor::OnStart() {
+void Monitor::OnStart() {
   PrintString(0xff, STR_RES_START);
 }
 
-void MidiMonitor::OnContinue() {
+void Monitor::OnContinue() {
   PrintString(0xff, STR_RES_CONT_);
 }
 
-void MidiMonitor::OnStop() {
+void Monitor::OnStop() {
   PrintString(0xff, STR_RES_STOP);
 }
 
-void MidiMonitor::OnActiveSensing() {
+void Monitor::OnActiveSensing() {
   if (edit_mode_) {
     return;
   }
@@ -201,33 +201,20 @@ void MidiMonitor::OnActiveSensing() {
   ui.Refresh();
 }
 
-void MidiMonitor::OnReset() {
+void Monitor::OnReset() {
   PrintString(0xff, STR_RES_RESET);
 }
 
-void MidiMonitor::OnRawByte(uint8_t byte) {
-  
-}
-
-void MidiMonitor::OnRawMidiData(
-     uint8_t status,
-     uint8_t* data,
-     uint8_t data_size,
-     uint8_t accepted_channel) {
-       
-}
-
-uint8_t MidiMonitor::CheckChannel(uint8_t channel) {
+uint8_t Monitor::CheckChannel(uint8_t channel) {
   return (edit_mode_ == 0) && 
       ((monitored_channel_ == 0) || (channel + 1 == monitored_channel_));
 }
 
      
-void MidiMonitor::OnIncrement(int8_t increment) {
+void Monitor::OnIncrement(int8_t increment) {
   if (!edit_mode_) {
     return;
   }
-  edit_mode_ = 1;
   monitored_channel_ += increment;
   if (monitored_channel_ > 128) {
     monitored_channel_ = 0;
@@ -238,7 +225,7 @@ void MidiMonitor::OnIncrement(int8_t increment) {
   ui.Refresh();
 }
 
-void MidiMonitor::OnClick() {
+void Monitor::OnClick() {
   edit_mode_ ^= 1;
   if (edit_mode_) {
     OnIncrement(0);
@@ -247,10 +234,6 @@ void MidiMonitor::OnClick() {
     ui.Clear();
     ui.Refresh();
   }
-}
-
-void MidiMonitor::OnInternalClock() {
-  
 }
 
 } }  // namespace midipal::plugins
