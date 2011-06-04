@@ -74,4 +74,7 @@ val
 cc#
 min
 max
+
+lvl
+num
 """

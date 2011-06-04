@@ -58,6 +58,7 @@ class Monitor : public PlugIn {
   virtual void OnStop();
   virtual void OnActiveSensing();
   virtual void OnReset();
+  virtual void OnRawByte(uint8_t byte);
 
   virtual uint8_t CheckChannel(uint8_t channel);
      

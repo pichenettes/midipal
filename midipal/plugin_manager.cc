@@ -21,6 +21,7 @@
 #include "midipal/plugins/bpm_meter.h"
 #include "midipal/plugins/cc_knob.h"
 #include "midipal/plugins/clock_source.h"
+#include "midipal/plugins/ear_training_game.h"
 #include "midipal/plugins/monitor.h"
 
 namespace midipal {
@@ -29,6 +30,7 @@ plugins::ActiveSensingFilter active_sensing_filter;
 plugins::BpmMeter bpm_meter;
 plugins::CcKnob cc_knob;
 plugins::ClockSource clock_source;
+plugins::EarTrainingGame ear_training_game;
 plugins::Monitor monitor;
 
 PlugIn* registry[] = {
@@ -36,7 +38,8 @@ PlugIn* registry[] = {
   &active_sensing_filter,
   &bpm_meter,
   &clock_source,
-  &cc_knob
+  &cc_knob,
+  &ear_training_game
 };
 
 /* extern */

@@ -21,7 +21,8 @@ Firmware:
 * cc seq     CC sequencer
 * chordmem   chord memory
 * chaos!     chaos!
-
+* nrpn knb   NRPN knob
+* rhy game   Rhythm game
 
 Ear training game
 

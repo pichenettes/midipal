@@ -70,7 +70,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(4);
+  plugin_manager.set_active_plugin(5);
 
   display.Init();
   ui.Init();

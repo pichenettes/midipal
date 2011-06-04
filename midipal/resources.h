@@ -99,6 +99,8 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_CC_ 47  // cc#
 #define STR_RES_MIN 48  // min
 #define STR_RES_MAX 49  // max
+#define STR_RES_LVL 50  // lvl
+#define STR_RES_NUM 51  // num
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_GROOVE_SWING 1

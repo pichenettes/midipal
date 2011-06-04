@@ -211,6 +211,10 @@ uint8_t Monitor::CheckChannel(uint8_t channel) {
       ((monitored_channel_ == 0) || (channel + 1 == monitored_channel_));
 }
 
+void Monitor::OnRawByte(uint8_t byte) {
+  SendNow(byte);
+}
+
 void Monitor::SetParameter(uint8_t key, uint8_t value) {
   monitored_channel_ = value;
   SaveSetting(SETTING_MONITOR_CHANNEL, value);

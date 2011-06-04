@@ -75,6 +75,8 @@ static const prog_char str_res_val[] PROGMEM = "val";
 static const prog_char str_res_cc_[] PROGMEM = "cc#";
 static const prog_char str_res_min[] PROGMEM = "min";
 static const prog_char str_res_max[] PROGMEM = "max";
+static const prog_char str_res_lvl[] PROGMEM = "lvl";
+static const prog_char str_res_num[] PROGMEM = "num";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -128,6 +130,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cc_,
   str_res_min,
   str_res_max,
+  str_res_lvl,
+  str_res_num,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
@@ -176,7 +180,7 @@ const prog_uint8_t chr_res_digits_10[] PROGMEM = {
       16,     16,     16,     22,      9,      2,      4,     15,
       16,     16,     16,     22,      1,      2,      1,      6,
       16,     16,     16,     18,      4,     10,     15,      2,
-      16,     16,     16,     23,      4,      6,      1,     14,
+      16,     16,     16,     23,      4,      6,      1,      6,
       16,     16,     16,     19,      4,      7,      5,      7,
 };
 
