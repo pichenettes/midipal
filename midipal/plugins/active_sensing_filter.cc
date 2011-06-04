@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -18,6 +18,7 @@
 // Active Sensing filter plug-in.
 
 #include "midipal/plugins/active_sensing_filter.h"
+
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -27,7 +28,7 @@ using namespace avrlib;
 
 void ActiveSensingFilter::OnLoad() {
   enabled_ = LoadSetting(SETTING_0XFE_FILTER_ENABLED) != 0;
-  OnIncrement(0);  // Forces a screen refresh
+  ui.AddPage(STR_RES_FLT, STR_RES_OFF, 0, 1);
 }
 
 void ActiveSensingFilter::OnRawByte(uint8_t byte) {
@@ -36,18 +37,13 @@ void ActiveSensingFilter::OnRawByte(uint8_t byte) {
   }
 }
 
-void ActiveSensingFilter::OnIncrement(int8_t increment) {
-  if (increment && editing_) {
-    enabled_ ^= 1;
-    SaveSetting(SETTING_0XFE_FILTER_ENABLED, enabled_);
-  }
-  ui.PrintKeyValuePair(STR_RES_FLT, STR_RES_OFF, enabled_, editing_);
-  ui.Refresh();
+void ActiveSensingFilter::SetParameter(uint8_t key, uint8_t value) {
+  enabled_ = value;
+  SaveSetting(SETTING_0XFE_FILTER_ENABLED, enabled_);
 }
 
-void ActiveSensingFilter::OnClick() {
-  editing_ ^= 1;
-  OnIncrement(0);
+uint8_t ActiveSensingFilter::GetParameter(uint8_t key) {
+  return enabled_;
 }
 
 } }  // namespace midipal::plugins

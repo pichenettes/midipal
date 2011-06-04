@@ -1,4 +1,4 @@
-# Copyright 2009 Olivier Gillet.
+# Copyright 2011 Olivier Gillet.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +17,10 @@ TARGET         = midipal
 PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/plugins
 RESOURCES      = midipal/resources
 EXTRA_DEFINES  = DISABLE_DEFAULT_UART_RX_ISR
+
+LFUSE          = ff
+HFUSE          = d6
+EFUSE          = fd
 LOCK           = 2f
 
 include avrlib/makefile.mk

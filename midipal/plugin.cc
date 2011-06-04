@@ -24,6 +24,7 @@
 #include "avrlib/serial.h"
 
 #include "midipal/hardware_config.h"
+#include "midipal/midi_handler.h"
 
 namespace midipal {
   
@@ -42,5 +43,24 @@ void PlugIn::SaveSetting(uint8_t setting_id, uint8_t value) {
 void PlugIn::SendNow(uint8_t byte) {
   midi_out.Overwrite(byte);
 }
+
+void PlugIn::Send3(uint8_t a, uint8_t b, uint8_t c) {
+  MidiHandler::OutputBuffer::Write(a);
+  MidiHandler::OutputBuffer::Write(b);
+  MidiHandler::OutputBuffer::Write(c);
+}
+
+void PlugIn::Send(uint8_t status, uint8_t* data, uint8_t size) {
+  MidiHandler::OutputBuffer::Write(status);
+  if (size) {
+    MidiHandler::OutputBuffer::Write(*data++);
+    --size;
+  }
+  if (size) {
+    MidiHandler::OutputBuffer::Write(*data++);
+    --size;
+  }
+}
+
 
 }  // namespace midipal

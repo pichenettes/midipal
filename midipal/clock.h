@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -24,22 +24,72 @@
 
 namespace midipal {
 
+static const uint8_t kNumStepsInGroovePattern = 16;
+static const uint8_t kNumTicksPerStep = 6;
+
 class Clock {
  public:
   static inline void Reset() {
-    clock_ = 0;    
+    clock_ = 0;
+  }
+  
+  static inline void Start() {
+    Reset();
+    running_ = 1;
+    tick_count_ = 0;
+    step_count_ = 0;
+    tick_duration_ = tick_duration_table_[0];
+  }
+  
+  static inline void Stop() {
+    running_ = 0;
   }
 
-  static inline void Tick() {
+  static inline uint8_t Tick() {
     ++clock_;
+    uint8_t result = 0;
+    if (running_ && static_cast<uint16_t>(clock_) == tick_duration_) {
+      clock_ = 0;
+      ++tick_count_;
+      result |= 1;
+      if (tick_count_ == kNumTicksPerStep) {
+        tick_count_ = 0;
+        result |= 2;
+        ++step_count_;
+        if (step_count_ == kNumStepsInGroovePattern) {
+          result |= 4;
+          step_count_ = 0;
+        }
+        tick_duration_ = tick_duration_table_[step_count_];
+      }
+    }
+    return result;
   }
 
   static uint32_t value() {
     return clock_;
   }
+  
+  static uint8_t tick() {
+    return tick_count_;
+  }
+
+  static uint8_t step() {
+    return step_count_;
+  }
+  
+  static void Update(
+      uint8_t bpm,
+      uint8_t groove_template,
+      uint8_t groove_amount);
 
  private:
+  static uint8_t running_;
   static uint32_t clock_;
+  static uint16_t tick_duration_table_[kNumStepsInGroovePattern];
+  static uint16_t tick_duration_;
+  static uint8_t tick_count_;
+  static uint8_t step_count_;
 };
 
 extern Clock clock;

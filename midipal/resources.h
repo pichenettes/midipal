@@ -41,6 +41,13 @@ extern const prog_uint16_t* lookup_table_table[];
 
 extern const prog_uint8_t* character_table[];
 
+extern const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_swing[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_shuffle[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_push[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_lag[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_human[] PROGMEM;
+extern const prog_uint16_t lut_res_groove_monkey[] PROGMEM;
 extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_MIDIPAL_ 0  // midipal!
 #define STR_RES_SNDOFF 1  // sndOff
@@ -78,6 +85,34 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_FLT 33  // flt
 #define STR_RES_OFF 34  // off
 #define STR_RES_ON 35  // on
+#define STR_RES_RUN 36  // run
+#define STR_RES_BPM 37  // bpm
+#define STR_RES_GRV 38  // grv
+#define STR_RES_AMT 39  // amt
+#define STR_RES_SWG 40  // swg
+#define STR_RES_SHF 41  // shf
+#define STR_RES_PSH 42  // psh
+#define STR_RES_LAG 43  // lag
+#define STR_RES_HUM 44  // hum
+#define STR_RES_MNK 45  // mnk
+#define STR_RES_VAL 46  // val
+#define STR_RES_CC_ 47  // cc#
+#define STR_RES_MIN 48  // min
+#define STR_RES_MAX 49  // max
+#define LUT_RES_ARPEGGIATOR_PATTERNS 0
+#define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
+#define LUT_RES_GROOVE_SWING 1
+#define LUT_RES_GROOVE_SWING_SIZE 16
+#define LUT_RES_GROOVE_SHUFFLE 2
+#define LUT_RES_GROOVE_SHUFFLE_SIZE 16
+#define LUT_RES_GROOVE_PUSH 3
+#define LUT_RES_GROOVE_PUSH_SIZE 16
+#define LUT_RES_GROOVE_LAG 4
+#define LUT_RES_GROOVE_LAG_SIZE 16
+#define LUT_RES_GROOVE_HUMAN 5
+#define LUT_RES_GROOVE_HUMAN_SIZE 16
+#define LUT_RES_GROOVE_MONKEY 6
+#define LUT_RES_GROOVE_MONKEY_SIZE 16
 #define CHR_RES_DIGITS_10 0
 #define CHR_RES_DIGITS_10_SIZE 56
 typedef avrlib::ResourcesManager<

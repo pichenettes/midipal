@@ -1,6 +1,6 @@
 #!/usr/bin/python2.5
 #
-# Copyright 2009 Olivier Gillet.
+# Copyright 2011 Olivier Gillet.
 #
 # Author: Olivier Gillet (ol.gillet@gmail.com)
 #
@@ -55,10 +55,12 @@ create_specialized_manager = True
 
 
 import characters
+import lookup_tables
 import strings
 
 resources = [
   (strings.strings, 'string', 'STR_RES', 'prog_char', str, False),
-  ([], 'lookup_table', 'LUT_RES', 'prog_uint16_t', int, False),
+  (lookup_tables.lookup_tables,
+   'lookup_table', 'LUT_RES', 'prog_uint16_t', int, False),
   (characters.characters, 'character', 'CHR_RES', 'prog_uint8_t', int, True),
 ]

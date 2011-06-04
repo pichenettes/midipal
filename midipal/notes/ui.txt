@@ -23,36 +23,6 @@ Firmware:
 * chaos!     chaos!
 
 
-0xfe filter
-
-	01234567
-	flt> on<
-
-
-BPM counter
-
-	01234567
-	120.0000
-
-
-BPM source
-
-	01234567
-	>120.00<
-
-
-CC knob
-
-	01234567
-	val>127<
-
-	01234567
-	cc >  7<
-
-	01234567
-	chn>  1<
-
-
 Ear training game
 
 	01234567
@@ -83,10 +53,16 @@ Euclidian pattern generator
 	chn> 10<
 	
 	01234567
-	inc> 10<
+	pt1> C1<
 
 	01234567
-	not> C1<
+	pt2> C1<
+
+	01234567
+	pt3> C1<
+
+	01234567
+	pt4> C1<
 
 	
 	Each octave: one instrument
@@ -115,19 +91,16 @@ Drum pattern generator
 	chn> 10<
 	
 	01234567
-	inc> 10<
+	pt1> C1<
 
 	01234567
-	bd > C1<
+	pt2> D1<
 
 	01234567
-	sd > D1<
+	pt3>G#1<
 
 	01234567
-	hh >G#1<
-
-	01234567
-	prc> C2<
+	pt4> C2<
 
 	Octave1: 11 drum patterns
 	Octave2: 11 snare pattern
@@ -179,13 +152,13 @@ Sequencer
 	...
 
 	01234567
-	ltc>off<
-
-	01234567
 	len> 63<
 
+	01234567
+	ltc>off<
 
-Sequencer
+
+CC Sequencer
 
 	01234567
 	bpm>120<
@@ -203,9 +176,6 @@ Sequencer
 	 1 > 63<
 
 	...
-
-	01234567
-	ltc>off<
 
 	01234567
 	CC >  7<

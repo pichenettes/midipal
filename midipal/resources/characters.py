@@ -1,6 +1,6 @@
 #!/usr/bin/python2.5
 #
-# Copyright 2009 Olivier Gillet.
+# Copyright 2011 Olivier Gillet.
 #
 # Author: Olivier Gillet (ol.gillet@gmail.com)
 #
@@ -102,7 +102,7 @@ X.XXX
 ..X..
 ..XX.
 ....X
-.XXX.
+..XX.
 """,
 """
 X....

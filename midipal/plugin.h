@@ -28,7 +28,18 @@ enum EepromSetting {
   // Settings must be defined here. Please leave some space between them
   // to allow for future improvements of plug-ins.
   SETTING_MONITOR_CHANNEL = 0,
+  
   SETTING_0XFE_FILTER_ENABLED = 8,
+  
+  SETTING_CLOCK_SOURCE_BPM = 16,
+  SETTING_CLOCK_SOURCE_GROOVE_TEMPLATE,
+  SETTING_CLOCK_SOURCE_GROOVE_AMOUNT,
+  
+  SETTING_CC_KNOB_VALUE = 24,
+  SETTING_CC_KNOB_CHANNEL,
+  SETTING_CC_KNOB_CC,
+  SETTING_CC_KNOB_MIN,
+  SETTING_CC_KNOB_MAX
 };
 
 class PlugIn {
@@ -74,16 +85,19 @@ class PlugIn {
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel) { }
-     
+    
   // Event handlers for UI.
-  virtual void OnIncrement(int8_t increment) { }
-  virtual void OnClick() { }
-  
-  // Called when nothing has happened for 50ms.
+  virtual uint8_t OnIncrement(int8_t increment) { return 0; }
+  virtual uint8_t OnClick() { return 0; }
+  virtual uint8_t OnRedraw() { return 0; }
   virtual void OnIdle() { }
   
+  virtual void SetParameter(uint8_t key, uint8_t value) { }
+  virtual uint8_t GetParameter(uint8_t key) { }
+  
   // Event handlers for clock.
-  virtual void OnInternalClock() { }
+  virtual void OnInternalClockTick() { }
+  virtual void OnInternalClockStep() { }
 
  protected:
   // Can be used to save/load settings in EEPROM.
@@ -91,7 +105,8 @@ class PlugIn {
   void SaveSetting(uint8_t setting_id, uint8_t value);
   
   void SendNow(uint8_t byte);
-  //void Send3(uint8_t a, uint8_t b, uint8_t c);
+  void Send(uint8_t status, uint8_t* data, uint8_t size);
+  void Send3(uint8_t a, uint8_t b, uint8_t c);
   
  private:  
   DISALLOW_COPY_AND_ASSIGN(PlugIn);

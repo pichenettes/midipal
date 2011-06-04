@@ -44,7 +44,16 @@ static uint8_t sub_clock_2;
 static uint16_t clock_counter;
 
 TIMER_2_TICK {
-  clock.Tick();
+  uint8_t events = clock.Tick();
+  if (events & 1) {
+    plugin_manager.active_plugin()->OnInternalClockTick();
+  }
+  if (events & 2) {
+    plugin_manager.active_plugin()->OnInternalClockStep();
+  }
+  if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
+    midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
+  }
   sub_clock = (sub_clock + 1) & 31;
   if (sub_clock == 0) {  // 2kHz
     lcd.Tick();
@@ -61,7 +70,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(2);
+  plugin_manager.set_active_plugin(4);
 
   display.Init();
   ui.Init();
@@ -74,6 +83,7 @@ void Init() {
   lcd.Init();
   
   plugin_manager.active_plugin()->OnLoad();
+  plugin_manager.active_plugin()->OnIncrement(0);
 
   midi_io.Init();
 }

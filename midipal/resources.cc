@@ -61,6 +61,20 @@ static const prog_char str_res_16[] PROGMEM = "16";
 static const prog_char str_res_flt[] PROGMEM = "flt";
 static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
+static const prog_char str_res_run[] PROGMEM = "run";
+static const prog_char str_res_bpm[] PROGMEM = "bpm";
+static const prog_char str_res_grv[] PROGMEM = "grv";
+static const prog_char str_res_amt[] PROGMEM = "amt";
+static const prog_char str_res_swg[] PROGMEM = "swg";
+static const prog_char str_res_shf[] PROGMEM = "shf";
+static const prog_char str_res_psh[] PROGMEM = "psh";
+static const prog_char str_res_lag[] PROGMEM = "lag";
+static const prog_char str_res_hum[] PROGMEM = "hum";
+static const prog_char str_res_mnk[] PROGMEM = "mnk";
+static const prog_char str_res_val[] PROGMEM = "val";
+static const prog_char str_res_cc_[] PROGMEM = "cc#";
+static const prog_char str_res_min[] PROGMEM = "min";
+static const prog_char str_res_max[] PROGMEM = "max";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -100,11 +114,60 @@ PROGMEM const prog_char* string_table[] = {
   str_res_flt,
   str_res_off,
   str_res_on,
+  str_res_run,
+  str_res_bpm,
+  str_res_grv,
+  str_res_amt,
+  str_res_swg,
+  str_res_shf,
+  str_res_psh,
+  str_res_lag,
+  str_res_hum,
+  str_res_mnk,
+  str_res_val,
+  str_res_cc_,
+  str_res_min,
+  str_res_max,
+};
+
+const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
+   21845,  30583,  62965,  46517,  28527,   2313,  18761,  21065,
+   18725,  56283,  30431,  43281,  54553,  28609,  53505,
+};
+const prog_uint16_t lut_res_groove_swing[] PROGMEM = {
+     127,    127,   -127,   -127,    127,    127,   -127,   -127,
+     127,    127,   -127,   -127,    127,    127,   -127,   -127,
+};
+const prog_uint16_t lut_res_groove_shuffle[] PROGMEM = {
+     127,   -127,    127,   -127,    127,   -127,    127,   -127,
+     127,   -127,    127,   -127,    127,   -127,    127,   -127,
+};
+const prog_uint16_t lut_res_groove_push[] PROGMEM = {
+     -63,    -63,    127,      0,   -127,      0,      0,     88,
+       0,      0,     88,    -50,    -88,      0,     88,      0,
+};
+const prog_uint16_t lut_res_groove_lag[] PROGMEM = {
+      19,     44,     93,     -4,     32,    -53,    -90,   -127,
+     117,     32,   -102,    -53,    105,    -53,     93,    -53,
+};
+const prog_uint16_t lut_res_groove_human[] PROGMEM = {
+      88,   -101,    107,    -95,     88,    -88,     50,    -38,
+      65,    -88,    101,    -95,    101,   -127,     63,    -31,
+};
+const prog_uint16_t lut_res_groove_monkey[] PROGMEM = {
+      70,    -84,     84,   -112,     84,    -98,    112,    -98,
+      54,    -70,    127,    -84,    127,   -112,     84,    -84,
 };
 
 
-
 PROGMEM const prog_uint16_t* lookup_table_table[] = {
+  lut_res_arpeggiator_patterns,
+  lut_res_groove_swing,
+  lut_res_groove_shuffle,
+  lut_res_groove_push,
+  lut_res_groove_lag,
+  lut_res_groove_human,
+  lut_res_groove_monkey,
 };
 
 const prog_uint8_t chr_res_digits_10[] PROGMEM = {

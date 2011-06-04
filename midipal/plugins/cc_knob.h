@@ -15,33 +15,39 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Shruti-1 project.
+// MIDI clock generator plug-in.
 
-#ifndef MIDIPAL_DISPLAY_H_
-#define MIDIPAL_DISPLAY_H_
+#ifndef MIDIPAL_PLUGINS_CC_KNOB_
+#define MIDIPAL_PLUGINS_CC_KNOB_
 
-#include "avrlib/devices/buffered_display.h"
-#include "avrlib/devices/hd44780_lcd.h"
+#include "midipal/plugin.h"
 
-#include "midipal/hardware_config.h"
-#include "midipal/midipal.h"
+namespace midipal { namespace plugins {
 
-using avrlib::BufferedDisplay;
-using avrlib::Hd44780Lcd;
+class CcKnob : public PlugIn {
+ public:
+  CcKnob() { }
 
-namespace midipal {
+  virtual void OnLoad();
+  virtual void OnRawMidiData(
+     uint8_t status,
+     uint8_t* data,
+     uint8_t data_size,
+     uint8_t accepted_channel);
+  
+  virtual void SetParameter(uint8_t key, uint8_t value);
+  virtual uint8_t GetParameter(uint8_t key);
+  
+ private:
+  uint8_t value_;
+  uint8_t channel_;
+  uint8_t cc_;
+  uint8_t min_;
+  uint8_t max_;
+  
+  DISALLOW_COPY_AND_ASSIGN(CcKnob);
+};
 
-typedef Hd44780Lcd<
-    LcdRsLine,
-    LcdEnableLine,
-    LcdDataBus,
-    kLcdWidth,
-    kLcdHeight> Lcd;
-extern Lcd lcd;
-extern BufferedDisplay<Lcd> display;
+} }  // namespace midipal::plugins
 
-extern char line_buffer[];
-
-}  // namespace midipal
-
-#endif // MIDIPAL_DISPLAY_H_
+#endif // MIDIPAL_PLUGINS_CC_KNOB_

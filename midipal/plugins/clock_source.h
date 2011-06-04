@@ -15,30 +15,43 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter plug-in.
+// MIDI clock generator plug-in.
 
-#ifndef MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
-#define MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
+#ifndef MIDIPAL_PLUGINS_CLOCK_SOURCE_
+#define MIDIPAL_PLUGINS_CLOCK_SOURCE_
 
 #include "midipal/plugin.h"
 
 namespace midipal { namespace plugins {
 
-class ActiveSensingFilter : public PlugIn {
+class ClockSource : public PlugIn {
  public:
-  ActiveSensingFilter() { }
+  ClockSource() { }
 
   virtual void OnLoad();
+  virtual void OnStart();
+  virtual void OnStop();
+  virtual void OnContinue();
   virtual void OnRawByte(uint8_t byte);
   
   virtual void SetParameter(uint8_t key, uint8_t value);
   virtual uint8_t GetParameter(uint8_t key);
   
+  virtual void OnInternalClockTick();
+
  private:
-  uint8_t enabled_;
-  DISALLOW_COPY_AND_ASSIGN(ActiveSensingFilter);
+  void UpdateCursor();
+  void Stop();
+  void Start();
+  
+  uint8_t running_;
+  uint8_t bpm_;
+  uint8_t groove_template_;
+  uint8_t groove_amount_;
+  
+  DISALLOW_COPY_AND_ASSIGN(ClockSource);
 };
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
+#endif // MIDIPAL_PLUGINS_CLOCK_SOURCE_

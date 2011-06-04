@@ -32,6 +32,13 @@ namespace midipal {
 
 using namespace avrlib;
 
+struct PageDefinition {
+  uint8_t key_res_id;
+  uint8_t value_res_id;
+  uint8_t min;
+  uint8_t max;
+};
+
 class Ui {
  public:
   static void Init();
@@ -49,10 +56,24 @@ class Ui {
   static void PrintHex(char* buffer, uint8_t value);
   static void PrintNote(char* buffer, uint8_t note);
   static void Refresh();
+  
+  static void AddPage(
+      uint8_t key_res_id,
+      uint8_t value_res_id,
+      uint8_t min,
+      uint8_t max);
+    
+  static uint8_t editing() {
+    return editing_;
+  }
 
  private:
   static RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> encoder_;
   static EventQueue<32> queue_;
+  static uint8_t num_pages_;
+  static uint8_t page_;
+  static uint8_t editing_;
+  static PageDefinition pages_[32];
 };
 
 extern Ui ui;

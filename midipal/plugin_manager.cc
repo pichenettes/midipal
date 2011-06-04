@@ -19,18 +19,24 @@
 
 #include "midipal/plugins/active_sensing_filter.h"
 #include "midipal/plugins/bpm_meter.h"
+#include "midipal/plugins/cc_knob.h"
+#include "midipal/plugins/clock_source.h"
 #include "midipal/plugins/monitor.h"
 
 namespace midipal {
 
 plugins::ActiveSensingFilter active_sensing_filter;
 plugins::BpmMeter bpm_meter;
+plugins::CcKnob cc_knob;
+plugins::ClockSource clock_source;
 plugins::Monitor monitor;
 
 PlugIn* registry[] = {
   &monitor,
   &active_sensing_filter,
-  &bpm_meter
+  &bpm_meter,
+  &clock_source,
+  &cc_knob
 };
 
 /* extern */

@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -35,11 +35,11 @@ class BpmMeter : public PlugIn {
   virtual void OnStop();
   virtual void OnContinue();
   virtual void OnReset();
+  virtual void OnRawByte(uint8_t byte);
 
-  virtual void OnClick();
-  virtual void OnIncrement(int8_t increment);
-  
-  virtual void OnIdle();
+  virtual uint8_t OnClick();
+  virtual uint8_t OnIncrement(int8_t increment);
+  virtual uint8_t OnRedraw();
   
  private:
   void PrintBpm();

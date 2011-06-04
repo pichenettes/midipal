@@ -26,6 +26,14 @@
 namespace midipal {
 
 struct MidiHandler : public midi::MidiDevice {
+  
+  enum {
+    buffer_size = 128,
+    data_size = 8,
+  };
+  typedef avrlib::RingBuffer<MidiHandler> OutputBuffer;
+  typedef avrlib::DataTypeForSize<data_size>::Type Value;
+  
   static void NoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     plugin_manager.active_plugin()->OnNoteOn(channel, note, velocity);
   }

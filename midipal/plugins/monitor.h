@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -26,9 +26,7 @@ namespace midipal { namespace plugins {
 
 class Monitor : public PlugIn {
  public:
-  Monitor() 
-    : monitored_channel_(0),
-      edit_mode_(0) { }
+  Monitor() { }
 
   virtual void OnLoad();
 
@@ -63,13 +61,15 @@ class Monitor : public PlugIn {
 
   virtual uint8_t CheckChannel(uint8_t channel);
      
-  virtual void OnIncrement(int8_t increment);
-  virtual void OnClick();
+  virtual void SetParameter(uint8_t key, uint8_t value);
+  virtual uint8_t GetParameter(uint8_t key);
+  
+  virtual uint8_t OnRedraw();
+  virtual uint8_t OnClick();
   
  private:
   void PrintString(uint8_t channel, uint8_t res_id);
-
-  uint8_t edit_mode_;  // Set to one when the user is editing the channel
+  
   uint8_t monitored_channel_;
   
   DISALLOW_COPY_AND_ASSIGN(Monitor);

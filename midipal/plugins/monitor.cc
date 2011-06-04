@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -17,10 +17,11 @@
 //
 // MIDI monitor plug-in.
 
+#include "midipal/plugins/monitor.h"
+
 #include "avrlib/string.h"
 
 #include "midipal/display.h"
-#include "midipal/plugins/monitor.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -32,7 +33,7 @@ void Monitor::OnLoad() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
   monitored_channel_ = LoadSetting(SETTING_MONITOR_CHANNEL);
   ui.Clear();
-  ui.Refresh();
+  ui.AddPage(STR_RES_CHN, STR_RES_ALL, 0, 16);
 }
 
 void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -107,7 +108,7 @@ void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
 }
 
 void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
-  if (edit_mode_) {
+  if (ui.editing()) {
     return;
   }
   ui.Clear();
@@ -172,11 +173,11 @@ void Monitor::OnBozoByte(uint8_t bozo_byte) {
 }
 
 void Monitor::OnClock() {
-  if (edit_mode_) {
+  if (ui.editing()) {
     return;
   }
   
-  line_buffer[1] = '*';
+  line_buffer[1] = 0xa5;
   ui.Refresh();
 }
 
@@ -193,11 +194,11 @@ void Monitor::OnStop() {
 }
 
 void Monitor::OnActiveSensing() {
-  if (edit_mode_) {
+  if (ui.editing()) {
     return;
   }
   
-  line_buffer[1] = 0xa5;
+  line_buffer[1] = '*';
   ui.Refresh();
 }
 
@@ -206,33 +207,29 @@ void Monitor::OnReset() {
 }
 
 uint8_t Monitor::CheckChannel(uint8_t channel) {
-  return (edit_mode_ == 0) && 
+  return (ui.editing() == 0) && 
       ((monitored_channel_ == 0) || (channel + 1 == monitored_channel_));
 }
 
-     
-void Monitor::OnIncrement(int8_t increment) {
-  if (!edit_mode_) {
-    return;
-  }
-  monitored_channel_ += increment;
-  if (monitored_channel_ > 128) {
-    monitored_channel_ = 0;
-  } else if (monitored_channel_ > 16) {
-    monitored_channel_ = 16;
-  }
-  ui.PrintKeyValuePair(STR_RES_CHN, STR_RES_ALL, monitored_channel_, 1);
-  ui.Refresh();
+void Monitor::SetParameter(uint8_t key, uint8_t value) {
+  monitored_channel_ = value;
+  SaveSetting(SETTING_MONITOR_CHANNEL, value);
 }
 
-void Monitor::OnClick() {
-  edit_mode_ ^= 1;
-  if (edit_mode_) {
-    OnIncrement(0);
+uint8_t Monitor::GetParameter(uint8_t key) {
+  return monitored_channel_;
+}
+
+uint8_t Monitor::OnClick() {
+  ui.Clear();
+  return 0;
+}
+
+uint8_t Monitor::OnRedraw() {
+  if (!ui.editing()) {
+    return 1;  // Prevent the default screen redraw handler to be called.
   } else {
-    SaveSetting(SETTING_MONITOR_CHANNEL, monitored_channel_);
-    ui.Clear();
-    ui.Refresh();
+    return 0;
   }
 }
 

@@ -31,6 +31,11 @@ namespace midipal {
 /* <static> */
 RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> Ui::encoder_;
 EventQueue<32> Ui::queue_;
+uint8_t Ui::num_pages_ = 0;
+uint8_t Ui::page_ = 0;
+uint8_t Ui::editing_ = 0;
+PageDefinition Ui::pages_[32];
+
 /* </static> */
 
 /* extern */
@@ -39,6 +44,19 @@ Ui ui;
 /* static */
 void Ui::Init() {
   encoder_.Init();
+}
+
+/* static */
+void Ui::AddPage(
+    uint8_t key_res_id,
+    uint8_t value_res_id,
+    uint8_t min,
+    uint8_t max) {
+  pages_[num_pages_].key_res_id = key_res_id;
+  pages_[num_pages_].value_res_id = value_res_id;
+  pages_[num_pages_].min = min;
+  pages_[num_pages_].max = max;
+  ++num_pages_;
 }
 
 /* static */
@@ -54,18 +72,51 @@ void Ui::Poll() {
 
 /* static */
 void Ui::DoEvents() {
+  uint8_t redraw = 0;
+  PlugIn* plugin = plugin_manager.active_plugin();
   while (queue_.available()) {
+    redraw = 1;
     Event e = queue_.PullEvent();
     if (e.control_type == CONTROL_ENCODER) {
-      plugin_manager.active_plugin()->OnIncrement(e.value);
+      // Internal handling of the encoder.
+      if (!plugin->OnIncrement(e.value)) {
+        if (editing_) {
+          uint8_t v = plugin->GetParameter(page_);
+          v += e.value;
+          if (v == static_cast<uint8_t>(pages_[page_].min - 1)) {
+            v = pages_[page_].min;
+          } else if (v >= pages_[page_].max) {
+            v = pages_[page_].max;
+          }
+          plugin->SetParameter(page_, v);
+        } else {
+          page_ += e.value;
+          if (page_ == 0xff) {
+            page_ = 0;
+          } else if (page_ >= num_pages_) {
+            page_ = num_pages_ - 1;
+          }
+        }
+      }
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
-      plugin_manager.active_plugin()->OnClick();
+      if (!plugin_manager.active_plugin()->OnClick()) {
+        editing_ ^= 1;
+      }
     }
   }
   
   if (queue_.idle_time_ms() > 50) {
+    redraw = 1;
     queue_.Touch();
     plugin_manager.active_plugin()->OnIdle();
+  }
+  
+  if (redraw && !plugin->OnRedraw()) {
+    PrintKeyValuePair(
+        pages_[page_].key_res_id,
+        pages_[page_].value_res_id,
+        plugin->GetParameter(page_),
+        editing_);
   }
 }
 
@@ -81,8 +132,12 @@ void Ui::PrintKeyValuePair(
   memset(line_buffer, ' ', kLcdWidth);
   ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
   AlignRight(&line_buffer[0], 3);
-  ResourcesManager::LoadStringResource(
-      value_res_id + value, &line_buffer[4], 3);
+  if (value_res_id != 0) {
+    ResourcesManager::LoadStringResource(
+        value_res_id + value, &line_buffer[4], 3);
+  } else {
+    UnsafeItoa(value, 3, &line_buffer[4]);
+  }
   AlignRight(&line_buffer[4], 3);
   if (selected) {
     line_buffer[3] = '>';

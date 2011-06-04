@@ -1,4 +1,4 @@
-// Copyright 2009 Olivier Gillet.
+// Copyright 2011 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -22,8 +22,8 @@
 #include "avrlib/string.h"
 
 #include "midipal/clock.h"
-#include "midipal/resources.h"
 #include "midipal/display.h"
+#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace plugins {
@@ -33,7 +33,6 @@ using namespace avrlib;
 void BpmMeter::OnLoad() {
   active_page_ = 0;
   refresh_bpm_ = 1;
-  OnIdle();
   ui.Refresh();
 }
 
@@ -63,12 +62,12 @@ void BpmMeter::OnContinue() {
   Reset();
 }
 
-void BpmMeter::OnClick() {
+void BpmMeter::OnReset() {
   Reset();
 }
 
-void BpmMeter::OnReset() {
-  Reset();
+void BpmMeter::OnRawByte(uint8_t byte) {
+  SendNow(byte);
 }
 
 void BpmMeter::PrintBpm() {
@@ -95,7 +94,7 @@ void BpmMeter::PrintBpm() {
   line_buffer[6] = '.';
 }
 
-void BpmMeter::OnIdle() {
+uint8_t BpmMeter::OnRedraw() {
   if (active_page_ < 2) {
     if (refresh_bpm_ || active_page_ == 1) {
       PrintBpm();
@@ -112,9 +111,10 @@ void BpmMeter::OnIdle() {
     AlignRight(&line_buffer[1], 7);
     ui.Refresh();
   }
+  return 1;
 }
 
-void BpmMeter::OnIncrement(int8_t increment) {
+uint8_t BpmMeter::OnIncrement(int8_t increment) {
   if (increment) {
     active_page_ = active_page_ + increment;
     if (active_page_ == -1) {
@@ -126,6 +126,12 @@ void BpmMeter::OnIncrement(int8_t increment) {
   refresh_bpm_ = 1;
   OnIdle();
   ui.Refresh();
+  return 1;
+}
+
+uint8_t BpmMeter::OnClick() {
+  Reset();
+  return 1;
 }
 
 } }  // namespace midipal::plugins
