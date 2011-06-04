@@ -51,6 +51,10 @@ static const prog_uint8_t random_sign[4 * 5] PROGMEM = {
   1, 1, -1, -1,
 };
 
+static const prog_uint8_t rank[16] PROGMEM = {
+  0, 1, 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, -6, -6, 195
+};
+
 namespace midipal { namespace plugins {
 
 using namespace avrlib;
@@ -196,16 +200,21 @@ uint8_t EarTrainingGame::OnRedraw() {
         line_buffer[5] = '1' + attempts_;
       }
     } else {
-      line_buffer[0] = 'a';
-      line_buffer[1] = 'v';
-      line_buffer[2] = 'g';
-      line_buffer[3] = ' ';
       uint32_t score = (num_attempts_ == 0)
           ? 100
           : num_games_ * 100 / num_attempts_;
-      UnsafeItoa(score, 3, &line_buffer[4]);
-      AlignRight(&line_buffer[4], 3);
-      line_buffer[7] = '%';
+      UnsafeItoa(score, 3, &line_buffer[0]);
+      AlignRight(&line_buffer[0], 3);
+      line_buffer[3] = '%';
+      line_buffer[5] = '|';
+      uint8_t log_num_attempts = 0;
+      uint16_t n = num_attempts_;
+      while (n) {
+        ++log_num_attempts;
+        n >>= 1;
+      }
+      line_buffer[7] = '0' + ResourcesManager::Lookup<uint8_t, uint8_t>(
+          rank, log_num_attempts);
     }
     ui.RefreshScreen();
     return 1;

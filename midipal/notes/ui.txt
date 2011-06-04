@@ -14,7 +14,8 @@ Firmware:
 * clock      BPM source
 * cc knob    CC knob
 * ear game   ear training game
-* euclide    euclidian pattern generator
+
+* * euclide    euclidian pattern generator
 * drums      drum pattern generator
 * arpeggio   arpeggiator
 * sequencr   sequencer
@@ -23,27 +24,6 @@ Firmware:
 * chaos!     chaos!
 * nrpn knb   NRPN knob
 * rhy game   Rhythm game
-
-Ear training game
-
-	01234567
-	lvl>  1<
-
-	01234567
-	num>  3<
-
-	01234567
-	10   80%
-
-	01234567
-	100  70%
-
-	01234567
-	all  60%
-
-	01234567
-	chn>  1<
-
 
 Euclidian pattern generator
 
