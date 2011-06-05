@@ -44,18 +44,16 @@ void EuclidianPatternGenerator::OnNoteOnImpl() {
   // Select pattern depending on played notes.
   uint8_t previous_octave = 0xff;
   for (uint8_t i = 0; i < note_stack.size(); ++i) {
-    uint8_t n = FactorizeMidiNote(note_stack.sorted_note(i).note);
-    uint8_t octave = U8ShiftRight4(n);
-    n &= 0x0f;
-    uint8_t part = (octave >= 7) ? 3 : (octave <= 3 ? 0 : octave - 3);
-    if (octave == previous_octave) {
-      num_steps_[part] = n;
+    Note n = FactorizeMidiNote(note_stack.sorted_note(i).note);
+    uint8_t part = (n.octave >= 7) ? 3 : (n.octave <= 3 ? 0 : n.octave - 3);
+    if (n.octave == previous_octave) {
+      num_steps_[part] = n.note;
     } else {
-      num_notes_[part] = n;
+      num_notes_[part] = n.note;
       step_count_[part] = 0;
       bitmask_[part] = 1;
     }
-    previous_octave = octave;
+    previous_octave = n.octave;
   }
 }
 

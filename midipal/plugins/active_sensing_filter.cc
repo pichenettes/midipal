@@ -24,8 +24,6 @@
 
 namespace midipal { namespace plugins {
 
-using namespace avrlib;
-
 void ActiveSensingFilter::OnLoad() {
   enabled_ = LoadSetting(SETTING_0XFE_FILTER_ENABLED) != 0;
   ui.AddPage(STR_RES_FLT, STR_RES_OFF, 0, 1);

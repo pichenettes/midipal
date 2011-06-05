@@ -26,8 +26,6 @@
 
 namespace midipal { namespace plugins {
 
-using namespace avrlib;
-
 void Splitter::OnLoad() {
   for (uint8_t i = 0; i < 4; ++i) {
     SetParameter(i, LoadSetting(SETTING_SPLITTER_INPUT_CHANNEL + i));

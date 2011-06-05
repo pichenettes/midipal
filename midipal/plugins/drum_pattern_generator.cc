@@ -41,11 +41,9 @@ void DrumPatternGenerator::ResetImpl() {
 void DrumPatternGenerator::OnNoteOnImpl() {
   // Select pattern depending on played notes.
   for (uint8_t i = 0; i < note_stack.size(); ++i) {
-    uint8_t n = FactorizeMidiNote(note_stack.sorted_note(i).note);
-    uint8_t octave = U8ShiftRight4(n);
-    n &= 0x0f;
-    uint8_t part = (octave >= 7) ? 3 : (octave <= 3 ? 0 : octave - 3);
-    active_pattern_[part] = n;
+    Note n = FactorizeMidiNote(note_stack.sorted_note(i).note);
+    uint8_t part = (n.octave >= 7) ? 3 : (n.octave <= 3 ? 0 : n.octave - 3);
+    active_pattern_[part] = n.note;
   }
 }
 

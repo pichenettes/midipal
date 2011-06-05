@@ -18,13 +18,13 @@ Firmware:
 * euclide    euclidian pattern generator
 * drums      drum pattern generator
 * cntrller   Pots scanner
+* splitter   splitter
 
 * arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chaos!     chaos!
 * chordmem   chord memory
-* splitter   splitter
 
 
 Arpeggiator

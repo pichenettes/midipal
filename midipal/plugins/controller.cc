@@ -26,8 +26,6 @@
 
 namespace midipal { namespace plugins {
 
-using namespace avrlib;
-
 void Controller::OnLoad() {
   for (uint8_t i = 0; i < 9; ++i) {
     SetParameter(i, LoadSetting(SETTING_CONTROLLER_CC + i));
@@ -35,7 +33,7 @@ void Controller::OnLoad() {
   ui.set_read_pots(1);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   for (uint8_t i = 0; i < 8; ++i) {
-    ui.AddPage(STR_RES_CC1 + i, 0, 0, 127);
+    ui.AddPage(STR_RES_CC1 + i, UNIT_INTEGER, 0, 127);
   }
 }
 

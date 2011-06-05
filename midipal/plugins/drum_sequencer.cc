@@ -27,8 +27,6 @@
 
 namespace midipal { namespace plugins {
 
-using namespace avrlib;
-
 void DrumSequencer::OnLoad() {
   for (uint8_t i = 0; i < 9; ++i) {
     SetParameter(i, LoadSetting(settings_base() + i));
@@ -53,8 +51,8 @@ void DrumSequencer::OnRawMidiData(
    uint8_t data_size,
    uint8_t accepted_channel) {
   // Forward everything except note on for the selected channel.
-  if (status != (0x80 | (channel_ - 1)) && 
-      status != (0x90 | (channel_ - 1))) {
+  if (status != (0x80 | channel_) && 
+      status != (0x90 | channel_)) {
     Send(status, data, data_size);
   }
 }
@@ -96,7 +94,7 @@ void DrumSequencer::OnNoteOn(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_ - 1) {
+  if (channel != channel_) {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
@@ -117,7 +115,7 @@ void DrumSequencer::OnNoteOff(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_ - 1) {
+  if (channel != channel_) {
     return;
   }
   note_stack.NoteOff(note);

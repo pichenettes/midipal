@@ -54,8 +54,6 @@ struct NoteEntry {
   uint8_t next_ptr;  // Base 1.
 };
 
-uint8_t FactorizeMidiNote(uint8_t note);
-
 class NoteStack {
  public: 
   NoteStack() { }
@@ -90,6 +88,14 @@ class NoteStack {
 };
 
 extern NoteStack note_stack;
+
+
+struct Note {
+  uint8_t octave;
+  uint8_t note;
+};
+
+Note FactorizeMidiNote(uint8_t note);
 
 }  // namespace midipal
 

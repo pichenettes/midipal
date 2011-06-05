@@ -29,8 +29,6 @@
 
 namespace midipal { namespace plugins {
 
-using namespace avrlib;
-
 void ClockSource::OnLoad() {
   bpm_ = LoadSetting(SETTING_CLOCK_SOURCE_BPM);
   groove_template_ = LoadSetting(SETTING_CLOCK_SOURCE_GROOVE_TEMPLATE);
