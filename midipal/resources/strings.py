@@ -102,4 +102,9 @@ cc5
 cc6
 cc7
 cc8
+
+inp
+spl
+low
+upp
 """

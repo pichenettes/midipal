@@ -126,6 +126,10 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_CC6 72  // cc6
 #define STR_RES_CC7 73  // cc7
 #define STR_RES_CC8 74  // cc8
+#define STR_RES_INP 75  // inp
+#define STR_RES_SPL 76  // spl
+#define STR_RES_LOW 77  // low
+#define STR_RES_UPP 78  // upp
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_DRUM_PATTERNS 1

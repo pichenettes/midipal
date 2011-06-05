@@ -62,8 +62,8 @@ using namespace avrlib;
 void EarTrainingGame::OnLoad() {
   level_ = LoadSetting(SETTING_EAR_TRAINING_LEVEL);
   num_notes_ = LoadSetting(SETTING_EAR_TRAINING_NUM_NOTES);
-  ui.AddPage(STR_RES_LVL, 0, 1, 5);
-  ui.AddPage(STR_RES_NUM, 0, 2, 4);
+  ui.AddPage(STR_RES_LVL, UNIT_INDEX, 0, 4);
+  ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, 4);
   ui.AddPage(STR_RES_RST, STR_RES_NO, 0, 1);
   GenerateChallenge();
   clock.Update(130, 0, 0);
@@ -92,13 +92,13 @@ void EarTrainingGame::OnRawMidiData(
 void EarTrainingGame::GenerateChallenge() {
   uint8_t root = Random::GetByte() & 0xf;
   root += ResourcesManager::Lookup<uint8_t, uint8_t>(
-      random_octave, (Random::GetByte() & 0x07) + 8 * (level_ - 1));
+      random_octave, (Random::GetByte() & 0x07) + 8 * level_);
   played_notes_[0] = root;
   for (uint8_t i = 1; i < 8; ++i) {
     int8_t interval = ResourcesManager::Lookup<int8_t, uint8_t>(
-        random_interval, (Random::GetByte() & 0x0f) + 16 * (level_ - 1));
+        random_interval, (Random::GetByte() & 0x0f) + 16 * level_);
     int8_t sign = ResourcesManager::Lookup<int8_t, uint8_t>(
-        random_sign, (Random::GetByte() & 0x03) + 4 * (level_ - 1));
+        random_sign, (Random::GetByte() & 0x03) + 4 * level_);
     played_notes_[i] = root + interval * sign;
   }
   new_challenge_ = 1;

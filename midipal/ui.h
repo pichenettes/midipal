@@ -38,6 +38,12 @@ struct PageDefinition {
   uint8_t max;
 };
 
+enum Unit {
+  UNIT_INTEGER,
+  UNIT_INDEX,
+  UNIT_NOTE
+};
+
 class Ui {
  public:
   static void Init();

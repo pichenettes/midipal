@@ -174,7 +174,7 @@ void MidiStreamParser<Device>::MessageReceived(uint8_t status) {
   uint8_t lo = status & 0x0f;
 
   // If this is a channel-specific message, check first that the receiver is
-  // tune to this channel.
+  // tuned to this channel.
   if (hi != 0xf0 && !Device::CheckChannel(lo)) {
     Device::RawMidiData(status, data_, data_size_, 0);
     return;

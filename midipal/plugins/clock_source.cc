@@ -36,9 +36,9 @@ void ClockSource::OnLoad() {
   groove_template_ = LoadSetting(SETTING_CLOCK_SOURCE_GROOVE_TEMPLATE);
   groove_amount_ = LoadSetting(SETTING_CLOCK_SOURCE_GROOVE_AMOUNT);
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
-  ui.AddPage(STR_RES_BPM, 0, 40, 240);
+  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
-  ui.AddPage(STR_RES_AMT, 0, 0, 127);
+  ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
   clock.Update(bpm_, groove_template_, groove_amount_);
 }
 

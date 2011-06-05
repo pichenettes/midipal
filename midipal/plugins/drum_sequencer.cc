@@ -35,12 +35,12 @@ void DrumSequencer::OnLoad() {
   }
   
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
-  ui.AddPage(STR_RES_BPM, 0, 40, 240);
+  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
-  ui.AddPage(STR_RES_AMT, 0, 0, 127);
-  ui.AddPage(STR_RES_CHN, 0, 1, 16);
+  ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+  ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   for (uint8_t i = 0; i < kNumDrumParts; ++i) {
-    ui.AddPage(STR_RES_PT1 + i, 1, 20, 108);
+    ui.AddPage(STR_RES_PT1 + i, UNIT_NOTE, 20, 108);
   }
   clock.Start();
   idle_ticks_ = 96;

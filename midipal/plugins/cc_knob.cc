@@ -32,12 +32,12 @@ void CcKnob::OnLoad() {
   for (uint8_t i = 0; i < 6; ++i) {
     SetParameter(i, LoadSetting(SETTING_CC_KNOB_VALUE + i));
   }
-  ui.AddPage(STR_RES_VAL, 0, 0, 127);
-  ui.AddPage(STR_RES_CHN, 0, 1, 16);
+  ui.AddPage(STR_RES_VAL, UNIT_INTEGER, 0, 127);
+  ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_TYP, STR_RES_CC_, 0, 1);
-  ui.AddPage(STR_RES_NUM, 0, 0, 255);
-  ui.AddPage(STR_RES_MIN, 0, 0, 255);
-  ui.AddPage(STR_RES_MAX, 0, 0, 255);
+  ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 0, 255);
+  ui.AddPage(STR_RES_MIN, UNIT_INTEGER, 0, 255);
+  ui.AddPage(STR_RES_MAX, UNIT_INTEGER, 0, 255);
 }
 
 void CcKnob::OnRawMidiData(
@@ -66,12 +66,12 @@ void CcKnob::SetParameter(uint8_t key, uint8_t value) {
   value_ = Clip(value_, min_, max_);
   if (value_ != previous_value) {
     if (type_ == 0) {
-      Send3(0xb0 | (channel_ - 1), number_ & 0x7f, value_ & 0x7f);
+      Send3(0xb0 | channel_, number_ & 0x7f, value_ & 0x7f);
     } else {
-      Send3(0xb0 | (channel_ - 1), midi::kNrpnMsb, number_ > 127);
-      Send3(0xb0 | (channel_ - 1), midi::kNrpnLsb, number_ & 0x7f);
-      Send3(0xb0 | (channel_ - 1), midi::kDataEntryMsb, value_ > 127);
-      Send3(0xb0 | (channel_ - 1), midi::kDataEntryLsb, value_ & 0x7f);
+      Send3(0xb0 | channel_, midi::kNrpnMsb, number_ > 127);
+      Send3(0xb0 | channel_, midi::kNrpnLsb, number_ & 0x7f);
+      Send3(0xb0 | channel_, midi::kDataEntryMsb, value_ > 127);
+      Send3(0xb0 | channel_, midi::kDataEntryLsb, value_ & 0x7f);
     }
   }
   SaveSetting(SETTING_CC_KNOB_VALUE + key, value);
