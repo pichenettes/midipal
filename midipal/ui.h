@@ -22,6 +22,7 @@
 
 #include "avrlib/base.h"
 
+#include "avrlib/devices/pot_scanner.h"
 #include "avrlib/devices/rotary_encoder.h"
 #include "avrlib/devices/switch.h"
 #include "avrlib/ui/event_queue.h"
@@ -29,8 +30,6 @@
 #include "midipal/hardware_config.h"
 
 namespace midipal {
-
-using namespace avrlib;
 
 struct PageDefinition {
   uint8_t key_res_id;
@@ -58,6 +57,9 @@ class Ui {
   static void PrintString(uint8_t res_id);
   static void RefreshScreen();
   
+  static inline void set_read_pots(uint8_t value) {
+    read_pots_ = value;
+  }
   static void AddPage(
       uint8_t key_res_id,
       uint8_t value_res_id,
@@ -69,11 +71,15 @@ class Ui {
   }
 
  private:
-  static RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> encoder_;
-  static EventQueue<32> queue_;
+  static avrlib::RotaryEncoder<
+      EncoderALine, EncoderBLine, EncoderClickLine> encoder_;
+  static avrlib::PotScanner<8, 0, 8, 7> pots_;
+  static avrlib::EventQueue<32> queue_;
   static uint8_t num_pages_;
   static uint8_t page_;
   static uint8_t editing_;
+  static uint8_t read_pots_;
+  static uint8_t pot_value_[8];
   static PageDefinition pages_[32];
 };
 

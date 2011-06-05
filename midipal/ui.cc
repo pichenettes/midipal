@@ -28,13 +28,18 @@
 
 namespace midipal {
 
+using namespace avrlib;
+
 /* <static> */
 RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> Ui::encoder_;
+PotScanner<8, 0, 8, 7> Ui::pots_;
 EventQueue<32> Ui::queue_;
-uint8_t Ui::num_pages_ = 0;
-uint8_t Ui::page_ = 0;
-uint8_t Ui::editing_ = 0;
 PageDefinition Ui::pages_[32];
+uint8_t Ui::num_pages_;
+uint8_t Ui::page_;
+uint8_t Ui::pot_value_[8];
+uint8_t Ui::editing_;
+uint8_t Ui::read_pots_;
 
 /* </static> */
 
@@ -44,6 +49,11 @@ Ui ui;
 /* static */
 void Ui::Init() {
   encoder_.Init();
+  pots_.Init();
+  read_pots_ = 0;
+  num_pages_ = 0;
+  page_ = 0;
+  editing_ = 0;
 }
 
 /* static */
@@ -67,6 +77,15 @@ void Ui::Poll() {
   }
   if (encoder_.clicked()) {
     queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
+  }
+  if (read_pots_) {
+    pots_.Read();
+    uint8_t index = pots_.last_read();
+    uint8_t value = pots_.value(index);
+    if (value != pot_value_[index]) {
+      pot_value_[index] = value;
+      queue_.AddEvent(CONTROL_POT, index, value);
+    }
   }
 }
 
@@ -100,6 +119,8 @@ void Ui::DoEvents() {
       if (!plugin_manager.active_plugin()->OnClick()) {
         editing_ ^= 1;
       }
+    } else if (e.control_type == CONTROL_POT) {
+      plugin_manager.active_plugin()->OnPot(e.control_id, e.value);
     }
   }
   

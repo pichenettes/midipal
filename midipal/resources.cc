@@ -92,6 +92,14 @@ static const prog_char str_res_pt1[] PROGMEM = "pt1";
 static const prog_char str_res_pt2[] PROGMEM = "pt2";
 static const prog_char str_res_pt3[] PROGMEM = "pt3";
 static const prog_char str_res_pt4[] PROGMEM = "pt4";
+static const prog_char str_res_cc1[] PROGMEM = "cc1";
+static const prog_char str_res_cc2[] PROGMEM = "cc2";
+static const prog_char str_res_cc3[] PROGMEM = "cc3";
+static const prog_char str_res_cc4[] PROGMEM = "cc4";
+static const prog_char str_res_cc5[] PROGMEM = "cc5";
+static const prog_char str_res_cc6[] PROGMEM = "cc6";
+static const prog_char str_res_cc7[] PROGMEM = "cc7";
+static const prog_char str_res_cc8[] PROGMEM = "cc8";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -162,6 +170,14 @@ PROGMEM const prog_char* string_table[] = {
   str_res_pt2,
   str_res_pt3,
   str_res_pt4,
+  str_res_cc1,
+  str_res_cc2,
+  str_res_cc3,
+  str_res_cc4,
+  str_res_cc5,
+  str_res_cc6,
+  str_res_cc7,
+  str_res_cc8,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

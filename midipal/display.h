@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Shruti-1 project.
+// Instance of the display class, configured for the Midipal project.
 
 #ifndef MIDIPAL_DISPLAY_H_
 #define MIDIPAL_DISPLAY_H_

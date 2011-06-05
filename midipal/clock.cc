@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Shruti-1 project.
+// Global clock.
 
 #include "midipal/clock.h"
 

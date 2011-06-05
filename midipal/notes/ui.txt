@@ -17,13 +17,14 @@ Firmware:
 * ear game   ear training game
 * euclide    euclidian pattern generator
 * drums      drum pattern generator
+* cntrller   Pots scanner
 
 * arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
-* chordmem   chord memory
 * chaos!     chaos!
-* cntrller   Pots scanner
+* chordmem   chord memory
+* splitter   splitter
 
 
 Arpeggiator

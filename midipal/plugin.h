@@ -50,6 +50,8 @@ enum EepromSetting {
   SETTING_EUCLIDIAN_PATTERN_GENERATOR = 48,
 
   SETTING_DRUM_PATTERN_GENERATOR = 64,
+  
+  SETTING_CONTROLLER_CC = 80,
 };
 
 class PlugIn {
@@ -99,6 +101,7 @@ class PlugIn {
   // Event handlers for UI.
   virtual uint8_t OnIncrement(int8_t increment) { return 0; }
   virtual uint8_t OnClick() { return 0; }
+  virtual uint8_t OnPot(uint8_t pot, uint8_t value) { return 0; }
   virtual uint8_t OnRedraw() { return 0; }
   virtual void OnIdle() { }
   

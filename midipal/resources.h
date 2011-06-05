@@ -118,6 +118,14 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_PT2 64  // pt2
 #define STR_RES_PT3 65  // pt3
 #define STR_RES_PT4 66  // pt4
+#define STR_RES_CC1 67  // cc1
+#define STR_RES_CC2 68  // cc2
+#define STR_RES_CC3 69  // cc3
+#define STR_RES_CC4 70  // cc4
+#define STR_RES_CC5 71  // cc5
+#define STR_RES_CC6 72  // cc6
+#define STR_RES_CC7 73  // cc7
+#define STR_RES_CC8 74  // cc8
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_DRUM_PATTERNS 1

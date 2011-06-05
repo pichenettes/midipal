@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Instance of the display class, configured for the Shruti-1 project.
+// Global clock.
 
 #ifndef MIDIPAL_CLOCK_H_
 #define MIDIPAL_CLOCK_H_
