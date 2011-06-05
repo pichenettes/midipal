@@ -23,7 +23,7 @@ Firmware:
 * chordmem   chord memory
 * chaos!     chaos!
 * nrpn knb   NRPN knob
-* rhy game   Rhythm game
+* cntrller   Pots scanner
 
 
 Drum pattern generator
