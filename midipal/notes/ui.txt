@@ -13,46 +13,17 @@ Firmware:
 * bpm cntr   BPM counter
 * clock      BPM source
 * cc knob    CC knob
+* nrpn knb   NRPN knob
 * ear game   ear training game
 * euclide    euclidian pattern generator
-
 * drums      drum pattern generator
+
 * arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chordmem   chord memory
 * chaos!     chaos!
-* nrpn knb   NRPN knob
 * cntrller   Pots scanner
-
-
-Drum pattern generator
-
-	01234567
-	bpm>120<
-
-	01234567
-	clk>int<
-
-	01234567
-	chn> 10<
-	
-	01234567
-	pt1> C1<
-
-	01234567
-	pt2> D1<
-
-	01234567
-	pt3>G#1<
-
-	01234567
-	pt4> C2<
-
-	Octave1: 11 drum patterns
-	Octave2: 11 snare pattern
-	Octave3: 11 hh patterns
-	Octave4: 11 perc patterns
 
 
 Arpeggiator

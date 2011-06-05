@@ -74,11 +74,13 @@ static const prog_char str_res_lag[] PROGMEM = "lag";
 static const prog_char str_res_hum[] PROGMEM = "hum";
 static const prog_char str_res_mnk[] PROGMEM = "mnk";
 static const prog_char str_res_val[] PROGMEM = "val";
+static const prog_char str_res_num[] PROGMEM = "num";
+static const prog_char str_res_typ[] PROGMEM = "typ";
 static const prog_char str_res_cc_[] PROGMEM = "cc#";
+static const prog_char str_res_nrp[] PROGMEM = "nrp";
 static const prog_char str_res_min[] PROGMEM = "min";
 static const prog_char str_res_max[] PROGMEM = "max";
 static const prog_char str_res_lvl[] PROGMEM = "lvl";
-static const prog_char str_res_num[] PROGMEM = "num";
 static const prog_char str_res_rst[] PROGMEM = "rst";
 static const prog_char str_res_sorry___[] PROGMEM = "sorry...";
 static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
@@ -142,11 +144,13 @@ PROGMEM const prog_char* string_table[] = {
   str_res_hum,
   str_res_mnk,
   str_res_val,
+  str_res_num,
+  str_res_typ,
   str_res_cc_,
+  str_res_nrp,
   str_res_min,
   str_res_max,
   str_res_lvl,
-  str_res_num,
   str_res_rst,
   str_res_sorry___,
   str_res_perfect_,

@@ -81,13 +81,11 @@ void Ui::DoEvents() {
       // Internal handling of the encoder.
       if (!plugin->OnIncrement(e.value)) {
         if (editing_) {
-          uint8_t v = plugin->GetParameter(page_);
-          v += e.value;
-          if (v == static_cast<uint8_t>(pages_[page_].min - 1)) {
-            v = pages_[page_].min;
-          } else if (v >= pages_[page_].max) {
-            v = pages_[page_].max;
-          }
+          int16_t v = plugin->GetParameter(page_);
+          v = Clip(
+              v + static_cast<int8_t>(e.value),
+              pages_[page_].min,
+              pages_[page_].max);
           plugin->SetParameter(page_, v);
         } else {
           page_ += e.value;

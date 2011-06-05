@@ -73,12 +73,14 @@ hum
 mnk
 
 val
+num
+typ
 cc#
+nrp
 min
 max
 
 lvl
-num
 rst
 sorry...
 perfect!

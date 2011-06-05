@@ -19,6 +19,8 @@
 
 #include "midipal/plugins/cc_knob.h"
 
+#include "midi/midi.h"
+
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -27,16 +29,15 @@ namespace midipal { namespace plugins {
 using namespace avrlib;
 
 void CcKnob::OnLoad() {
-  value_ = LoadSetting(SETTING_CC_KNOB_VALUE);
-  channel_ = LoadSetting(SETTING_CC_KNOB_CHANNEL);
-  cc_ = LoadSetting(SETTING_CC_KNOB_CC);
-  min_ = LoadSetting(SETTING_CC_KNOB_MIN);
-  max_ = LoadSetting(SETTING_CC_KNOB_MAX);
+  for (uint8_t i = 0; i < 6; ++i) {
+    SetParameter(i, LoadSetting(SETTING_CC_KNOB_VALUE + i));
+  }
   ui.AddPage(STR_RES_VAL, 0, 0, 127);
   ui.AddPage(STR_RES_CHN, 0, 1, 16);
-  ui.AddPage(STR_RES_CC_, 0, 0, 127);
-  ui.AddPage(STR_RES_MIN, 0, 0, 127);
-  ui.AddPage(STR_RES_MAX, 0, 0, 127);
+  ui.AddPage(STR_RES_TYP, STR_RES_CC_, 0, 1);
+  ui.AddPage(STR_RES_NUM, 0, 0, 255);
+  ui.AddPage(STR_RES_MIN, 0, 0, 255);
+  ui.AddPage(STR_RES_MAX, 0, 0, 255);
 }
 
 void CcKnob::OnRawMidiData(
@@ -50,9 +51,28 @@ void CcKnob::OnRawMidiData(
 void CcKnob::SetParameter(uint8_t key, uint8_t value) {
   uint8_t previous_value = value_;
   static_cast<uint8_t*>(&value_)[key] = value;
+  if (type_ == 0) {
+    // Extended range not supported by CC.
+    if (min_ > 127) {
+      min_ = 127;
+    }
+    if (max_ > 127) {
+      max_ = 127;
+    }
+    if (number_ > 127) {
+      number_ = 127;
+    }
+  }
   value_ = Clip(value_, min_, max_);
   if (value_ != previous_value) {
-    Send3(0xb0 | (channel_ - 1), cc_, value_);
+    if (type_ == 0) {
+      Send3(0xb0 | (channel_ - 1), number_ & 0x7f, value_ & 0x7f);
+    } else {
+      Send3(0xb0 | (channel_ - 1), midi::kNrpnMsb, number_ > 127);
+      Send3(0xb0 | (channel_ - 1), midi::kNrpnLsb, number_ & 0x7f);
+      Send3(0xb0 | (channel_ - 1), midi::kDataEntryMsb, value_ > 127);
+      Send3(0xb0 | (channel_ - 1), midi::kDataEntryLsb, value_ & 0x7f);
+    }
   }
   SaveSetting(SETTING_CC_KNOB_VALUE + key, value);
 }

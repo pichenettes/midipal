@@ -41,7 +41,8 @@ class CcKnob : public PlugIn {
  private:
   uint8_t value_;
   uint8_t channel_;
-  uint8_t cc_;
+  uint8_t type_;
+  uint8_t number_;
   uint8_t min_;
   uint8_t max_;
   
