@@ -39,10 +39,9 @@ void DrumSequencer::OnLoad() {
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, 0, 0, 127);
   ui.AddPage(STR_RES_CHN, 0, 1, 16);
-  ui.AddPage(STR_RES_PT1, 1, 20, 108);
-  ui.AddPage(STR_RES_PT2, 1, 20, 108);
-  ui.AddPage(STR_RES_PT3, 1, 20, 108);
-  ui.AddPage(STR_RES_PT4, 1, 20, 108);
+  for (uint8_t i = 0; i < kNumDrumParts; ++i) {
+    ui.AddPage(STR_RES_PT1 + i, 1, 20, 108);
+  }
   clock.Start();
   idle_ticks_ = 96;
   OnInitImpl();
@@ -70,12 +69,14 @@ void DrumSequencer::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
+  ResetImpl();
 }
 
 void DrumSequencer::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 0;
   }
+  AllNotesOff();
 }
 
 void DrumSequencer::OnClock() {
@@ -86,6 +87,7 @@ void DrumSequencer::OnClock() {
 
 void DrumSequencer::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
+    SendNow(0xf8);
     Tick();
   }
 }
@@ -101,12 +103,14 @@ void DrumSequencer::OnNoteOn(
     // Reset the clock counter.
     if (idle_ticks_ >= 96) {
       clock.Start();
+      ResetImpl();
       running_ = 1;
+      SendNow(0xfa);
     }
     idle_ticks_ = 0;
   }
   note_stack.NoteOn(note, velocity);
-  ParseNotes();
+  OnNoteOnImpl();
 }
 
 void DrumSequencer::OnNoteOff(
@@ -130,8 +134,24 @@ void DrumSequencer::Tick() {
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
     }
+    AllNotesOff();
+    SendNow(0xfc);
   }
   TickImpl();
+}
+
+void DrumSequencer::TriggerNote(uint8_t part) {
+  Send3(0x90 | channel_, part_instrument_[part], 0x64);
+  active_note_[part] = part_instrument_[part];
+}
+
+void DrumSequencer::AllNotesOff() {
+  for (uint8_t part = 0; part < kNumDrumParts; ++part) {
+    if (active_note_[part]) {
+      Send3(0x80 | channel_, part_instrument_[part], 0);
+      active_note_[part] = 0;
+    }
+  }
 }
 
 void DrumSequencer::SetParameter(uint8_t key, uint8_t value) {

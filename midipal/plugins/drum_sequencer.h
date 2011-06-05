@@ -29,6 +29,8 @@ enum CLOCK_MODE {
   CLOCK_MODE_EXTERNAL
 };
 
+const uint8_t kNumDrumParts = 4;
+
 class DrumSequencer : public PlugIn {
  public:
   DrumSequencer() { }
@@ -53,10 +55,13 @@ class DrumSequencer : public PlugIn {
   
  protected:
   void Tick();
-
+  void AllNotesOff();
+  void TriggerNote(uint8_t part);
+  
   virtual void OnInitImpl() { }
-  virtual void ParseNotes() { }
+  virtual void OnNoteOnImpl() { }
   virtual void TickImpl() { }
+  virtual void ResetImpl() { }
   virtual uint8_t settings_base() { return 0; }
   
   uint8_t running_;
@@ -66,10 +71,12 @@ class DrumSequencer : public PlugIn {
   uint8_t groove_template_;
   uint8_t groove_amount_;
   uint8_t channel_;
-  uint8_t part_instrument_[4];
+  uint8_t part_instrument_[kNumDrumParts];
   
   uint8_t tick_;
   uint8_t idle_ticks_;
+  
+  uint8_t active_note_[kNumDrumParts];
   
   DISALLOW_COPY_AND_ASSIGN(DrumSequencer);
 };

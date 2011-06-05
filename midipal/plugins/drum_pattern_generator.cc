@@ -17,7 +17,7 @@
 //
 // Euclidian pattern generator plug-in.
 
-#include "midipal/plugins/euclidian_pattern_generator.h"
+#include "midipal/plugins/drum_pattern_generator.h"
 #include "midipal/note_stack.h"
 
 #include "midipal/clock.h"
@@ -29,59 +29,46 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-static const prog_uint8_t sizes[12] PROGMEM = {
-  0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16  
-};
-
-void EuclidianPatternGenerator::OnInitImpl() {
-  for (uint8_t i = 0; i < kNumDrumParts; ++i) {
-    num_notes_[i] = 0;
-    num_steps_[i] = 11; // 16 steps
-  }
+void DrumPatternGenerator::OnInitImpl() {
+  memset(&active_pattern_[0], 0, kNumDrumParts);
 }
 
-void EuclidianPatternGenerator::OnNoteOnImpl() {
+void DrumPatternGenerator::ResetImpl() {
+  step_count_ = 0;
+  bitmask_ = 1;
+}
+
+void DrumPatternGenerator::OnNoteOnImpl() {
   // Select pattern depending on played notes.
-  uint8_t previous_octave = 0xff;
   for (uint8_t i = 0; i < note_stack.size(); ++i) {
     uint8_t n = FactorizeMidiNote(note_stack.sorted_note(i).note);
     uint8_t octave = U8ShiftRight4(n);
     n &= 0x0f;
     uint8_t part = (octave >= 7) ? 3 : (octave <= 3 ? 0 : octave - 3);
-    if (octave == previous_octave) {
-      num_steps_[part] = n;
-    } else {
-      num_notes_[part] = n;
-      step_count_[part] = 0;
-      bitmask_[part] = 1;
-    }
-    previous_octave = octave;
+    active_pattern_[part] = n;
   }
 }
 
-void EuclidianPatternGenerator::TickImpl() {
+void DrumPatternGenerator::TickImpl() {
   if (tick_ == 6) {
     tick_ = 0;
-    for (uint8_t part = 0; part < kNumDrumParts; ++part) {
-      // Skip the muted parts.
-      if (num_notes_[part]) {
-        // Continue running the sequencer as long as something is playing.
+    uint8_t offset = 0;
+    for (uint8_t part = 0; part < 4; ++part) {
+      if (active_pattern_[part]) {
         idle_ticks_ = 0;
-        uint16_t pattern = ResourcesManager::Lookup<uint16_t, uint8_t>(
-            lut_res_euclidian_patterns,
-            num_notes_[part] + num_steps_[part] * 12);
-        uint16_t mask = bitmask_[part];
-        if (pattern & mask) {
-          TriggerNote(part);
-        }
       }
-      ++step_count_[part];
-      bitmask_[part] <<= 1;
-      if (step_count_[part] == ResourcesManager::Lookup<uint16_t, uint8_t>(
-                sizes, num_steps_[part])) {
-        step_count_[part] = 0;
-        bitmask_[part] = 1;
+      uint16_t pattern = ResourcesManager::Lookup<uint16_t, uint8_t>(
+            lut_res_drum_patterns, active_pattern_[part] + offset);
+      offset += 12;
+      if (pattern & bitmask_) {
+        TriggerNote(part);
       }
+    }
+    ++step_count_;
+    bitmask_ <<= 1;
+    if (step_count_ == 16) {
+      step_count_ = 0;
+      bitmask_ = 1;
     }
   } else if (tick_ == 3) {
     AllNotesOff();

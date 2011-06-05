@@ -42,6 +42,7 @@
 #define MIDIPAL_NOTE_STACK_H_
 
 #include "avrlib/base.h"
+#include "avrlib/op.h"
 
 static const uint8_t kNoteStackSize = 16;
 
@@ -52,6 +53,8 @@ struct NoteEntry {
   uint8_t velocity;
   uint8_t next_ptr;  // Base 1.
 };
+
+uint8_t FactorizeMidiNote(uint8_t note);
 
 class NoteStack {
  public: 

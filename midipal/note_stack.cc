@@ -22,6 +22,15 @@
 #include <string.h>
 
 namespace midipal {
+  
+uint8_t FactorizeMidiNote(uint8_t note) {
+  uint8_t octave = 0;
+  while (note >= 12) {
+    note -= 12;
+    ++octave;
+  }
+  return avrlib::U8ShiftLeft4(octave) | note;
+}
 
 static const uint8_t kFreeSlot = 0xff;
 

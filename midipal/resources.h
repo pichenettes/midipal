@@ -42,6 +42,7 @@ extern const prog_uint16_t* lookup_table_table[];
 extern const prog_uint8_t* character_table[];
 
 extern const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM;
+extern const prog_uint16_t lut_res_drum_patterns[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_swing[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_shuffle[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_push[] PROGMEM;
@@ -117,19 +118,21 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_PT4 64  // pt4
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
-#define LUT_RES_GROOVE_SWING 1
+#define LUT_RES_DRUM_PATTERNS 1
+#define LUT_RES_DRUM_PATTERNS_SIZE 48
+#define LUT_RES_GROOVE_SWING 2
 #define LUT_RES_GROOVE_SWING_SIZE 16
-#define LUT_RES_GROOVE_SHUFFLE 2
+#define LUT_RES_GROOVE_SHUFFLE 3
 #define LUT_RES_GROOVE_SHUFFLE_SIZE 16
-#define LUT_RES_GROOVE_PUSH 3
+#define LUT_RES_GROOVE_PUSH 4
 #define LUT_RES_GROOVE_PUSH_SIZE 16
-#define LUT_RES_GROOVE_LAG 4
+#define LUT_RES_GROOVE_LAG 5
 #define LUT_RES_GROOVE_LAG_SIZE 16
-#define LUT_RES_GROOVE_HUMAN 5
+#define LUT_RES_GROOVE_HUMAN 6
 #define LUT_RES_GROOVE_HUMAN_SIZE 16
-#define LUT_RES_GROOVE_MONKEY 6
+#define LUT_RES_GROOVE_MONKEY 7
 #define LUT_RES_GROOVE_MONKEY_SIZE 16
-#define LUT_RES_EUCLIDIAN_PATTERNS 7
+#define LUT_RES_EUCLIDIAN_PATTERNS 8
 #define LUT_RES_EUCLIDIAN_PATTERNS_SIZE 144
 #define CHR_RES_DIGITS_10 0
 #define CHR_RES_DIGITS_10_SIZE 56

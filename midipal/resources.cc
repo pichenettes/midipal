@@ -164,6 +164,14 @@ const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
    21845,  30583,  62965,  46517,  28527,   2313,  18761,  21065,
    18725,  56283,  30431,  43281,  54553,  28609,  53505,
 };
+const prog_uint16_t lut_res_drum_patterns[] PROGMEM = {
+       0,  18705,   4369,  18761,   1281,    257,  21065,    261,
+   10561,   1089,  42049,  16705,      0,  16530,   4112,   4624,
+    4176,  37008,   4752,   4624,  18700,  16400,  18448,  36880,
+       0,  18761,   4369,  23644,  21845,  17476,  24351,  17733,
+   54741,  30583,  25666,  65535,      0,  18504,  21761,  18688,
+   61456,  42116,   4168,  16657,   5193,  21845,  22616,  25253,
+};
 const prog_uint16_t lut_res_groove_swing[] PROGMEM = {
      127,    127,   -127,   -127,    127,    127,   -127,   -127,
      127,    127,   -127,   -127,    127,    127,   -127,   -127,
@@ -212,6 +220,7 @@ const prog_uint16_t lut_res_euclidian_patterns[] PROGMEM = {
 
 PROGMEM const prog_uint16_t* lookup_table_table[] = {
   lut_res_arpeggiator_patterns,
+  lut_res_drum_patterns,
   lut_res_groove_swing,
   lut_res_groove_shuffle,
   lut_res_groove_push,
