@@ -83,6 +83,13 @@ static const prog_char str_res_rst[] PROGMEM = "rst";
 static const prog_char str_res_sorry___[] PROGMEM = "sorry...";
 static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
 static const prog_char str_res_not_bad_[] PROGMEM = "not bad!";
+static const prog_char str_res_int[] PROGMEM = "int";
+static const prog_char str_res_ext[] PROGMEM = "ext";
+static const prog_char str_res_clk[] PROGMEM = "clk";
+static const prog_char str_res_pt1[] PROGMEM = "pt1";
+static const prog_char str_res_pt2[] PROGMEM = "pt2";
+static const prog_char str_res_pt3[] PROGMEM = "pt3";
+static const prog_char str_res_pt4[] PROGMEM = "pt4";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -144,6 +151,13 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sorry___,
   str_res_perfect_,
   str_res_not_bad_,
+  str_res_int,
+  str_res_ext,
+  str_res_clk,
+  str_res_pt1,
+  str_res_pt2,
+  str_res_pt3,
+  str_res_pt4,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
@@ -174,6 +188,26 @@ const prog_uint16_t lut_res_groove_monkey[] PROGMEM = {
       70,    -84,     84,   -112,     84,    -98,    112,    -98,
       54,    -70,    127,    -84,    127,   -112,     84,    -84,
 };
+const prog_uint16_t lut_res_euclidian_patterns[] PROGMEM = {
+       0,      1,      3,      7,     15,     63,    127,    255,
+    1023,   4095,  16383,  65535,      0,      1,      3,      7,
+      15,     63,    127,    255,   1023,   4095,  16383,  65535,
+       0,      1,      3,      7,     15,     63,    127,    255,
+    1023,   4095,  16383,  65535,      0,      1,      5,      7,
+      15,     63,    127,    255,   1023,   4095,  16383,  65535,
+       0,      1,      5,     13,     15,     63,    127,    255,
+    1023,   4095,  16383,  65535,      0,      1,      9,     21,
+      45,     63,    127,    255,   1023,   4095,  16383,  65535,
+       0,      1,     17,     41,     45,    125,    127,    255,
+    1023,   4095,  16383,  65535,      0,      1,     17,     41,
+      85,    221,    253,    255,   1023,   4095,  16383,  65535,
+       0,      1,     33,    145,    297,    429,    733,    957,
+    1023,   4095,  16383,  65535,      0,      1,     65,    273,
+     585,   1365,   1709,   2925,   3965,   4095,  16383,  65535,
+       0,      1,    129,    545,   2193,   5289,   5461,   5805,
+   11997,  16125,  16383,  65535,      0,      1,    257,   2113,
+    4369,  10537,  21161,  21845,  44461,  56797,  65021,  65535,
+};
 
 
 PROGMEM const prog_uint16_t* lookup_table_table[] = {
@@ -184,6 +218,7 @@ PROGMEM const prog_uint16_t* lookup_table_table[] = {
   lut_res_groove_lag,
   lut_res_groove_human,
   lut_res_groove_monkey,
+  lut_res_euclidian_patterns,
 };
 
 const prog_uint8_t chr_res_digits_10[] PROGMEM = {

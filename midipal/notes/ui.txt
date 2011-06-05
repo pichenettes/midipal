@@ -14,8 +14,8 @@ Firmware:
 * clock      BPM source
 * cc knob    CC knob
 * ear game   ear training game
+* euclide    euclidian pattern generator
 
-* * euclide    euclidian pattern generator
 * drums      drum pattern generator
 * arpeggio   arpeggiator
 * sequencr   sequencer
@@ -25,48 +25,14 @@ Firmware:
 * nrpn knb   NRPN knob
 * rhy game   Rhythm game
 
-Euclidian pattern generator
-
-	01234567
-	bpm>120<
-
-	01234567
-	chn> 10<
-	
-	01234567
-	pt1> C1<
-
-	01234567
-	pt2> C1<
-
-	01234567
-	pt3> C1<
-
-	01234567
-	pt4> C1<
-
-	
-	Each octave: one instrument
-	Press 1 note: stop
-	Press 2 notes: pattern
-	C = 1
-	C# = 2
-	D = 3
-	D# = 4
-	E = 5
-	F = 6
-	F# = 7
-	G = 8
-	G# = 10
-	A = 12
-	A# = 14
-	B = 16
-
 
 Drum pattern generator
 
 	01234567
 	bpm>120<
+
+	01234567
+	clk>int<
 
 	01234567
 	chn> 10<
@@ -95,6 +61,9 @@ Arpeggiator
 	bpm>120<
 	
 	01234567
+	clk>int<
+
+	01234567
 	chn> 10<
 
 	01234567
@@ -118,6 +87,9 @@ Sequencer
 	01234567
 	bpm>120<
 	
+	01234567
+	clk>int<
+
 	01234567
 	chn> 10<
 
@@ -145,6 +117,9 @@ CC Sequencer
 	bpm>120<
 	
 	01234567
+	clk>int<
+
+	01234567
 	chn> 10<
 
 	01234567
@@ -165,11 +140,8 @@ CC Sequencer
 Chord memory
 
 	01234567
-	mod>go!<
+	mod>rec<
 
-	01234567
-	record?
-	
 	01234567
 	chn>  1<
 

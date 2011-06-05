@@ -83,4 +83,12 @@ rst
 sorry...
 perfect!
 not bad!
+
+int
+ext
+clk
+pt1
+pt2
+pt3
+pt4
 """

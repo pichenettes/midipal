@@ -15,43 +15,36 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock generator plug-in.
+// Euclidian pattern generator plug-in.
 
-#ifndef MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
-#define MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
+#ifndef MIDIPAL_PLUGINS_EUCLIDIAN_PATTERN_GENERATOR_H_
+#define MIDIPAL_PLUGINS_EUCLIDIAN_PATTERN_GENERATOR_H_
 
 #include "midipal/plugin.h"
+#include "midipal/plugins/drum_sequencer.h"
 
 namespace midipal { namespace plugins {
 
-class ClockSource : public PlugIn {
+class EuclidianPatternGenerator : public DrumSequencer {
  public:
-  ClockSource() { }
-
-  virtual void OnLoad();
-  virtual void OnStart();
-  virtual void OnStop();
-  virtual void OnContinue();
-  virtual void OnRawByte(uint8_t byte);
+  EuclidianPatternGenerator() { }
+ protected:
+  virtual void OnInitImpl();
+  virtual void ParseNotes();
+  virtual void TickImpl();
+  virtual uint8_t settings_base() {
+    return SETTING_EUCLIDIAN_PATTERN_GENERATOR;
+  }
   
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
-  
-  virtual void OnInternalClockTick();
-
  private:
-  void UpdateCursor();
-  void Stop();
-  void Start();
+  uint8_t num_notes_[4];
+  uint8_t num_steps_[4];
+  uint8_t step_count_[4];
+  uint16_t bitmask_[4];
   
-  uint8_t running_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
-  
-  DISALLOW_COPY_AND_ASSIGN(ClockSource);
+  DISALLOW_COPY_AND_ASSIGN(EuclidianPatternGenerator);
 };
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
+#endif // MIDIPAL_PLUGINS_EUCLIDIAN_PATTERN_GENERATOR_H_

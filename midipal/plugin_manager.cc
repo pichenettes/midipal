@@ -22,6 +22,7 @@
 #include "midipal/plugins/cc_knob.h"
 #include "midipal/plugins/clock_source.h"
 #include "midipal/plugins/ear_training_game.h"
+#include "midipal/plugins/euclidian_pattern_generator.h"
 #include "midipal/plugins/monitor.h"
 
 namespace midipal {
@@ -31,6 +32,7 @@ plugins::BpmMeter bpm_meter;
 plugins::CcKnob cc_knob;
 plugins::ClockSource clock_source;
 plugins::EarTrainingGame ear_training_game;
+plugins::EuclidianPatternGenerator euclidian_pattern_generator;
 plugins::Monitor monitor;
 
 PlugIn* registry[] = {
@@ -39,7 +41,8 @@ PlugIn* registry[] = {
   &bpm_meter,
   &clock_source,
   &cc_knob,
-  &ear_training_game
+  &ear_training_game,
+  &euclidian_pattern_generator
 };
 
 /* extern */

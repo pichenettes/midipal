@@ -17,8 +17,8 @@
 //
 // MIDI clock generator plug-in.
 
-#ifndef MIDIPAL_PLUGINS_CC_KNOB_
-#define MIDIPAL_PLUGINS_CC_KNOB_
+#ifndef MIDIPAL_PLUGINS_CC_KNOB_H_
+#define MIDIPAL_PLUGINS_CC_KNOB_H_
 
 #include "midipal/plugin.h"
 
@@ -50,4 +50,4 @@ class CcKnob : public PlugIn {
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_CC_KNOB_
+#endif // MIDIPAL_PLUGINS_CC_KNOB_H_

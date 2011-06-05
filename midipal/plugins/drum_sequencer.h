@@ -15,43 +15,65 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock generator plug-in.
+// Generic drum sequencer plugin.
 
-#ifndef MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
-#define MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
+#ifndef MIDIPAL_PLUGINS_DRUM_SEQUENCER_H_
+#define MIDIPAL_PLUGINS_DRUM_SEQUENCER_H_
 
 #include "midipal/plugin.h"
 
 namespace midipal { namespace plugins {
 
-class ClockSource : public PlugIn {
+enum CLOCK_MODE {
+  CLOCK_MODE_INTERNAL,
+  CLOCK_MODE_EXTERNAL
+};
+
+class DrumSequencer : public PlugIn {
  public:
-  ClockSource() { }
+  DrumSequencer() { }
 
   virtual void OnLoad();
+  virtual void OnRawMidiData(
+     uint8_t status,
+     uint8_t* data,
+     uint8_t data_size,
+     uint8_t accepted_channel);
+  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+
+  virtual void OnContinue();
   virtual void OnStart();
   virtual void OnStop();
-  virtual void OnContinue();
-  virtual void OnRawByte(uint8_t byte);
-  
+  virtual void OnClock();
+  virtual void OnInternalClockTick();
+
   virtual void SetParameter(uint8_t key, uint8_t value);
   virtual uint8_t GetParameter(uint8_t key);
   
-  virtual void OnInternalClockTick();
+ protected:
+  void Tick();
 
- private:
-  void UpdateCursor();
-  void Stop();
-  void Start();
+  virtual void OnInitImpl() { }
+  virtual void ParseNotes() { }
+  virtual void TickImpl() { }
+  virtual uint8_t settings_base() { return 0; }
   
   uint8_t running_;
+   
+  uint8_t clk_mode_;
   uint8_t bpm_;
   uint8_t groove_template_;
   uint8_t groove_amount_;
+  uint8_t channel_;
+  uint8_t part_instrument_[4];
   
-  DISALLOW_COPY_AND_ASSIGN(ClockSource);
+  uint8_t tick_;
+  uint8_t idle_ticks_;
+  
+  DISALLOW_COPY_AND_ASSIGN(DrumSequencer);
 };
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_CLOCK_SOURCE_H_
+#endif // MIDIPAL_PLUGINS_DRUM_SEQUENCER_H_

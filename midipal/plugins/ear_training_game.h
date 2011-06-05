@@ -17,8 +17,8 @@
 //
 // Ear Training Game plug-in.
 
-#ifndef MIDIPAL_EAR_TRAINING_GAME_
-#define MIDIPAL_EAR_TRAINING_GAME_
+#ifndef MIDIPAL_EAR_TRAINING_GAME_H_
+#define MIDIPAL_EAR_TRAINING_GAME_H_
 
 #include "midipal/plugin.h"
 
@@ -69,4 +69,4 @@ class EarTrainingGame : public PlugIn {
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_EAR_TRAINING_GAME_
+#endif // MIDIPAL_EAR_TRAINING_GAME_H_

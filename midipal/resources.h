@@ -48,6 +48,7 @@ extern const prog_uint16_t lut_res_groove_push[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_lag[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_human[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_monkey[] PROGMEM;
+extern const prog_uint16_t lut_res_euclidian_patterns[] PROGMEM;
 extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_MIDIPAL_ 0  // midipal!
 #define STR_RES_SNDOFF 1  // sndOff
@@ -107,6 +108,13 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_SORRY___ 55  // sorry...
 #define STR_RES_PERFECT_ 56  // perfect!
 #define STR_RES_NOT_BAD_ 57  // not bad!
+#define STR_RES_INT 58  // int
+#define STR_RES_EXT 59  // ext
+#define STR_RES_CLK 60  // clk
+#define STR_RES_PT1 61  // pt1
+#define STR_RES_PT2 62  // pt2
+#define STR_RES_PT3 63  // pt3
+#define STR_RES_PT4 64  // pt4
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_GROOVE_SWING 1
@@ -121,6 +129,8 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define LUT_RES_GROOVE_HUMAN_SIZE 16
 #define LUT_RES_GROOVE_MONKEY 6
 #define LUT_RES_GROOVE_MONKEY_SIZE 16
+#define LUT_RES_EUCLIDIAN_PATTERNS 7
+#define LUT_RES_EUCLIDIAN_PATTERNS_SIZE 144
 #define CHR_RES_DIGITS_10 0
 #define CHR_RES_DIGITS_10_SIZE 56
 typedef avrlib::ResourcesManager<

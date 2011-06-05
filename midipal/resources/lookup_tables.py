@@ -98,3 +98,37 @@ lookup_tables.extend([
     ('groove_monkey', ConvertGrooveTemplate(
       [0.5, -0.6, 0.6, -0.8, 0.6, -0.7, 0.8, -0.7,
        0.4, -0.5, 0.9, -0.6, 0.9, -0.8, 0.6, -0.6]))])
+
+
+"""----------------------------------------------------------------------------
+Euclidian patterns
+----------------------------------------------------------------------------"""
+
+def Flatten(l):
+  if hasattr(l, 'pop'):
+    for item in l:
+      for j in Flatten(item):
+        yield j
+  else:
+    yield l
+
+
+def EuclidianPattern(k, n):
+  pattern = [[1]] * k + [[0]] * (n - k)
+  while k:
+    cut = min(k, len(pattern) - k)
+    k, pattern = cut, [pattern[i] + pattern[k + i] for i in xrange(cut)] + \
+        pattern[cut:k] + pattern[k + cut:]
+  return pattern
+  
+table = []
+durations = [0, 1, 2, 3, 4, 6, 7, 8, 10, 12, 14, 16]
+for num_steps in durations:
+  for num_notes in durations:
+    bitmask = 0
+    for i, bit in enumerate(Flatten(EuclidianPattern(num_notes, num_steps))):
+      if bit:
+        bitmask |= (1 << i)
+    table.append(bitmask)
+
+lookup_tables.append(('euclidian_patterns', table))
