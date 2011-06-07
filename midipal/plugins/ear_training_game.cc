@@ -59,9 +59,7 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-void EarTrainingGame::OnLoad() {
-  level_ = LoadSetting(SETTING_EAR_TRAINING_LEVEL);
-  num_notes_ = LoadSetting(SETTING_EAR_TRAINING_NUM_NOTES);
+void EarTrainingGame::OnInit() {
   ui.AddPage(STR_RES_LVL, UNIT_INDEX, 0, 4);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, 4);
   ui.AddPage(STR_RES_RST, STR_RES_NO, 0, 1);
@@ -70,8 +68,6 @@ void EarTrainingGame::OnLoad() {
   clock.Start();
   StartChallenge();
   seeded_ = 0;
-  num_games_ = LoadSettingWord(SETTING_EAR_TRAINING_NUM_GAMES);
-  num_attempts_ = LoadSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS);
   confirm_reset_ = 0;
 }
 
@@ -105,8 +101,8 @@ void EarTrainingGame::GenerateChallenge() {
   if (attempts_) {
     ++num_games_;
     num_attempts_ += attempts_;
-    SaveSettingWord(SETTING_EAR_TRAINING_NUM_GAMES, num_games_);
-    SaveSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS, num_attempts_);
+    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, num_games_);
+    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, num_attempts_);
   }
 }
 
@@ -167,8 +163,8 @@ uint8_t EarTrainingGame::OnClick() {
     show_score_ = 1;
     num_games_ = 0;
     num_attempts_ = 0;
-    SaveSettingWord(SETTING_EAR_TRAINING_NUM_GAMES, 0);
-    SaveSettingWord(SETTING_EAR_TRAINING_NUM_ATTEMPTS, 0);
+    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, 0);
+    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, 0);
   } else {
     show_score_ = 0;
   }
@@ -221,16 +217,6 @@ uint8_t EarTrainingGame::OnRedraw() {
   } else {
     return 0;
   }
-}
-
-
-void EarTrainingGame::SetParameter(uint8_t key, uint8_t value) {
-  static_cast<uint8_t*>(&level_)[key] = value;
-  SaveSetting(SETTING_EAR_TRAINING_LEVEL + key, value);
-}
-
-uint8_t EarTrainingGame::GetParameter(uint8_t key) {
-  return static_cast<uint8_t*>(&level_)[key];
 }
 
 } }  // namespace midipal::plugins

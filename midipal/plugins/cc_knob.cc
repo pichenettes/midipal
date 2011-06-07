@@ -28,10 +28,7 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-void CcKnob::OnLoad() {
-  for (uint8_t i = 0; i < 6; ++i) {
-    SetParameter(i, LoadSetting(SETTING_CC_KNOB_VALUE + i));
-  }
+void CcKnob::OnInit() {
   ui.AddPage(STR_RES_VAL, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_TYP, STR_RES_CC_, 0, 1);
@@ -74,7 +71,6 @@ void CcKnob::SetParameter(uint8_t key, uint8_t value) {
       Send3(0xb0 | channel_, midi::kDataEntryLsb, value_ & 0x7f);
     }
   }
-  SaveSetting(SETTING_CC_KNOB_VALUE + key, value);
 }
 
 uint8_t CcKnob::GetParameter(uint8_t key) {

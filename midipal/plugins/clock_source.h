@@ -28,16 +28,19 @@ class ClockSource : public PlugIn {
  public:
   ClockSource() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnStart();
   virtual void OnStop();
   virtual void OnContinue();
   virtual void OnRawByte(uint8_t byte);
   
   virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
   
   virtual void OnInternalClockTick();
+  
+  virtual uint8_t settings_size() { return 4; }
+  virtual uint8_t settings_offset() { return SETTINGS_CLOCK_SOURCE; }
+  virtual uint8_t* settings_data() { return &running_; }
 
  private:
   void UpdateCursor();

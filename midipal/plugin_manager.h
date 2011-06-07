@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Base class implemented by all the "Plug-ins" running on the Midipal.
+// Class responsible for switching between the various plug-ins.
 
 #ifndef MIDIPAL_PLUGIN_MANAGER_H_
 #define MIDIPAL_PLUGIN_MANAGER_H_

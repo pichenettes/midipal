@@ -29,25 +29,33 @@
 namespace midipal {
   
 using namespace avrlib;
-  
+
 Serial<MidiPort, 31250, DISABLED, POLLED> midi_out;
 
-uint8_t PlugIn::LoadSetting(uint8_t setting_id) {
-  return eeprom_read_byte((uint8_t*)(setting_id));
+void PlugIn::Init() {
+  // Load settings.
+  eeprom_read_block(
+      settings_data(),
+      (void*)(settings_offset()),
+      settings_size());
+  OnIncrement(0);
+  OnInit();
+}
+
+void PlugIn::SaveSettings() {
+  eeprom_write_block(
+      settings_data(),
+      (void*)(settings_offset()),
+      settings_size());
 }
 
 void PlugIn::SaveSetting(uint8_t setting_id, uint8_t value) {
   eeprom_write_byte((uint8_t*)(setting_id), value);
 }
 
-uint16_t PlugIn::LoadSettingWord(uint8_t setting_id) {
-  return eeprom_read_word((uint16_t*)(setting_id));
-}
-
 void PlugIn::SaveSettingWord(uint8_t setting_id, uint16_t value) {
   eeprom_write_word((uint16_t*)(setting_id), value);
 }
-
 
 void PlugIn::SendNow(uint8_t byte) {
   midi_out.Overwrite(byte);

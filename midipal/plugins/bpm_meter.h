@@ -28,7 +28,7 @@ class BpmMeter : public PlugIn {
  public:
   BpmMeter() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
 
   virtual void OnClock();
   virtual void OnStart();

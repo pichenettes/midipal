@@ -30,7 +30,7 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-void BpmMeter::OnLoad() {
+void BpmMeter::OnInit() {
   active_page_ = 0;
   refresh_bpm_ = 1;
   ui.RefreshScreen();
@@ -117,7 +117,7 @@ uint8_t BpmMeter::OnRedraw() {
 uint8_t BpmMeter::OnIncrement(int8_t increment) {
   if (increment) {
     active_page_ = active_page_ + increment;
-    if (active_page_ == -1) {
+    if (active_page_ > 128) {
       active_page_ = 0;
     } else if (active_page_ > 2) {
       active_page_ = 2;

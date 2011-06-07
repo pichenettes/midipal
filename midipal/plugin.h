@@ -23,47 +23,30 @@
 #include "avrlib/base.h"
 
 namespace midipal {
-  
+
 enum EepromSetting {
   // Settings must be defined here. Please leave some space between them
   // to allow for future improvements of plug-ins.
-  SETTING_MONITOR_CHANNEL = 0,
-  
-  SETTING_0XFE_FILTER_ENABLED = 8,
-  
-  SETTING_CLOCK_SOURCE_BPM = 16,
-  SETTING_CLOCK_SOURCE_GROOVE_TEMPLATE,
-  SETTING_CLOCK_SOURCE_GROOVE_AMOUNT,
-  
-  SETTING_CC_KNOB_VALUE = 24,
-  SETTING_CC_KNOB_CHANNEL,
-  SETTING_CC_KNOB_TYPE,
-  SETTING_CC_KNOB_NUM,
-  SETTING_CC_KNOB_MIN,
-  SETTING_CC_KNOB_MAX,
-  
-  SETTING_EAR_TRAINING_LEVEL = 32,
-  SETTING_EAR_TRAINING_NUM_NOTES,
-  SETTING_EAR_TRAINING_NUM_GAMES = 34,
-  SETTING_EAR_TRAINING_NUM_ATTEMPTS = 36,
-  
-  SETTING_EUCLIDIAN_PATTERN_GENERATOR = 48,
-
-  SETTING_DRUM_PATTERN_GENERATOR = 64,
-  
-  SETTING_CONTROLLER_CC = 80,
-  
-  SETTING_SPLITTER_INPUT_CHANNEL = 128,
-  SETTING_SPLITTER_SPLIT_POINT = 129,
-  SETTING_SPLITTER_LOWER_CHANNEL = 130,
-  SETTING_SPLITTER_UPPER_CHANNEL = 131,
+  SETTINGS_MONITOR = 0,
+  SETTINGS_0XFE_FILTER = 8,
+  SETTINGS_CLOCK_SOURCE = 16,
+  SETTINGS_CC_KNOB = 24,
+  SETTINGS_EAR_TRAINING = 32,
+  SETTINGS_EAR_TRAINING_NUM_GAMES = 35,
+  SETTINGS_EAR_TRAINING_NUM_ATTEMPTS = 37,
+  SETTINGS_DRUM_PATTERN_GENERATOR = 64,
+  SETTINGS_CONTROLLER = 80,
+  SETTINGS_SPLITTER = 128,
 };
 
 class PlugIn {
  public:
   PlugIn() { }
   
-  virtual void OnLoad() { }
+  void Init();
+  void SaveSettings();
+  
+  virtual void OnInit() { }
   
   // Event handlers for MIDI input.
   virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) { }
@@ -110,8 +93,17 @@ class PlugIn {
   virtual uint8_t OnRedraw() { return 0; }
   virtual void OnIdle() { }
   
-  virtual void SetParameter(uint8_t key, uint8_t value) { }
-  virtual uint8_t GetParameter(uint8_t key) { }
+  // Access to settings data structure
+  virtual uint8_t settings_size() { return 0; }
+  virtual uint8_t settings_offset() { return 0; }
+  virtual uint8_t* settings_data() { return NULL; }
+  
+  virtual void SetParameter(uint8_t key, uint8_t value) {
+    settings_data()[key] = value;
+  }
+  virtual uint8_t GetParameter(uint8_t key) {
+    return settings_data()[key];
+  }
   
   // Event handlers for clock.
   virtual void OnInternalClockTick() { }
@@ -119,9 +111,7 @@ class PlugIn {
 
  protected:
   // Can be used to save/load settings in EEPROM.
-  uint8_t LoadSetting(uint8_t setting_id);
   void SaveSetting(uint8_t setting_id, uint8_t value);
-  uint16_t LoadSettingWord(uint8_t setting_id);
   void SaveSettingWord(uint8_t setting_id, uint16_t value);
   
   void SendNow(uint8_t byte);

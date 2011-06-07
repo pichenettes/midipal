@@ -24,13 +24,12 @@
 #include "avrlib/devices/hd44780_lcd.h"
 
 #include "midipal/hardware_config.h"
-#include "midipal/midipal.h"
 
 using avrlib::BufferedDisplay;
 using avrlib::Hd44780Lcd;
 
 namespace midipal {
-
+  
 typedef Hd44780Lcd<
     LcdRsLine,
     LcdEnableLine,

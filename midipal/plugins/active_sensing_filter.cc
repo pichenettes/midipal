@@ -24,8 +24,7 @@
 
 namespace midipal { namespace plugins {
 
-void ActiveSensingFilter::OnLoad() {
-  enabled_ = LoadSetting(SETTING_0XFE_FILTER_ENABLED) != 0;
+void ActiveSensingFilter::OnInit() {
   ui.AddPage(STR_RES_FLT, STR_RES_OFF, 0, 1);
 }
 
@@ -33,15 +32,6 @@ void ActiveSensingFilter::OnRawByte(uint8_t byte) {
   if (byte != 0xfe || !enabled_) {
     SendNow(byte);
   }
-}
-
-void ActiveSensingFilter::SetParameter(uint8_t key, uint8_t value) {
-  enabled_ = value;
-  SaveSetting(SETTING_0XFE_FILTER_ENABLED, enabled_);
-}
-
-uint8_t ActiveSensingFilter::GetParameter(uint8_t key) {
-  return enabled_;
 }
 
 } }  // namespace midipal::plugins

@@ -14,8 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // -----------------------------------------------------------------------------
-//
-// Main definitions.
 
 #ifndef MIDIPAL_UI_H_
 #define MIDIPAL_UI_H_
@@ -50,17 +48,18 @@ class Ui {
   static void Poll();
   static void DoEvents();
   
+  static void Clear();
+
   static void PrintKeyValuePair(
       uint8_t key_res_id,
       uint8_t value_res_id,
       uint8_t value,
       uint8_t selected);
-
-  static void Clear();
   static void PrintChannel(char* buffer, uint8_t channel);
   static void PrintHex(char* buffer, uint8_t value);
   static void PrintNote(char* buffer, uint8_t note);
   static void PrintString(uint8_t res_id);
+
   static void RefreshScreen();
   
   static inline void set_read_pots(uint8_t value) {

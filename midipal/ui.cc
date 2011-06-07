@@ -14,8 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // -----------------------------------------------------------------------------
-//
-// Multi data structure.
 
 #include "midipal/ui.h"
 
@@ -118,6 +116,10 @@ void Ui::DoEvents() {
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
       if (!plugin_manager.active_plugin()->OnClick()) {
         editing_ ^= 1;
+        // Left the editing mode, save settings.
+        if (!editing_) {
+          plugin_manager.active_plugin()->SaveSettings();
+        }
       }
     } else if (e.control_type == CONTROL_POT) {
       plugin_manager.active_plugin()->OnPot(e.control_id, e.value);

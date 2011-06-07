@@ -111,25 +111,28 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_SORRY___ 57  // sorry...
 #define STR_RES_PERFECT_ 58  // perfect!
 #define STR_RES_NOT_BAD_ 59  // not bad!
-#define STR_RES_INT 60  // int
-#define STR_RES_EXT 61  // ext
-#define STR_RES_CLK 62  // clk
-#define STR_RES_PT1 63  // pt1
-#define STR_RES_PT2 64  // pt2
-#define STR_RES_PT3 65  // pt3
-#define STR_RES_PT4 66  // pt4
-#define STR_RES_CC1 67  // cc1
-#define STR_RES_CC2 68  // cc2
-#define STR_RES_CC3 69  // cc3
-#define STR_RES_CC4 70  // cc4
-#define STR_RES_CC5 71  // cc5
-#define STR_RES_CC6 72  // cc6
-#define STR_RES_CC7 73  // cc7
-#define STR_RES_CC8 74  // cc8
-#define STR_RES_INP 75  // inp
-#define STR_RES_SPL 76  // spl
-#define STR_RES_LOW 77  // low
-#define STR_RES_UPP 78  // upp
+#define STR_RES_MOD 60  // mod
+#define STR_RES_PTN 61  // ptn
+#define STR_RES_EUC 62  // euc
+#define STR_RES_INT 63  // int
+#define STR_RES_EXT 64  // ext
+#define STR_RES_CLK 65  // clk
+#define STR_RES_PT1 66  // pt1
+#define STR_RES_PT2 67  // pt2
+#define STR_RES_PT3 68  // pt3
+#define STR_RES_PT4 69  // pt4
+#define STR_RES_CC1 70  // cc1
+#define STR_RES_CC2 71  // cc2
+#define STR_RES_CC3 72  // cc3
+#define STR_RES_CC4 73  // cc4
+#define STR_RES_CC5 74  // cc5
+#define STR_RES_CC6 75  // cc6
+#define STR_RES_CC7 76  // cc7
+#define STR_RES_CC8 77  // cc8
+#define STR_RES_INP 78  // inp
+#define STR_RES_SPL 79  // spl
+#define STR_RES_LOW 80  // low
+#define STR_RES_UPP 81  // upp
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_DRUM_PATTERNS 1

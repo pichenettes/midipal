@@ -24,7 +24,6 @@
 #include "midipal/plugins/controller.h"
 #include "midipal/plugins/drum_pattern_generator.h"
 #include "midipal/plugins/ear_training_game.h"
-#include "midipal/plugins/euclidian_pattern_generator.h"
 #include "midipal/plugins/monitor.h"
 #include "midipal/plugins/splitter.h"
 
@@ -37,7 +36,6 @@ plugins::ClockSource clock_source;
 plugins::Controller controller;
 plugins::DrumPatternGenerator drum_pattern_generator;
 plugins::EarTrainingGame ear_training_game;
-plugins::EuclidianPatternGenerator euclidian_pattern_generator;
 plugins::Monitor monitor;
 plugins::Splitter splitter;
 
@@ -49,7 +47,6 @@ PlugIn* registry[] = {
   &cc_knob,
   &controller,
   &ear_training_game,
-  &euclidian_pattern_generator,
   &drum_pattern_generator,
   &splitter
 };

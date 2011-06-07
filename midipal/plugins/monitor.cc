@@ -29,9 +29,8 @@ namespace midipal { namespace plugins {
 
 using namespace avrlib;
 
-void Monitor::OnLoad() {
+void Monitor::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
-  monitored_channel_ = LoadSetting(SETTING_MONITOR_CHANNEL);
   ui.Clear();
   ui.AddPage(STR_RES_CHN, STR_RES_ALL, 0, 16);
 }
@@ -213,15 +212,6 @@ uint8_t Monitor::CheckChannel(uint8_t channel) {
 
 void Monitor::OnRawByte(uint8_t byte) {
   SendNow(byte);
-}
-
-void Monitor::SetParameter(uint8_t key, uint8_t value) {
-  monitored_channel_ = value;
-  SaveSetting(SETTING_MONITOR_CHANNEL, value);
-}
-
-uint8_t Monitor::GetParameter(uint8_t key) {
-  return monitored_channel_;
 }
 
 uint8_t Monitor::OnClick() {

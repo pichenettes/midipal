@@ -15,29 +15,73 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Euclidian pattern generator plug-in.
+// Drum pattern generator plug-in.
 
 #ifndef MIDIPAL_PLUGINS_DRUM_PATTERN_GENERATOR_H_
 #define MIDIPAL_PLUGINS_DRUM_PATTERN_GENERATOR_H_
 
 #include "midipal/plugin.h"
-#include "midipal/plugins/drum_sequencer.h"
 
 namespace midipal { namespace plugins {
 
-class DrumPatternGenerator : public DrumSequencer {
+enum CLOCK_MODE {
+  CLOCK_MODE_INTERNAL,
+  CLOCK_MODE_EXTERNAL
+};
+
+const uint8_t kNumDrumParts = 4;
+
+class DrumPatternGenerator : public PlugIn {
  public:
   DrumPatternGenerator() { }
- protected:
-  virtual void OnInitImpl();
-  virtual void OnNoteOnImpl();
-  virtual void ResetImpl();
-  virtual void TickImpl();
-  virtual uint8_t settings_base() {
-    return SETTING_DRUM_PATTERN_GENERATOR;
-  }
+
+  virtual void OnInit();
+  virtual void OnRawMidiData(
+     uint8_t status,
+     uint8_t* data,
+     uint8_t data_size,
+     uint8_t accepted_channel);
+  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+
+  virtual void OnContinue();
+  virtual void OnStart();
+  virtual void OnStop();
+  virtual void OnClock();
+  virtual void OnInternalClockTick();
+
+  virtual void SetParameter(uint8_t key, uint8_t value);
   
- private:
+  virtual uint8_t settings_size() { return 10; }
+  virtual uint8_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
+  virtual uint8_t* settings_data() { return &mode_; }
+
+ protected:
+  void Reset();
+  void Tick();
+  void AllNotesOff();
+  void TriggerNote(uint8_t part);
+  
+  uint8_t running_;
+   
+  uint8_t mode_;
+  uint8_t clk_mode_;
+  uint8_t bpm_;
+  uint8_t groove_template_;
+  uint8_t groove_amount_;
+  uint8_t channel_;
+  uint8_t part_instrument_[kNumDrumParts];
+  
+  uint8_t tick_;
+  uint8_t idle_ticks_;
+  
+  uint8_t active_note_[kNumDrumParts];
+  
+  uint8_t euclidian_num_notes_[kNumDrumParts];
+  uint8_t euclidian_num_steps_[kNumDrumParts];
+  uint8_t euclidian_step_count_[kNumDrumParts];
+  uint16_t euclidian_bitmask_[kNumDrumParts];
+  
   uint8_t active_pattern_[kNumDrumParts];
   uint8_t step_count_;
   uint16_t bitmask_;

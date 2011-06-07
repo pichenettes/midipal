@@ -28,7 +28,7 @@ class EarTrainingGame : public PlugIn {
  public:
   EarTrainingGame() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
@@ -36,16 +36,24 @@ class EarTrainingGame : public PlugIn {
      uint8_t accepted_channel);
   void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
   virtual void OnInternalClockStep();
   virtual uint8_t OnRedraw();
   virtual uint8_t OnClick();
   virtual uint8_t OnIncrement(int8_t value);
   
+  virtual uint8_t settings_size() { return 7; }
+  virtual uint8_t settings_offset() { return SETTINGS_EAR_TRAINING; }
+  virtual uint8_t* settings_data() { return &level_; }
+  
  private:
   void GenerateChallenge();
   void StartChallenge();
+  
+  uint8_t level_;
+  uint8_t num_notes_;
+  uint8_t confirm_reset_;
+  uint16_t num_games_;
+  uint16_t num_attempts_;
   
   uint8_t step_counter_;
   uint8_t played_notes_[8];
@@ -57,11 +65,6 @@ class EarTrainingGame : public PlugIn {
   uint8_t new_challenge_;
   uint8_t show_score_;
 
-  uint8_t level_;
-  uint8_t num_notes_;
-  uint8_t confirm_reset_;
-  uint16_t num_games_;
-  uint16_t num_attempts_;
   uint8_t seeded_;
   
   DISALLOW_COPY_AND_ASSIGN(EarTrainingGame);

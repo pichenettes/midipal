@@ -32,9 +32,10 @@ using avrlib::PARALLEL_NIBBLE_HIGH;
 using avrlib::ParallelPort;
 using avrlib::PortB;
 using avrlib::PortC;
-using avrlib::PortD;
 using avrlib::SerialPort0;
-using avrlib::SerialPort1;
+
+static const uint8_t kLcdWidth = 8;
+static const uint8_t kLcdHeight = 1;
 
 // MIDI
 typedef SerialPort0 MidiPort;

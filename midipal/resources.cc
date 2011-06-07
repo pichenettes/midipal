@@ -85,6 +85,9 @@ static const prog_char str_res_rst[] PROGMEM = "rst";
 static const prog_char str_res_sorry___[] PROGMEM = "sorry...";
 static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
 static const prog_char str_res_not_bad_[] PROGMEM = "not bad!";
+static const prog_char str_res_mod[] PROGMEM = "mod";
+static const prog_char str_res_ptn[] PROGMEM = "ptn";
+static const prog_char str_res_euc[] PROGMEM = "euc";
 static const prog_char str_res_int[] PROGMEM = "int";
 static const prog_char str_res_ext[] PROGMEM = "ext";
 static const prog_char str_res_clk[] PROGMEM = "clk";
@@ -167,6 +170,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sorry___,
   str_res_perfect_,
   str_res_not_bad_,
+  str_res_mod,
+  str_res_ptn,
+  str_res_euc,
   str_res_int,
   str_res_ext,
   str_res_clk,

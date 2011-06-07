@@ -86,6 +86,9 @@ sorry...
 perfect!
 not bad!
 
+mod
+ptn
+euc
 int
 ext
 clk

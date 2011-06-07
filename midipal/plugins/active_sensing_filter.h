@@ -28,11 +28,12 @@ class ActiveSensingFilter : public PlugIn {
  public:
   ActiveSensingFilter() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnRawByte(uint8_t byte);
   
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
+  virtual uint8_t settings_size() { return 1; }
+  virtual uint8_t settings_offset() { return SETTINGS_0XFE_FILTER; }
+  virtual uint8_t* settings_data() { return &enabled_; }
   
  private:
   uint8_t enabled_;

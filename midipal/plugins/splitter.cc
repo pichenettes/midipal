@@ -26,10 +26,7 @@
 
 namespace midipal { namespace plugins {
 
-void Splitter::OnLoad() {
-  for (uint8_t i = 0; i < 4; ++i) {
-    SetParameter(i, LoadSetting(SETTING_SPLITTER_INPUT_CHANNEL + i));
-  }
+void Splitter::OnInit() {
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_SPL, UNIT_NOTE, 20, 108);
   ui.AddPage(STR_RES_LOW, UNIT_INDEX, 0, 15);
@@ -68,15 +65,6 @@ void Splitter::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 void Splitter::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
   Split(0xa0, channel, note, velocity);
-}
-
-void Splitter::SetParameter(uint8_t key, uint8_t value) {
-  static_cast<uint8_t*>(&input_channel_)[key] = value;
-  SaveSetting(SETTING_SPLITTER_INPUT_CHANNEL + key, value);
-}
-
-uint8_t Splitter::GetParameter(uint8_t key) {
-  return static_cast<uint8_t*>(&input_channel_)[key];
 }
 
 } }  // namespace midipal::plugins

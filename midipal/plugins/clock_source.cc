@@ -29,19 +29,17 @@
 
 namespace midipal { namespace plugins {
 
-void ClockSource::OnLoad() {
-  bpm_ = LoadSetting(SETTING_CLOCK_SOURCE_BPM);
-  groove_template_ = LoadSetting(SETTING_CLOCK_SOURCE_GROOVE_TEMPLATE);
-  groove_amount_ = LoadSetting(SETTING_CLOCK_SOURCE_GROOVE_AMOUNT);
+void ClockSource::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
   clock.Update(bpm_, groove_template_, groove_amount_);
+  running_ = 0;
 }
 
 void ClockSource::OnRawByte(uint8_t byte) {
-  uint8_t is_realtime = byte & 0xf0;
+  uint8_t is_realtime = (byte & 0xf0) == 0xf0;
   uint8_t is_sysex = (byte == 0xf7) || (byte == 0xf0);
   if (!is_realtime || is_sysex) {
     SendNow(byte);
@@ -55,15 +53,9 @@ void ClockSource::SetParameter(uint8_t key, uint8_t value) {
     } else {
       Stop();
     }
-  } else {
-    static_cast<uint8_t*>(&running_)[key] = value;
-    SaveSetting(SETTING_CLOCK_SOURCE_BPM + key - 1, value);
-    clock.Update(bpm_, groove_template_, groove_amount_);
   }
-}
-
-uint8_t ClockSource::GetParameter(uint8_t key) {
-  return static_cast<uint8_t*>(&running_)[key];
+  static_cast<uint8_t*>(&running_)[key] = value;
+  clock.Update(bpm_, groove_template_, groove_amount_);
 }
 
 void ClockSource::OnStart() {

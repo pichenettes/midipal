@@ -28,7 +28,7 @@ class Splitter : public PlugIn {
  public:
   Splitter() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
@@ -37,10 +37,11 @@ class Splitter : public PlugIn {
   virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
   virtual void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+ 
+  virtual uint8_t settings_size() { return 4; }
+  virtual uint8_t settings_offset() { return SETTINGS_SPLITTER; }
+  virtual uint8_t* settings_data() { return &input_channel_; }
 
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
-  
  private:
   void Split(uint8_t type, uint8_t channel, uint8_t note, uint8_t velocity);
   uint8_t input_channel_;

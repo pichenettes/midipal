@@ -71,7 +71,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(8);
+  plugin_manager.set_active_plugin(5);
   note_stack.Init();
   display.Init();
   ui.Init();
@@ -83,8 +83,7 @@ void Init() {
 
   lcd.Init();
   
-  plugin_manager.active_plugin()->OnLoad();
-  plugin_manager.active_plugin()->OnIncrement(0);
+  plugin_manager.active_plugin()->Init();
 
   midi_io.Init();
 }

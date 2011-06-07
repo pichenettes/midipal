@@ -28,7 +28,7 @@ class CcKnob : public PlugIn {
  public:
   CcKnob() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
@@ -37,6 +37,10 @@ class CcKnob : public PlugIn {
   
   virtual void SetParameter(uint8_t key, uint8_t value);
   virtual uint8_t GetParameter(uint8_t key);
+  
+  virtual uint8_t settings_size() { return 6; }
+  virtual uint8_t settings_offset() { return SETTINGS_CC_KNOB; }
+  virtual uint8_t* settings_data() { return &value_; }
   
  private:
   uint8_t value_;

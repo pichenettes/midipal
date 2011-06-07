@@ -26,10 +26,7 @@
 
 namespace midipal { namespace plugins {
 
-void Controller::OnLoad() {
-  for (uint8_t i = 0; i < 9; ++i) {
-    SetParameter(i, LoadSetting(SETTING_CONTROLLER_CC + i));
-  }
+void Controller::OnInit() {
   ui.set_read_pots(1);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   for (uint8_t i = 0; i < 8; ++i) {
@@ -47,15 +44,6 @@ void Controller::OnRawMidiData(
 
 uint8_t Controller::OnPot(uint8_t pot, uint8_t value) {
   Send3(0xb0 | channel_, cc_[pot], value);
-}
-
-void Controller::SetParameter(uint8_t key, uint8_t value) {
-  static_cast<uint8_t*>(&channel_)[key] = value;
-  SaveSetting(SETTING_CONTROLLER_CC + key, value);
-}
-
-uint8_t Controller::GetParameter(uint8_t key) {
-  return static_cast<uint8_t*>(&channel_)[key];
 }
 
 } }  // namespace midipal::plugins

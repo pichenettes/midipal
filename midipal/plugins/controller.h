@@ -28,7 +28,7 @@ class Controller : public PlugIn {
  public:
   Controller() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
   virtual void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
@@ -37,8 +37,9 @@ class Controller : public PlugIn {
 
   virtual uint8_t OnPot(uint8_t pot, uint8_t value);
   
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
+  virtual uint8_t settings_size() { return 9; }
+  virtual uint8_t settings_offset() { return SETTINGS_CONTROLLER; }
+  virtual uint8_t* settings_data() { return &channel_; }
   
  private:
   uint8_t channel_;

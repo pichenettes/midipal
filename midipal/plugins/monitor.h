@@ -28,7 +28,7 @@ class Monitor : public PlugIn {
  public:
   Monitor() { }
 
-  virtual void OnLoad();
+  virtual void OnInit();
 
   virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
@@ -62,14 +62,15 @@ class Monitor : public PlugIn {
 
   virtual uint8_t CheckChannel(uint8_t channel);
      
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
-  
   virtual uint8_t OnRedraw();
   virtual uint8_t OnClick();
   
  private:
   void PrintString(uint8_t channel, uint8_t res_id);
+  
+  virtual uint8_t settings_size() { return 1; }
+  virtual uint8_t settings_offset() { return SETTINGS_MONITOR; }
+  virtual uint8_t* settings_data() { return &monitored_channel_; }
   
   uint8_t monitored_channel_;
   
