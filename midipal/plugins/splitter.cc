@@ -39,32 +39,27 @@ void Splitter::OnRawMidiData(
    uint8_t data_size,
    uint8_t accepted_channel) {
   uint8_t type = status & 0xf0;
-  if (type != 0x80 && type != 0x90 && type != 0xa0) {
+  if (type == 0xf0) {
+    Send(status, data, data_size);
+  } else if (type == 0x80 || type == 0x90 || type == 0xa0) {
+    // Split note on/off/aftertouch messages depending on the note value.
+    uint8_t note = data[0];
+    uint8_t channel = status & 0x0f;
+    if (channel == input_channel_) {
+      channel = note < split_point_ ? lower_channel_ : upper_channel_;
+    }
+    Send(type | channel, data, data_size);
+  } else {
+    // Pass through the other messages, just rewrite their channel.
+    uint8_t channel = status & 0x0f;
+    if (channel == input_channel_) {
+      if (upper_channel_ != lower_channel_) {
+        Send(type | upper_channel_, data, data_size);
+      }
+      status = type | lower_channel_;
+    }
     Send(status, data, data_size);
   }
-}
-
-void Splitter::Split(
-    uint8_t type,
-    uint8_t channel,
-    uint8_t note,
-    uint8_t velocity) {
-  if (channel == input_channel_) {
-    channel = note < split_point_ ? lower_channel_ : upper_channel_;
-  }
-  Send3(type | channel, note, velocity);
-}
-
-void Splitter::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-  Split(0x90, channel, note, velocity);
-}
-
-void Splitter::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  Split(0x80, channel, note, velocity);
-}
-
-void Splitter::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
-  Split(0xa0, channel, note, velocity);
 }
 
 } }  // namespace midipal::plugins

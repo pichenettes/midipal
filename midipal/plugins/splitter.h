@@ -34,16 +34,12 @@ class Splitter : public PlugIn {
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
  
   virtual uint8_t settings_size() { return 4; }
   virtual uint8_t settings_offset() { return SETTINGS_SPLITTER; }
   virtual uint8_t* settings_data() { return &input_channel_; }
 
  private:
-  void Split(uint8_t type, uint8_t channel, uint8_t note, uint8_t velocity);
   uint8_t input_channel_;
   uint8_t split_point_;
   uint8_t lower_channel_;
