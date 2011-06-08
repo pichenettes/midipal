@@ -14,12 +14,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // -----------------------------------------------------------------------------
+//
+// Class responsible for switching between the various plug-ins.
 
 #include "midipal/plugin_manager.h"
 
 #include "midipal/plugins/active_sensing_filter.h"
 #include "midipal/plugins/bpm_meter.h"
 #include "midipal/plugins/cc_knob.h"
+#include "midipal/plugins/chord_memory.h"
 #include "midipal/plugins/clock_source.h"
 #include "midipal/plugins/controller.h"
 #include "midipal/plugins/drum_pattern_generator.h"
@@ -33,6 +36,7 @@ namespace midipal {
 plugins::ActiveSensingFilter active_sensing_filter;
 plugins::BpmMeter bpm_meter;
 plugins::CcKnob cc_knob;
+plugins::ChordMemory chord_memory;
 plugins::ClockSource clock_source;
 plugins::Controller controller;
 plugins::DrumPatternGenerator drum_pattern_generator;
@@ -51,7 +55,8 @@ PlugIn* registry[] = {
   &ear_training_game,
   &drum_pattern_generator,
   &splitter,
-  &randomizer
+  &randomizer,
+  &chord_memory
 };
 
 /* extern */

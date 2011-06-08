@@ -20,14 +20,14 @@ Firmware:
 * cntrller   Pots scanner
 * splitter   splitter
 * randomiz   note/velo/CC/Randomizer
+* chordmem   chord memory
 
 * arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chaos!     chaos!
-* chordmem   chord memory
 * rnbrobin   polyphonic round robin
-
+* strummer?
 
 Arpeggiator
 
