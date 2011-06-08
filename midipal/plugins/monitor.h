@@ -28,49 +28,49 @@ class Monitor : public PlugIn {
  public:
   Monitor() { }
 
-  virtual void OnInit();
+  void OnInit();
 
-  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnAftertouch(uint8_t channel, uint8_t velocity);
-  virtual void OnControlChange(uint8_t channel, uint8_t controller,
+  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnAftertouch(uint8_t channel, uint8_t velocity);
+  void OnControlChange(uint8_t channel, uint8_t controller,
     uint8_t value);
-  virtual void OnProgramChange(uint8_t channel, uint8_t program);
-  virtual void OnPitchBend(uint8_t channel, uint16_t pitch_bend);
+  void OnProgramChange(uint8_t channel, uint8_t program);
+  void OnPitchBend(uint8_t channel, uint16_t pitch_bend);
 
-  virtual void OnAllSoundOff(uint8_t channel);
-  virtual void OnResetAllControllers(uint8_t channel);
-  virtual void OnLocalControl(uint8_t channel, uint8_t state);
-  virtual void OnAllNotesOff(uint8_t channel);
-  virtual void OnOmniModeOff(uint8_t channel);
-  virtual void OnOmniModeOn(uint8_t channel);
-  virtual void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
-  virtual void OnPolyModeOn(uint8_t channel);
-  virtual void OnSysExStart();
-  virtual void OnSysExByte(uint8_t sysex_byte);
-  virtual void OnSysExEnd();
-  virtual void OnBozoByte(uint8_t bozo_byte);
+  void OnAllSoundOff(uint8_t channel);
+  void OnResetAllControllers(uint8_t channel);
+  void OnLocalControl(uint8_t channel, uint8_t state);
+  void OnAllNotesOff(uint8_t channel);
+  void OnOmniModeOff(uint8_t channel);
+  void OnOmniModeOn(uint8_t channel);
+  void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
+  void OnPolyModeOn(uint8_t channel);
+  void OnSysExStart();
+  void OnSysExByte(uint8_t sysex_byte);
+  void OnSysExEnd();
+  void OnBozoByte(uint8_t bozo_byte);
 
-  virtual void OnClock();
-  virtual void OnStart();
-  virtual void OnContinue();
-  virtual void OnStop();
-  virtual void OnActiveSensing();
-  virtual void OnReset();
-  virtual void OnRawByte(uint8_t byte);
+  void OnClock();
+  void OnStart();
+  void OnContinue();
+  void OnStop();
+  void OnActiveSensing();
+  void OnReset();
+  void OnRawByte(uint8_t byte);
 
-  virtual uint8_t CheckChannel(uint8_t channel);
+  uint8_t CheckChannel(uint8_t channel);
      
-  virtual uint8_t OnRedraw();
-  virtual uint8_t OnClick();
+  uint8_t OnRedraw();
+  uint8_t OnClick();
   
  private:
   void PrintString(uint8_t channel, uint8_t res_id);
   
-  virtual uint8_t settings_size() { return 1; }
-  virtual uint8_t settings_offset() { return SETTINGS_MONITOR; }
-  virtual uint8_t* settings_data() { return &monitored_channel_; }
+  uint8_t settings_size() { return 1; }
+  uint8_t settings_offset() { return SETTINGS_MONITOR; }
+  uint8_t* settings_data() { return &monitored_channel_; }
   
   uint8_t monitored_channel_;
   

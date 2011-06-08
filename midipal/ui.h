@@ -39,7 +39,8 @@ struct PageDefinition {
 enum Unit {
   UNIT_INTEGER,
   UNIT_INDEX,
-  UNIT_NOTE
+  UNIT_NOTE,
+  UNIT_INTEGER_ALL,
 };
 
 class Ui {

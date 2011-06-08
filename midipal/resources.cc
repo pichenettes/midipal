@@ -42,22 +42,6 @@ static const prog_char str_res_cont_[] PROGMEM = "cont.";
 static const prog_char str_res_reset[] PROGMEM = "reset";
 static const prog_char str_res_chn[] PROGMEM = "chn";
 static const prog_char str_res_all[] PROGMEM = "all";
-static const prog_char str_res_1[] PROGMEM = "1";
-static const prog_char str_res_2[] PROGMEM = "2";
-static const prog_char str_res_3[] PROGMEM = "3";
-static const prog_char str_res_4[] PROGMEM = "4";
-static const prog_char str_res_5[] PROGMEM = "5";
-static const prog_char str_res_6[] PROGMEM = "6";
-static const prog_char str_res_7[] PROGMEM = "7";
-static const prog_char str_res_8[] PROGMEM = "8";
-static const prog_char str_res_9[] PROGMEM = "9";
-static const prog_char str_res_10[] PROGMEM = "10";
-static const prog_char str_res_11[] PROGMEM = "11";
-static const prog_char str_res_12[] PROGMEM = "12";
-static const prog_char str_res_13[] PROGMEM = "13";
-static const prog_char str_res_14[] PROGMEM = "14";
-static const prog_char str_res_15[] PROGMEM = "15";
-static const prog_char str_res_16[] PROGMEM = "16";
 static const prog_char str_res_flt[] PROGMEM = "flt";
 static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
@@ -107,6 +91,10 @@ static const prog_char str_res_inp[] PROGMEM = "inp";
 static const prog_char str_res_spl[] PROGMEM = "spl";
 static const prog_char str_res_low[] PROGMEM = "low";
 static const prog_char str_res_upp[] PROGMEM = "upp";
+static const prog_char str_res_not[] PROGMEM = "not";
+static const prog_char str_res_vel[] PROGMEM = "vel";
+static const prog_char str_res__c1[] PROGMEM = "#c1";
+static const prog_char str_res__c2[] PROGMEM = "#c2";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -127,22 +115,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_reset,
   str_res_chn,
   str_res_all,
-  str_res_1,
-  str_res_2,
-  str_res_3,
-  str_res_4,
-  str_res_5,
-  str_res_6,
-  str_res_7,
-  str_res_8,
-  str_res_9,
-  str_res_10,
-  str_res_11,
-  str_res_12,
-  str_res_13,
-  str_res_14,
-  str_res_15,
-  str_res_16,
   str_res_flt,
   str_res_off,
   str_res_on,
@@ -192,6 +164,10 @@ PROGMEM const prog_char* string_table[] = {
   str_res_spl,
   str_res_low,
   str_res_upp,
+  str_res_not,
+  str_res_vel,
+  str_res__c1,
+  str_res__c2,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

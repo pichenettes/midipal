@@ -28,16 +28,16 @@ class Splitter : public PlugIn {
  public:
   Splitter() { }
 
-  virtual void OnInit();
-  virtual void OnRawMidiData(
+  void OnInit();
+  void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
  
-  virtual uint8_t settings_size() { return 4; }
-  virtual uint8_t settings_offset() { return SETTINGS_SPLITTER; }
-  virtual uint8_t* settings_data() { return &input_channel_; }
+  uint8_t settings_size() { return 4; }
+  uint8_t settings_offset() { return SETTINGS_SPLITTER; }
+  uint8_t* settings_data() { return &input_channel_; }
 
  private:
   uint8_t input_channel_;

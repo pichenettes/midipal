@@ -28,18 +28,18 @@ class BpmMeter : public PlugIn {
  public:
   BpmMeter() { }
 
-  virtual void OnInit();
+  void OnInit();
 
-  virtual void OnClock();
-  virtual void OnStart();
-  virtual void OnStop();
-  virtual void OnContinue();
-  virtual void OnReset();
-  virtual void OnRawByte(uint8_t byte);
+  void OnClock();
+  void OnStart();
+  void OnStop();
+  void OnContinue();
+  void OnReset();
+  void OnRawByte(uint8_t byte);
 
-  virtual uint8_t OnClick();
-  virtual uint8_t OnIncrement(int8_t increment);
-  virtual uint8_t OnRedraw();
+  uint8_t OnClick();
+  uint8_t OnIncrement(int8_t increment);
+  uint8_t OnRedraw();
   
  private:
   void PrintBpm();

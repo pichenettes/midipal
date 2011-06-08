@@ -28,19 +28,19 @@ class CcKnob : public PlugIn {
  public:
   CcKnob() { }
 
-  virtual void OnInit();
-  virtual void OnRawMidiData(
+  void OnInit();
+  void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
   
-  virtual void SetParameter(uint8_t key, uint8_t value);
-  virtual uint8_t GetParameter(uint8_t key);
+  void SetParameter(uint8_t key, uint8_t value);
+  uint8_t GetParameter(uint8_t key);
   
-  virtual uint8_t settings_size() { return 6; }
-  virtual uint8_t settings_offset() { return SETTINGS_CC_KNOB; }
-  virtual uint8_t* settings_data() { return &value_; }
+  uint8_t settings_size() { return 6; }
+  uint8_t settings_offset() { return SETTINGS_CC_KNOB; }
+  uint8_t* settings_data() { return &value_; }
   
  private:
   uint8_t value_;

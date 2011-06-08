@@ -28,22 +28,22 @@ class EarTrainingGame : public PlugIn {
  public:
   EarTrainingGame() { }
 
-  virtual void OnInit();
-  virtual void OnRawMidiData(
+  void OnInit();
+  void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
   void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  virtual void OnInternalClockStep();
-  virtual uint8_t OnRedraw();
-  virtual uint8_t OnClick();
-  virtual uint8_t OnIncrement(int8_t value);
+  void OnInternalClockStep();
+  uint8_t OnRedraw();
+  uint8_t OnClick();
+  uint8_t OnIncrement(int8_t value);
   
-  virtual uint8_t settings_size() { return 7; }
-  virtual uint8_t settings_offset() { return SETTINGS_EAR_TRAINING; }
-  virtual uint8_t* settings_data() { return &level_; }
+  uint8_t settings_size() { return 7; }
+  uint8_t settings_offset() { return SETTINGS_EAR_TRAINING; }
+  uint8_t* settings_data() { return &level_; }
   
  private:
   void GenerateChallenge();

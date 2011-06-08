@@ -19,12 +19,14 @@ Firmware:
 * drums      drum pattern generator
 * cntrller   Pots scanner
 * splitter   splitter
+* randomiz   note/velo/CC/Randomizer
 
 * arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chaos!     chaos!
 * chordmem   chord memory
+* rnbrobin   polyphonic round robin
 
 
 Arpeggiator

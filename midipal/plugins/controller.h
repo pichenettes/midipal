@@ -28,18 +28,18 @@ class Controller : public PlugIn {
  public:
   Controller() { }
 
-  virtual void OnInit();
-  virtual void OnRawMidiData(
+  void OnInit();
+  void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
 
-  virtual uint8_t OnPot(uint8_t pot, uint8_t value);
+  uint8_t OnPot(uint8_t pot, uint8_t value);
   
-  virtual uint8_t settings_size() { return 9; }
-  virtual uint8_t settings_offset() { return SETTINGS_CONTROLLER; }
-  virtual uint8_t* settings_data() { return &channel_; }
+  uint8_t settings_size() { return 9; }
+  uint8_t settings_offset() { return SETTINGS_CONTROLLER; }
+  uint8_t* settings_data() { return &channel_; }
   
  private:
   uint8_t channel_;

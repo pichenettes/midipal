@@ -25,6 +25,7 @@
 #include "midipal/plugins/drum_pattern_generator.h"
 #include "midipal/plugins/ear_training_game.h"
 #include "midipal/plugins/monitor.h"
+#include "midipal/plugins/randomizer.h"
 #include "midipal/plugins/splitter.h"
 
 namespace midipal {
@@ -37,6 +38,7 @@ plugins::Controller controller;
 plugins::DrumPatternGenerator drum_pattern_generator;
 plugins::EarTrainingGame ear_training_game;
 plugins::Monitor monitor;
+plugins::Randomizer randomizer;
 plugins::Splitter splitter;
 
 PlugIn* registry[] = {
@@ -48,7 +50,8 @@ PlugIn* registry[] = {
   &controller,
   &ear_training_game,
   &drum_pattern_generator,
-  &splitter
+  &splitter,
+  &randomizer
 };
 
 /* extern */

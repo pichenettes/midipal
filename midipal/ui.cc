@@ -153,8 +153,13 @@ void Ui::PrintKeyValuePair(
   memset(line_buffer, ' ', kLcdWidth);
   ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
   AlignRight(&line_buffer[0], 3);
-  if (value_res_id == UNIT_INTEGER) {
+  if (value_res_id == UNIT_INTEGER ||
+      value_res_id == UNIT_INTEGER_ALL) {
     UnsafeItoa(value, 3, &line_buffer[4]);
+    if (value == 0 && value_res_id == UNIT_INTEGER_ALL) {
+        ResourcesManager::LoadStringResource(
+            STR_RES_ALL, &line_buffer[4], 3);
+    }
   } else if (value_res_id == UNIT_INDEX) {
     UnsafeItoa(value + 1, 3, &line_buffer[4]);
   } else if (value_res_id == UNIT_NOTE) {

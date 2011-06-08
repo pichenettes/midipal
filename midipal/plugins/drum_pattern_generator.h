@@ -35,26 +35,26 @@ class DrumPatternGenerator : public PlugIn {
  public:
   DrumPatternGenerator() { }
 
-  virtual void OnInit();
-  virtual void OnRawMidiData(
+  void OnInit();
+  void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
 
-  virtual void OnContinue();
-  virtual void OnStart();
-  virtual void OnStop();
-  virtual void OnClock();
-  virtual void OnInternalClockTick();
+  void OnContinue();
+  void OnStart();
+  void OnStop();
+  void OnClock();
+  void OnInternalClockTick();
 
-  virtual void SetParameter(uint8_t key, uint8_t value);
+  void SetParameter(uint8_t key, uint8_t value);
   
-  virtual uint8_t settings_size() { return 10; }
-  virtual uint8_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
-  virtual uint8_t* settings_data() { return &mode_; }
+  uint8_t settings_size() { return 10; }
+  uint8_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
+  uint8_t* settings_data() { return &mode_; }
 
  protected:
   void Reset();

@@ -32,7 +32,7 @@ using namespace avrlib;
 void Monitor::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
   ui.Clear();
-  ui.AddPage(STR_RES_CHN, STR_RES_ALL, 0, 16);
+  ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
 }
 
 void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
