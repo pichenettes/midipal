@@ -91,13 +91,19 @@ cc7
 cc8
 
 inp
+out
 spl
 low
 upp
 
-amt
+ amt
 not
 vel
 #c1
 #c2
+
+cyc
+pol
+rnd
+sta
 """

@@ -39,6 +39,7 @@ enum EepromSetting {
   SETTINGS_SPLITTER = 128,
   SETTINGS_RANDOMIZER = 136,
   SETTINGS_CHORD_MEMORY = 144,
+  SETTINGS_DISPATCHER = 176
 };
 
 class PlugIn {
@@ -120,7 +121,7 @@ class PlugIn {
   void Send(uint8_t status, uint8_t* data, uint8_t size);
   void Send3(uint8_t a, uint8_t b, uint8_t c);
   
- private:  
+ private:
   DISALLOW_COPY_AND_ASSIGN(PlugIn);
 };
 

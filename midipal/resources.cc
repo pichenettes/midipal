@@ -88,13 +88,19 @@ static const prog_char str_res_cc6[] PROGMEM = "cc6";
 static const prog_char str_res_cc7[] PROGMEM = "cc7";
 static const prog_char str_res_cc8[] PROGMEM = "cc8";
 static const prog_char str_res_inp[] PROGMEM = "inp";
+static const prog_char str_res_out[] PROGMEM = "out";
 static const prog_char str_res_spl[] PROGMEM = "spl";
 static const prog_char str_res_low[] PROGMEM = "low";
 static const prog_char str_res_upp[] PROGMEM = "upp";
+static const prog_char str_res__amt[] PROGMEM = "amt";
 static const prog_char str_res_not[] PROGMEM = "not";
 static const prog_char str_res_vel[] PROGMEM = "vel";
 static const prog_char str_res__c1[] PROGMEM = "#c1";
 static const prog_char str_res__c2[] PROGMEM = "#c2";
+static const prog_char str_res_cyc[] PROGMEM = "cyc";
+static const prog_char str_res_pol[] PROGMEM = "pol";
+static const prog_char str_res_rnd[] PROGMEM = "rnd";
+static const prog_char str_res_sta[] PROGMEM = "sta";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -161,13 +167,19 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cc7,
   str_res_cc8,
   str_res_inp,
+  str_res_out,
   str_res_spl,
   str_res_low,
   str_res_upp,
+  str_res__amt,
   str_res_not,
   str_res_vel,
   str_res__c1,
   str_res__c2,
+  str_res_cyc,
+  str_res_pol,
+  str_res_rnd,
+  str_res_sta,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

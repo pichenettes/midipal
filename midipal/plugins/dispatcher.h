@@ -15,19 +15,26 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Randomizer plug-in.
+// Dispatcher plug-in.
 
-#ifndef MIDIPAL_PLUGINS_RANDOMIZER_H_
-#define MIDIPAL_PLUGINS_RANDOMIZER_H_
+#ifndef MIDIPAL_PLUGINS_DISPATCHER_H_
+#define MIDIPAL_PLUGINS_DISPATCHER_H_
 
 #include "midipal/plugin.h"
 #include "midipal/note_map.h"
 
 namespace midipal { namespace plugins {
 
-class Randomizer : public PlugIn {
+enum DispatcherMode {
+  DISPATCHER_CYCLIC,
+  DISPATCHER_POLYPHONIC_ALLOCATOR,
+  DISPATCHER_RANDOM,
+  DISPATCHER_STACK
+};
+
+class Dispatcher : public PlugIn {
  public:
-  Randomizer() { }
+  Dispatcher() { }
 
   void OnInit();
   void OnRawMidiData(
@@ -35,34 +42,41 @@ class Randomizer : public PlugIn {
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
-  
-  uint8_t settings_size() { return 7; }
-  uint8_t settings_offset() { return SETTINGS_RANDOMIZER; }
-  uint8_t* settings_data() { return &channel_; }
-  
+  void OnNoteOn(
+     uint8_t channel,
+     uint8_t note,
+     uint8_t velocity);
+  void OnNoteOff(
+     uint8_t channel,
+     uint8_t note,
+     uint8_t velocity);
+  void OnAftertouch(
+     uint8_t channel,
+     uint8_t note,
+     uint8_t velocity);
+ 
+  uint8_t settings_size() { return 4; }
+  uint8_t settings_offset() { return SETTINGS_DISPATCHER; }
+  uint8_t* settings_data() { return &input_channel_; }
+
  private:
   void SendMessage(
       uint8_t message,
       uint8_t channel,
       uint8_t note,
       uint8_t velocity);
-  uint8_t ScaleModulationAmount(uint8_t amount);
-  
-  uint8_t channel_;
-  uint8_t global_amount_;
-  uint8_t note_amount_;
-  uint8_t velocity_amount_;
-  uint8_t cc_amount_[2];
-  uint8_t cc_[2];
-  
+   
+  uint8_t input_channel_;
+  uint8_t mode_;
+  uint8_t base_channel_;
+  uint8_t num_voices_;
+
   NoteMap<32> map_;
+  uint8_t counter_;
   
-  DISALLOW_COPY_AND_ASSIGN(Randomizer);
+  DISALLOW_COPY_AND_ASSIGN(Dispatcher);
 };
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_RANDOMIZER_H_
+#endif // MIDIPAL_PLUGINS_DISPATCHER_H_

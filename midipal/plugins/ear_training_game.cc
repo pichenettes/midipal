@@ -83,8 +83,6 @@ void EarTrainingGame::OnRawMidiData(
   }
 }
 
-
-
 void EarTrainingGame::GenerateChallenge() {
   uint8_t root = Random::GetByte() & 0xf;
   root += ResourcesManager::Lookup<uint8_t, uint8_t>(

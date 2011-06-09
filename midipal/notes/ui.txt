@@ -15,7 +15,6 @@ Firmware:
 * cc knob    CC knob
 * nrpn knb   NRPN knob
 * ear game   ear training game
-* euclide    euclidian pattern generator
 * drums      drum pattern generator
 * cntrller   Pots scanner
 * splitter   splitter

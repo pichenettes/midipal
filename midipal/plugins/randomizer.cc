@@ -39,7 +39,6 @@ void Randomizer::OnInit() {
   ui.AddPage(STR_RES_CC2, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES__C1, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES__C2, UNIT_INTEGER, 0, 127);
-  memset(note_mappings_, 0xff, kNumNoteMappings * sizeof(NoteMapping));
 }
 
 void Randomizer::OnRawMidiData(
@@ -48,7 +47,7 @@ void Randomizer::OnRawMidiData(
    uint8_t data_size,
    uint8_t accepted_channel) {
   uint8_t type = status & 0xf0;
-  if (type != 0x80 && type != 0x90) {
+  if (type != 0x80 && type != 0x90 && type != 0xa0) {
     Send(status, data, data_size);
   }
 }
@@ -89,29 +88,37 @@ void Randomizer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
           Random::GetByte() & 0x7f,
           ScaleModulationAmount(note_amount_));
     }
-    for (uint8_t i = 0; i < kNumNoteMappings; ++i) {
-      if (note_mappings_[i].original == 0xff) {
-        note_mappings_[i].original = note;
-        note_mappings_[i].modified = new_note;
-        break;
-      }
-    }
+
+    map_.Put(note, new_note);
+
     Send3(0x90 | channel, new_note, velocity);
   }
 }
 
 void Randomizer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+  SendMessage(0x80, channel, note, velocity);
+}
+
+void Randomizer::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+  SendMessage(0xa0, channel, note, velocity);
+}
+
+void Randomizer::SendMessage(
+    uint8_t message,
+    uint8_t channel,
+    uint8_t note,
+    uint8_t velocity) {
   if (channel_ && channel_ != (channel + 1)) {
-    Send3(0x80 | channel, note, velocity);
+    Send3(message | channel, note, velocity);
   } else {
-    for (uint8_t i = 0; i < kNumNoteMappings; ++i) {
-      if (note_mappings_[i].original == note) {
-        note_mappings_[i].original = 0xff;
-        Send3(0x80 | channel, note_mappings_[i].modified, velocity);
-        break;
+    NoteMapEntry* entry = map_.Find(note);
+    if (entry) {
+      Send3(message | channel, entry->value, velocity);
+      if (message == 0x80) {
+        entry->note = 0xff;
       }
     }
-  }
+  }  
 }
 
 } }  // namespace midipal::plugins
