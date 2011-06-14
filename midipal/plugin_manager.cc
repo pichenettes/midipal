@@ -24,6 +24,7 @@
 #include "midipal/plugins/cc_knob.h"
 #include "midipal/plugins/chord_memory.h"
 #include "midipal/plugins/clock_source.h"
+#include "midipal/plugins/combiner.h"
 #include "midipal/plugins/controller.h"
 #include "midipal/plugins/dispatcher.h"
 #include "midipal/plugins/drum_pattern_generator.h"
@@ -39,8 +40,9 @@ plugins::BpmMeter bpm_meter;
 plugins::CcKnob cc_knob;
 plugins::ChordMemory chord_memory;
 plugins::ClockSource clock_source;
+plugins::Combiner combiner;
 plugins::Controller controller;
-plugins::Dispatcher dispatcher_;
+plugins::Dispatcher dispatcher;
 plugins::DrumPatternGenerator drum_pattern_generator;
 plugins::EarTrainingGame ear_training_game;
 plugins::Monitor monitor;
@@ -59,7 +61,8 @@ PlugIn* registry[] = {
   &splitter,
   &randomizer,
   &chord_memory,
-  &dispatcher_
+  &dispatcher,
+  &combiner
 };
 
 /* extern */
