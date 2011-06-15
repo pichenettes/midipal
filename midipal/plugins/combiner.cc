@@ -48,7 +48,7 @@ void Combiner::OnRawMidiData(
     in_range |= (channel + 0x10) >= input_channel_ && \
         (channel + 0x10) < input_channel_ + num_channels_;
     if (in_range) {
-      channel = (channel - input_channel_ + output_channel_) & 0xf;
+      channel = output_channel_;
     }
     Send(type | channel, data, data_size);
   }
