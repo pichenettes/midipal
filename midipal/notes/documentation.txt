@@ -1,0 +1,403 @@
+TODO:
+* arpeggio   arpeggiator
+* sequencr   sequencer
+* cc seq     CC sequencer
+* chaos!     chaos!
+* strummer?
+
+
+
+
+
+
+Mutable Instruments MIDIpal user manual
+
+The MIDIpal is a powerful MIDI processor - think of it as a multi-effect operating on MIDI data! It features 16 different MIDI apps, ranging from MIDI debugging or routing basics (monitoring messages, remapping a channel to another one) to compositional or inspirational tools (arpeggiator, pattern generator).
+
+
+Basic setup
+
+Connect a MIDI message source, such as a keyboard, control surface or computer interface to the MIDI in port of the MIDIpal.
+
+Connect a MIDI message receiver, such as a synth module, expander, or computer interface to the MIDI out port of the MIDIpal.
+
+The MIDIpal can be powered by either a 9V battery or a 5V-9V unregulated DC supply. Make sure that the connector has a center pin (or tip) positive / outer collar (or sleeve) negative pin polarity. Most universal power supplies allows the polarity to be selected — the polarity being often represented by a diagram like this: – (o +, or by the indication tip: +.
+
+
+User interface
+
+Incoming and outgoing MIDI data is visualized by the red and green LEDs near the MIDI sockets.
+
+You interact with the MIDIpal through the clickable rotary encoder, and the LCD display.
+
+Most of the apps are operated the following way:
+
+Turn the encoder to scroll through the lists of parameters.
+
+<lcd>bpm 123 </lcd>
+
+If you want to change a parameter, click on the encoder. Brackets appear around the parameter value.
+
+<lcd>bpm[123]</lcd>
+
+Turn the encoder to increase or decrease the value. Click again once you are done. The brackets disappear, and your modification is kept in memory (there is no save button - everything is saved).
+
+<lcd>bpm 123 </lcd>
+
+
+Selecting an app
+
+Keep the encoder pressed for 2s. The name of the current app is shown on the screen. Turn the encoder to select an app. Click on the encoder to validate.
+
+
+Apps
+
+
+
+DEBUGGING TOOLS
+
+Active sensing filter (@0xfe flt@)
+
+This simple app filters the active sensing messages (@0xfe@).
+
+<lcd>flt  on </lcd>
+
+The @flt@ setting turns the filter on or off.
+
+
+MIDI monitor (@monitor@)
+
+This app monitors MIDI traffic.
+
+<lcd>chn all </lcd>
+
+Press the encoder to adjust the MIDI channel to monitor. By default, all channels are monitored. Every incoming MIDI data is forwarded to the MIDI out.
+
+The monitor displays the following text for note on/off messages:
+
+<lcd>1*A#4 3f</lcd>
+
+* The first character is the MIDI channel.
+* A star is displayed as the second character whenever an active sensing message is received. A dot is displayed whenever a MIDI clock message is received.
+* The note number is displayed.
+* The last 2 digits are the velocity value in hexadecimal, or '--' for a note off message.
+
+The following text indicate a note pressure (aftertouch) message - 'a' for aftertouch, 7 is the highest nibble of the aftertouch value.
+
+<lcd>1*A#4 a7</lcd>
+
+The following text indicates a channel pressure (aftertouch message).
+
+<lcd>1*aft 7e</lcd>
+
+The following text indicates a CC #30 message.
+
+<lcd>1*#30 70</lcd>
+
+The following text indicates a pitch bend message of value 0x3070.
+
+<lcd>1*b 3070</lcd>
+
+Here is a list of text messages displayed for more unusual MIDI messages:
+* notoff: all notes off controller.
+* omnoff: omni mode off controller.
+* omnion: omni mode on controller.
+* monoon: mono mode on controller.
+* polyon: poly mode on controller.
+* sysx..: beginning of SysEx reception.
+* .sysx.: SysEx reception in progress.
+* ..sysx: end of SysEx reception.
+* start: clock start.
+* cont.: clock continue.
+* stop: clock stop.
+* reset: system reset.
+
+
+BPM meter (@bpm cntr@)
+
+This app estimates a BPM value from a MIDI clock. Every incoming MIDI data is forwarded to the MIDI out.
+
+Rotate the encoder to switch between the following views:
+
+<lcd>b  120.0</lcd>
+
+BPM estimated over the past half-second
+
+<lcd>B  120.0</lcd>
+
+average BPM (estimated since the clock was started)
+
+<lcd>t  23307</lcd>
+
+number of clock ticks received
+
+Click the encoder to reset the estimate and the clock tick counter.
+
+
+MIDI PLUMBING
+
+Splitter (@splitter@)
+
+This app routes MIDI note messages (note on, note off and aftertouch) from a specific channel to a different MIDI channel depending on their note value. For example, if you have a keyboard emitting on channel 1, you can use the lower half of the keyboard to send notes to a bass synth listening on channel 1, and the upper half of the keyboard to send notes to an expander listening on channel 3.
+
+<lcd>inp   5 </lcd>
+
+Input channel.
+
+<lcd>spl  B3 </lcd>
+
+Split point. 
+
+<lcd>low   7 </lcd>
+
+Notes below the split point, coming from the input channel, will be routed to this channel.
+
+<lcd>upp   7 </lcd>
+
+Notes above the split point, coming from the input channel, will be routed to this channel.
+
+
+Dispatcher (@dispatch@)
+
+This app routes MIDI note messages from a single channel to several channels. This allows you to play chords on a bunch of monophonic synths, for example.
+
+<lcd>inp   5 </lcd>
+
+Input channel.
+
+<lcd>mod cyc </lcd>
+
+Dispatching method:
+* cyclic (@cyc@). Each new note is cyclically played on the next channel.
+* polyphonic (@pol@). The mapping of notes to channel uses a sophisticated voice stealing algorithm. The MIDIpal tries to reuse the same channel for occurrences of the same note ; or the least recently used channel.
+* random (@rnd). Each new note is sent to a random channel.
+* stacking (@stk). Each note is sent to all channels at the same time. Perfect to thicken a lead by sending it to several synths!
+
+<lcd>out   4 </lcd>
+
+First output channel.
+
+<lcd>num   3 </lcd>
+
+Number of output channels. For example, if out = 4 and num = 3, the notes will be dispatched on channels 4, 5 and 6.
+
+
+Channel merger (@mergechn@)
+
+This app merges data from several channels into a single one.
+
+<lcd>inp   5 </lcd>
+
+First input channel.
+
+<lcd>num   3 </lcd>
+
+Number of channels to merge. For example, if inp = 5 and num = 3, channels 5, 6 and 7 will be merged.
+
+<lcd>out   2 </lcd>
+
+Output channel.
+
+
+
+
+CONTROLLERS AND MESSAGE SOURCES
+
+Clock source (@clock@)
+
+This app acts as a clock source - regularly sending MIDI clock (@0xf8@) messages. Every incoming MIDI data, at the exception of MIDI clock messages, are forwarded to the MIDI out. The settings are the following:
+
+<lcd>run off </lcd>
+
+Whether the clock is running.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock:
+* *swg*: swing
+* *shf*: shuffle
+* *psh*: _push_ effect, anticipating the beats
+* *lag*: _lag_ effect, delaying the beats
+* *hum*: humanization
+* *mnk*: monkeyzation
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+
+CC knob (@cc knob @)
+
+This app turns the MIDIpal into a MIDI controller - sending CC or NRPN messages. All incoming messages are sent to the output -- that is to say, the generated CC/NRPN messages are merged into the MIDI stream. The settings are the following:
+
+<lcd>val  60 </lcd>
+
+CC or NRPN value to send.
+
+<lcd>chn   7 </lcd>
+
+Channel on which the CC message has to be sent.
+
+<lcd>typ cc# </lcd>
+
+Type of message to send: CC or NRPN.
+
+<lcd>num   7 </lcd>
+
+Number of the CC or NRPN message to send. For example, set this to 7 to send a volume message.
+
+<lcd>min   0 </lcd>
+<lcd>max  80 </lcd>
+
+Value range. This restricts the range of the @val@ setting on the first page.
+
+
+
+
+Controller (@cntrller@)
+
+This app is only useful if you dare opening your MIDIpal. On the circuit board, you will find 8 pads labelled Analog 1..8 to which you can connect any circuit (including a simple potentiometer voltage divider) outputting a voltage in the 0-3.3V range. These are connected to the analog to digital converter of the MIDIpal brain. Voltage changes on these inputs will be translated into CC messages: a voltage of 0V yields a CC value of 0 ; a voltage of 3.3V yields a CC value of 127.
+
+Note that by default, these pads are floating, so they will receive random values! And beware: values above 3.3V are likely to destroy your MIDIpal.
+
+The following settings are available:
+
+<lcd>chn   8 </lcd>
+
+Channel on which CC messages will be sent.
+
+<lcd>ccN   7 </lcd>
+
+CC# associated with the Nth input.
+
+
+
+INSPIRATION
+
+Drum pattern generator (@drums@)
+
+This app generate 4 parts rhythmic patterns on a selected channel. You can use the keyboard to start, stop and mutate the patterns.
+
+The first octave on a 61 keys keyboard (C2 to B2) controls the first part. The second octave (C3 to B3) controls the second part. And so on.
+
+Two modes of operation are available:
+* *Preset patterns*: Each key within an octave will trigger and loop a different 1-bar pattern. C mutes the part.
+* *Euclidian patterns*: Pressing a key in an octave indicates how many notes should be played within the span of a bar (C is 0, C# is 1, D is 2, D# is 4, then 5, 6, 8, 10, 12, 14, 16). Pressing two keys indicate how many notes should be played within the span of a sequence + the duration of a sequence. For example, if you press D and E, a 5 steps pattern, containing 2 notes evenly spaced will be played.
+
+You can safely ignore these instructions and just play keys and clap your hands.
+
+The following settings are available:
+
+<lcd>mod ptn </lcd>
+
+Switch between the *preset patterns* and the *euclidian patterns* mode.
+
+<lcd>clk int </lcd>
+
+Select an internal or external clock source. When using an external clock source, start, clock and stop MIDI messages must be sent.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock.
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+<lcd>chn  10 </lcd>
+
+Channel on which the notes are sent. This is also the channel on which pattern triggers must be sent.
+
+<lcd>pt1  C1 </lcd>
+<lcd>pt2  D1 </lcd>
+<lcd>pt3 A#1 </lcd>
+<lcd>pt4 C#1 </lcd>
+
+Note to send when a note is triggered on parts 1, 2, 3, 4. Notes are sent with a velocity of 100 ; and the note off message immediately follows the note on (this is relevant for triggering drum sounds).
+
+
+Randomizer (@randomiz@)
+
+This app randomizes the note and velocity values of the incoming MIDI data. It can even send a random CC every time a new note is triggered!
+
+<lcd>chn   8 </lcd>
+
+Channel on which the randomization effect is applied.
+
+<lcd>amt  99 </lcd>
+
+Global amount of randomness to apply. When this value is set to 127 (maximum value), every single note is randomized. When this value is set to 63 (middle value), there's a 50/50% probability that a note will be randomized. When this value is set to 0, no randomization is applied.
+
+<lcd>not   1 </lcd>
+
+Amount of random modulation applied to the note number, in semitones. For example, if this parameter is set to 1, the emitted note is within +/- 1 semitone of the original note.
+
+<lcd>vel  70 </lcd>
+
+Amount of random modulation applied to the velocity value.
+
+<lcd>cc1  70 </lcd>
+<lcd>cc2  70 </lcd>
+
+Amount of random modulation applied to the first and second CC. Set both to 0 if you don't want to send a random CC with each note.
+
+<lcd>#c1   7 </lcd>
+<lcd>#c2   7 </lcd>
+
+CC Numbers for the first and second random CC sources.
+
+
+Chord memory (@chordmem@)
+
+This app memorizes a chord and allows you to play transpositions of it. To record a chord, click the encoder, and play a chord. Click the encoder again and that's it maestro!
+
+In recording mode, you can also select the affected channel.
+
+
+
+
+
+
+
+EVERYTHING IS MISCELLANEOUS
+
+Ear training game (@ear game@)
+
+This app is an ear training game, a perfect companion for your digital piano. A few notes are played on the MIDI output (on channel 1). You need to play them back on the keyboard connected on the MIDI input. If you play then correctly, the game continues with a new sequence of note. If you play them incorrectly, you have up to 10 guesses to identify the right notes.
+
+The following display indicates how many wrong guesses you have made:
+
+<lcd>try  1  </lcd>
+
+The following display indicates your global accuracy score and your rank (which depends on how many times you have played):
+
+<lcd> 90% | 0</lcd>
+
+The following settings are available:
+
+<lcd>lvl   1 </lcd>
+
+Difficulty level from 1 to 5. As the difficulty increases, rarer intervals are used, and the notes played span several octaves.
+
+<lcd>num   4 </lcd>
+
+Number of notes to identify, from 2 to 4.
+
+<lcd>rst  no </lcd>
+
+Change this setting to yes to clear the accuracy score.
+
+
+
+
+
+
+
