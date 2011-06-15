@@ -71,7 +71,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(12);
+  plugin_manager.set_active_plugin(13);
   note_stack.Init();
   display.Init();
   ui.Init();

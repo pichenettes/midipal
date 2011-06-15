@@ -20,6 +20,7 @@
 #include "midipal/plugin_manager.h"
 
 #include "midipal/plugins/active_sensing_filter.h"
+#include "midipal/plugins/arpeggiator.h"
 #include "midipal/plugins/bpm_meter.h"
 #include "midipal/plugins/cc_knob.h"
 #include "midipal/plugins/chord_memory.h"
@@ -36,6 +37,7 @@
 namespace midipal {
 
 plugins::ActiveSensingFilter active_sensing_filter;
+plugins::Arpeggiator arpeggiator;
 plugins::BpmMeter bpm_meter;
 plugins::CcKnob cc_knob;
 plugins::ChordMemory chord_memory;
@@ -62,7 +64,8 @@ PlugIn* registry[] = {
   &randomizer,
   &chord_memory,
   &dispatcher,
-  &combiner
+  &combiner,
+  &arpeggiator
 };
 
 /* extern */

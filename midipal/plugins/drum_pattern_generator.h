@@ -24,11 +24,6 @@
 
 namespace midipal { namespace plugins {
 
-enum CLOCK_MODE {
-  CLOCK_MODE_INTERNAL,
-  CLOCK_MODE_EXTERNAL
-};
-
 const uint8_t kNumDrumParts = 4;
 
 class DrumPatternGenerator : public PlugIn {
@@ -56,7 +51,7 @@ class DrumPatternGenerator : public PlugIn {
   uint8_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
   uint8_t* settings_data() { return &mode_; }
 
- protected:
+ private:
   void Reset();
   void Tick();
   void AllNotesOff();

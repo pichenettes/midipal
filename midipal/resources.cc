@@ -101,6 +101,29 @@ static const prog_char str_res_cyc[] PROGMEM = "cyc";
 static const prog_char str_res_pol[] PROGMEM = "pol";
 static const prog_char str_res_rnd[] PROGMEM = "rnd";
 static const prog_char str_res_sta[] PROGMEM = "sta";
+static const prog_char str_res_dir[] PROGMEM = "dir";
+static const prog_char str_res_up[] PROGMEM = "up";
+static const prog_char str_res_dwn[] PROGMEM = "dwn";
+static const prog_char str_res_u_d[] PROGMEM = "u&d";
+static const prog_char str_res__rnd[] PROGMEM = "rnd";
+static const prog_char str_res_oct[] PROGMEM = "oct";
+static const prog_char str_res_dur[] PROGMEM = "dur";
+static const prog_char str_res_div[] PROGMEM = "div";
+static const prog_char str_res_1_1[] PROGMEM = "1/1";
+static const prog_char str_res_3_4[] PROGMEM = "3/4";
+static const prog_char str_res_2_3[] PROGMEM = "2/3";
+static const prog_char str_res_1_2[] PROGMEM = "1/2";
+static const prog_char str_res_3_8[] PROGMEM = "3/8";
+static const prog_char str_res_1_3[] PROGMEM = "1/3";
+static const prog_char str_res_1_4[] PROGMEM = "1/4";
+static const prog_char str_res_1_6[] PROGMEM = "1/6";
+static const prog_char str_res_1_8[] PROGMEM = "1/8";
+static const prog_char str_res__12[] PROGMEM = "/12";
+static const prog_char str_res__16[] PROGMEM = "/16";
+static const prog_char str_res__24[] PROGMEM = "/24";
+static const prog_char str_res__32[] PROGMEM = "/32";
+static const prog_char str_res__48[] PROGMEM = "/48";
+static const prog_char str_res__96[] PROGMEM = "/96";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -180,6 +203,29 @@ PROGMEM const prog_char* string_table[] = {
   str_res_pol,
   str_res_rnd,
   str_res_sta,
+  str_res_dir,
+  str_res_up,
+  str_res_dwn,
+  str_res_u_d,
+  str_res__rnd,
+  str_res_oct,
+  str_res_dur,
+  str_res_div,
+  str_res_1_1,
+  str_res_3_4,
+  str_res_2_3,
+  str_res_1_2,
+  str_res_3_8,
+  str_res_1_3,
+  str_res_1_4,
+  str_res_1_6,
+  str_res_1_8,
+  str_res__12,
+  str_res__16,
+  str_res__24,
+  str_res__32,
+  str_res__48,
+  str_res__96,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

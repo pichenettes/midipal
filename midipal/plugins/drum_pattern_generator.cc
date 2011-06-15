@@ -50,11 +50,13 @@ void DrumPatternGenerator::OnInit() {
     euclidian_num_steps_[i] = 11; // 16 steps
   }
   idle_ticks_ = 96;
+  running_ = 0;
 }
 
 void DrumPatternGenerator::Reset() {
   step_count_ = 0;
   bitmask_ = 1;
+  tick_ = 0;
 }
 
 void DrumPatternGenerator::OnRawMidiData(
@@ -78,8 +80,8 @@ void DrumPatternGenerator::OnContinue() {
 void DrumPatternGenerator::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
+    Reset();
   }
-  Reset();
 }
 
 void DrumPatternGenerator::OnStop() {
@@ -156,6 +158,9 @@ void DrumPatternGenerator::OnNoteOff(
 }
 
 void DrumPatternGenerator::Tick() {
+  if (!running_) {
+    return;
+  }
   ++tick_;
   
   // Stop the internal clock when no key has been pressed for the duration
@@ -165,9 +170,9 @@ void DrumPatternGenerator::Tick() {
     idle_ticks_ = 96;
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
+      AllNotesOff();
+      SendNow(0xfc);
     }
-    AllNotesOff();
-    SendNow(0xfc);
   }
   if (tick_ == 6) {
     tick_ = 0;

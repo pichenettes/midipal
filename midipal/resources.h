@@ -127,6 +127,29 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_POL 73  // pol
 #define STR_RES_RND 74  // rnd
 #define STR_RES_STA 75  // sta
+#define STR_RES_DIR 76  // dir
+#define STR_RES_UP 77  // up
+#define STR_RES_DWN 78  // dwn
+#define STR_RES_U_D 79  // u&d
+#define STR_RES__RND 80  //  rnd
+#define STR_RES_OCT 81  // oct
+#define STR_RES_DUR 82  // dur
+#define STR_RES_DIV 83  // div
+#define STR_RES_1_1 84  // 1/1
+#define STR_RES_3_4 85  // 3/4
+#define STR_RES_2_3 86  // 2/3
+#define STR_RES_1_2 87  // 1/2
+#define STR_RES_3_8 88  // 3/8
+#define STR_RES_1_3 89  // 1/3
+#define STR_RES_1_4 90  // 1/4
+#define STR_RES_1_6 91  // 1/6
+#define STR_RES_1_8 92  // 1/8
+#define STR_RES__12 93  // /12
+#define STR_RES__16 94  // /16
+#define STR_RES__24 95  // /24
+#define STR_RES__32 96  // /32
+#define STR_RES__48 97  // /48
+#define STR_RES__96 98  // /96
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_DRUM_PATTERNS 1
