@@ -24,6 +24,7 @@
 #include "midipal/display.h"
 
 #include "midipal/clock.h"
+#include "midipal/event_scheduler.h"
 #include "midipal/note_stack.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
@@ -53,7 +54,7 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 14);
   ui.AddPage(STR_RES_DIV, STR_RES_1_1, 0, 14);
-  ui.AddPage(STR_RES_DUR, UNIT_INTEGER, 1, 24);
+  ui.AddPage(STR_RES_DUR, STR_RES_1_1, 0, 14);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
   SetParameter(8, clock_division_);  // Force an update of the prescaler.
@@ -89,8 +90,8 @@ void Arpeggiator::OnStart() {
 void Arpeggiator::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 0;
+    FlushQueue(channel_);
   }
-  // AllNotesOff();
 }
 
 void Arpeggiator::OnClock() {
@@ -146,8 +147,11 @@ void Arpeggiator::Tick() {
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
       SendNow(0xfc);
+      FlushQueue(channel_);
     }
   }
+  
+  SendScheduledNotes(channel_);
   
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
@@ -166,9 +170,16 @@ void Arpeggiator::Tick() {
       while (note > 127) {
         note -= 12;
       }
+      // If there are some Note Off messages for the note about to be triggeered
+      // remove them from the queue and process them now.
+      if (event_scheduler.Remove(note, 0)) {
+        Send3(0x80 | channel_, note, 0);
+      }
+      // Send a note on and schedule a note off later.
       Send3(0x90 | channel_, note, velocity);
+      SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
+          midi_clock_tick_per_step, duration_));
       StepArpeggio();
-      // TODO: schedule note off.
     }
   }
 }
@@ -219,7 +230,7 @@ void Arpeggiator::StepArpeggio() {
         if (direction_ == ARPEGGIO_DIRECTION_UP_DOWN) {
           current_direction_ = -current_direction_;
           StartArpeggio();
-          if (num_notes > 1 || direction_ > 1) {
+          if (num_notes > 1 || num_octaves_ > 1) {
             StepArpeggio();
           }
         } else {
@@ -235,9 +246,12 @@ void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
   if (key < 4) {
     clock.Update(bpm_, groove_template_, groove_amount_);
   }
-  if (key == 8) {
-    midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
-        midi_clock_tick_per_step, clock_division_);
+  midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
+      midi_clock_tick_per_step, clock_division_);
+  if (key == 5) {
+    // When changing the arpeggio direction, reset the pattern.
+    current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
+    StartArpeggio();
   }
 }
 

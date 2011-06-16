@@ -127,6 +127,9 @@ class PlugIn {
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);
   void Send3(uint8_t a, uint8_t b, uint8_t c);
+  void SendLater(uint8_t note, uint8_t velocity, uint8_t when);
+  void SendScheduledNotes(uint8_t channel);
+  void FlushQueue(uint8_t channel);
   
  private:
   DISALLOW_COPY_AND_ASSIGN(PlugIn);

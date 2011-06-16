@@ -17,8 +17,8 @@
 //
 // Map from a note index to an 8-bit integer.
 
-#ifndef MIDIPAL_NOTE_MAP_
-#define MIDIPAL_NOTE_MAP_
+#ifndef MIDIPAL_NOTE_MAP_H_
+#define MIDIPAL_NOTE_MAP_H_
 
 #include <string.h>
 
@@ -78,4 +78,4 @@ class NoteMap {
 
 }  // namespace midipal:
 
-#endif // MIDIPAL_NOTE_MAP_
+#endif // MIDIPAL_NOTE_MAP_H_

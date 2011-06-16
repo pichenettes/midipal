@@ -24,6 +24,7 @@
 #include "avrlib/serial.h"
 
 #include "midipal/hardware_config.h"
+#include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 
 namespace midipal {
@@ -79,5 +80,33 @@ void PlugIn::Send(uint8_t status, uint8_t* data, uint8_t size) {
   }
 }
 
+void PlugIn::SendLater(uint8_t note, uint8_t velocity, uint8_t when) {
+  event_scheduler.Schedule(note, velocity, when);
+}
+
+void PlugIn::SendScheduledNotes(uint8_t channel) {
+  uint8_t current = event_scheduler.root();
+  while (current) {
+    const SchedulerEntry& entry = event_scheduler.entry(current);
+    if (entry.when) {
+      break;
+    }
+    if (entry.note != kZombieSlot) {
+      if (entry.velocity == 0) {
+        Send3(0x80 | channel, entry.note, 0);
+      } else {
+        Send3(0x90 | channel, entry.note, entry.velocity);
+      }
+    }
+    current = entry.next;
+  }
+  event_scheduler.Tick();
+}
+
+void PlugIn::FlushQueue(uint8_t channel) {
+  while (event_scheduler.size()) {
+    SendScheduledNotes(channel);
+  }
+}
 
 }  // namespace midipal

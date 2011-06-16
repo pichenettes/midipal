@@ -362,9 +362,66 @@ This app memorizes a chord and allows you to play transpositions of it. To recor
 In recording mode, you can also select the affected channel.
 
 
+Arpeggiator (@arpeggio@)
 
+This app is a complete arpeggiator.
 
+<lcd>clk int </lcd>
 
+Select an internal or external clock source. When using an external clock source, start, clock and stop MIDI messages must be sent.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock.
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+<lcd>chn   1 </lcd>
+
+Channel to arpeggiate. Chords sent on this channels are filtered out and played as arpeggios.
+
+<lcd>dir  up </lcd>
+
+Arpeggio direction. It can be up, down, up&down, or random.
+
+<lcd>oct   1 </lcd>
+
+Arpeggio range, in octaves.
+
+<lcd>ptn  10 </lcd>
+
+Arpeggio rhythmic pattern.
+
+<pre> 1: o o o o o o o o 
+ 2: ooo ooo ooo ooo 
+ 3: o o ooooo o oooo
+ 4: o o oo oo o oo o
+ 5: oooo oo oooo oo 
+ 6: o  o    o  o    
+ 7: o  o  o o  o  o 
+ 8: o  o  o  o  o o 
+ 9: o o  o  o  o  o 
+10: oo oo oooo oo oo
+11: ooooo oo oo ooo 
+12: o   o   o  o o o
+13: o  oo   o o o oo
+14: o     oooooo oo 
+15: o       o   o oo
+</pre>
+
+<lcd>div /16 </lcd>
+
+Duration of an arpeggio step (the duration of a 'o' or blank in the previous chart). The default is /16, a 16th note per step.
+
+<lcd>dur /16 </lcd>
+
+Duration of the notes played by the arpeggiator. The default is /96, a MIDI clock tick.
 
 
 EVERYTHING IS MISCELLANEOUS
@@ -394,10 +451,4 @@ Number of notes to identify, from 2 to 4.
 <lcd>rst  no </lcd>
 
 Change this setting to yes to clear the accuracy score.
-
-
-
-
-
-
 

@@ -216,6 +216,7 @@ void Monitor::OnRawByte(uint8_t byte) {
 
 uint8_t Monitor::OnClick() {
   ui.Clear();
+  ui.RefreshScreen();
   return 0;
 }
 

@@ -22,6 +22,7 @@
 #include "midi/midi.h"
 #include "midipal/clock.h"
 #include "midipal/display.h"
+#include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 #include "midipal/note_stack.h"
 #include "midipal/plugin_manager.h"
@@ -73,6 +74,8 @@ void Init() {
   
   plugin_manager.set_active_plugin(13);
   note_stack.Init();
+  event_scheduler.Init();
+  
   display.Init();
   ui.Init();
   

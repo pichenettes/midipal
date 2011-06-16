@@ -59,6 +59,7 @@ void NoteStack::NoteOn(uint8_t note, uint8_t velocity) {
     for (uint8_t i = 1; i <= kNoteStackSize; ++i) {
       if (pool_[i].next_ptr == 0) {
         least_recent_note = pool_[i].note;
+        break;
       }
     }
     NoteOff(least_recent_note);
