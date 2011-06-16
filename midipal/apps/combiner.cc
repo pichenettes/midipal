@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Channel merger plug-in.
+// Channel merger app.
 
 #include "midipal/apps/combiner.h"
 

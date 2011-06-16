@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock generator plug-in.
+// MIDI clock generator app.
 
 #ifndef MIDIPAL_PLUGINS_CC_KNOB_H_
 #define MIDIPAL_PLUGINS_CC_KNOB_H_

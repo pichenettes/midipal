@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Channel merger plug-in.
+// Channel merger app.
 
 #ifndef MIDIPAL_PLUGINS_COMBINER_H_
 #define MIDIPAL_PLUGINS_COMBINER_H_

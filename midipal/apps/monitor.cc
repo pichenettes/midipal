@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI monitor plug-in.
+// MIDI monitor app.
 
 #include "midipal/apps/monitor.h"
 

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Chord memory plug-in.
+// Chord memory app.
 
 #include "midipal/apps/chord_memory.h"
 

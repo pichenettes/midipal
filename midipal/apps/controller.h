@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Knob controller plug-in.
+// Knob controller app.
 
 #ifndef MIDIPAL_PLUGINS_CONTROLLER_H_
 #define MIDIPAL_PLUGINS_CONTROLLER_H_

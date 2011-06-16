@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock monitor plug-in.
+// MIDI clock monitor app.
 
 #include "midipal/apps/bpm_meter.h"
 

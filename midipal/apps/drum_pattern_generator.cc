@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Drum pattern generator plug-in.
+// Drum pattern generator app.
 
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/note_stack.h"

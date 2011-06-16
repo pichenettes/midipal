@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Knob controller plug-in.
+// Knob controller app.
 
 #include "midipal/apps/controller.h"
 

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Ear Training Game plug-in.
+// Ear Training Game app.
 
 #ifndef MIDIPAL_EAR_TRAINING_GAME_H_
 #define MIDIPAL_EAR_TRAINING_GAME_H_

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Chord memory plug-in.
+// Chord memory app.
 
 #ifndef MIDIPAL_PLUGINS_CHORD_MEMORY_H_
 #define MIDIPAL_PLUGINS_CHORD_MEMORY_H_

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Randomizer plug-in.
+// Randomizer app.
 
 #include "midipal/apps/randomizer.h"
 

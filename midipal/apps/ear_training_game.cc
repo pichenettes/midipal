@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Ear Training Game plug-in.
+// Ear Training Game app.
 
 #include "midipal/apps/ear_training_game.h"
 

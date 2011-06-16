@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Splitter plug-in.
+// Splitter app.
 
 #ifndef MIDIPAL_PLUGINS_SPLITTER_H_
 #define MIDIPAL_PLUGINS_SPLITTER_H_

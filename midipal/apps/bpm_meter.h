@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock monitor plug-in.
+// MIDI clock monitor app.
 
 #ifndef MIDIPAL_PLUGINS_BPM_METER_H_
 #define MIDIPAL_PLUGINS_BPM_METER_H_

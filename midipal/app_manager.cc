@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Class responsible for switching between the various plug-ins.
+// Class responsible for switching between the various apps.
 
 #include "midipal/app_manager.h"
 

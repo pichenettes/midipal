@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI monitor plug-in.
+// MIDI monitor app.
 
 #ifndef MIDIPAL_PLUGINS_MONITOR_H_
 #define MIDIPAL_PLUGINS_MONITOR_H_

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Arpeggiator plug-in.
+// Arpeggiator app.
 
 #ifndef MIDIPAL_PLUGINS_ARPEGGIATOR_H_
 #define MIDIPAL_PLUGINS_ARPEGGIATOR_H_

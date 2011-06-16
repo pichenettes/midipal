@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Arpeggiator plug-in.
+// Arpeggiator app.
 
 #include "midipal/apps/arpeggiator.h"
 

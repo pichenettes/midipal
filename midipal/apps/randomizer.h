@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Randomizer plug-in.
+// Randomizer app.
 
 #ifndef MIDIPAL_PLUGINS_RANDOMIZER_H_
 #define MIDIPAL_PLUGINS_RANDOMIZER_H_

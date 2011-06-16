@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter plug-in.
+// Active Sensing filter app.
 
 #ifndef MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_
 #define MIDIPAL_PLUGINS_ACTIVE_SENSING_FILTER_H_

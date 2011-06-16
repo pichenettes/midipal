@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Class responsible for switching between the various plug-ins.
+// Class responsible for switching between the various apps.
 
 #ifndef MIDIPAL_PLUGIN_MANAGER_H_
 #define MIDIPAL_PLUGIN_MANAGER_H_

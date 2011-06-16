@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Dispatcher plug-in.
+// Dispatcher app.
 
 #include "midipal/apps/dispatcher.h"
 

@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Dispatcher plug-in.
+// Dispatcher app.
 
 #ifndef MIDIPAL_PLUGINS_DISPATCHER_H_
 #define MIDIPAL_PLUGINS_DISPATCHER_H_

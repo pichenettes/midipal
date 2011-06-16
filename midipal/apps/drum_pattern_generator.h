@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Drum pattern generator plug-in.
+// Drum pattern generator app.
 
 #ifndef MIDIPAL_PLUGINS_DRUM_PATTERN_GENERATOR_H_
 #define MIDIPAL_PLUGINS_DRUM_PATTERN_GENERATOR_H_

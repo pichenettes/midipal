@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Splitter plug-in.
+// Splitter app.
 
 #include "midipal/apps/splitter.h"
 

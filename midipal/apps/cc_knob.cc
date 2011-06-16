@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock generator plug-in.
+// MIDI clock generator app.
 
 #include "midipal/apps/cc_knob.h"
 

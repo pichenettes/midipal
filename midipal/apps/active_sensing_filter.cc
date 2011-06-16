@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter plug-in.
+// Active Sensing filter app.
 
 #include "midipal/apps/active_sensing_filter.h"
 
