@@ -81,6 +81,7 @@ class Ui {
       EncoderALine, EncoderBLine, EncoderClickLine> encoder_;
   static avrlib::PotScanner<8, 0, 8, 7> pots_;
   static avrlib::EventQueue<32> queue_;
+  static uint16_t encoder_hold_time_;
   static uint8_t num_pages_;
   static uint8_t page_;
   static uint8_t editing_;

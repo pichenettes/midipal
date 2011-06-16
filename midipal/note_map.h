@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-#include "midipal/plugin.h"
+#include "midipal/app.h"
 
 namespace midipal {
 

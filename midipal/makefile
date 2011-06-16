@@ -14,7 +14,7 @@
 VERSION        = 0.1
 MCU_NAME       = 644
 TARGET         = midipal
-PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/plugins
+PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/apps
 RESOURCES      = midipal/resources
 EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR
 

@@ -21,7 +21,7 @@
 #define MIDIPAL_MIDI_HANDLER_H_
 
 #include "midi/midi.h"
-#include "midipal/plugin_manager.h"
+#include "midipal/app_manager.h"
 
 namespace midipal {
 
@@ -35,112 +35,112 @@ struct MidiHandler : public midi::MidiDevice {
   typedef avrlib::DataTypeForSize<data_size>::Type Value;
   
   static void NoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-    plugin_manager.active_plugin()->OnNoteOn(channel, note, velocity);
+    plugin_manager.active_app()->OnNoteOn(channel, note, velocity);
   }
   
   static void NoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-    plugin_manager.active_plugin()->OnNoteOff(channel, note, velocity);
+    plugin_manager.active_app()->OnNoteOff(channel, note, velocity);
   }
   
   static void Aftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
-    plugin_manager.active_plugin()->OnAftertouch(channel, note, velocity);
+    plugin_manager.active_app()->OnAftertouch(channel, note, velocity);
   }
   
   static void Aftertouch(uint8_t channel, uint8_t velocity) {
-    plugin_manager.active_plugin()->OnAftertouch(channel, velocity);
+    plugin_manager.active_app()->OnAftertouch(channel, velocity);
   }
   
   static void ControlChange(uint8_t channel, uint8_t controller,
                              uint8_t value) {
-    plugin_manager.active_plugin()->OnControlChange(channel, controller, value);
+    plugin_manager.active_app()->OnControlChange(channel, controller, value);
   }
   
   static void ProgramChange(uint8_t channel, uint8_t program) {
-    plugin_manager.active_plugin()->OnProgramChange(channel, program);
+    plugin_manager.active_app()->OnProgramChange(channel, program);
   }
   
   static void PitchBend(uint8_t channel, uint16_t pitch_bend) {
-    plugin_manager.active_plugin()->OnPitchBend(channel, pitch_bend);
+    plugin_manager.active_app()->OnPitchBend(channel, pitch_bend);
   }
 
   static void AllSoundOff(uint8_t channel) {
-    plugin_manager.active_plugin()->OnAllSoundOff(channel);
+    plugin_manager.active_app()->OnAllSoundOff(channel);
   }
   
   static void ResetAllControllers(uint8_t channel) {
-    plugin_manager.active_plugin()->OnResetAllControllers(channel);
+    plugin_manager.active_app()->OnResetAllControllers(channel);
   }
   
   static void LocalControl(uint8_t channel, uint8_t state) {
-    plugin_manager.active_plugin()->OnLocalControl(channel, state);
+    plugin_manager.active_app()->OnLocalControl(channel, state);
   }
   
   static void AllNotesOff(uint8_t channel) {
-    plugin_manager.active_plugin()->OnAllNotesOff(channel);
+    plugin_manager.active_app()->OnAllNotesOff(channel);
   }
   
   static void OmniModeOff(uint8_t channel) {
-    plugin_manager.active_plugin()->OnOmniModeOff(channel);
+    plugin_manager.active_app()->OnOmniModeOff(channel);
   }
   
   static void OmniModeOn(uint8_t channel) {
-    plugin_manager.active_plugin()->OnOmniModeOn(channel);
+    plugin_manager.active_app()->OnOmniModeOn(channel);
   }
   
   static void MonoModeOn(uint8_t channel, uint8_t num_channels) {
-    plugin_manager.active_plugin()->OnMonoModeOn(channel, num_channels);
+    plugin_manager.active_app()->OnMonoModeOn(channel, num_channels);
   }
   
   static void PolyModeOn(uint8_t channel) {
-    plugin_manager.active_plugin()->OnPolyModeOn(channel);
+    plugin_manager.active_app()->OnPolyModeOn(channel);
   }
   
   static void SysExStart() {
-    plugin_manager.active_plugin()->OnSysExStart();
+    plugin_manager.active_app()->OnSysExStart();
   }
   
   static void SysExByte(uint8_t sysex_byte) {
-    plugin_manager.active_plugin()->OnSysExByte(sysex_byte);
+    plugin_manager.active_app()->OnSysExByte(sysex_byte);
   }
   
   static void SysExEnd() {
-    plugin_manager.active_plugin()->OnSysExEnd();
+    plugin_manager.active_app()->OnSysExEnd();
   }
   
   static void BozoByte(uint8_t bozo_byte) {
-    plugin_manager.active_plugin()->OnBozoByte(bozo_byte);
+    plugin_manager.active_app()->OnBozoByte(bozo_byte);
   }
 
   static void Clock() {
-    plugin_manager.active_plugin()->OnClock();
+    plugin_manager.active_app()->OnClock();
   }
   
   static void Start() {
-    plugin_manager.active_plugin()->OnStart();
+    plugin_manager.active_app()->OnStart();
   }
   
   static void Continue() {
-    plugin_manager.active_plugin()->OnContinue();
+    plugin_manager.active_app()->OnContinue();
   }
   
   static void Stop() {
-    plugin_manager.active_plugin()->OnStop();
+    plugin_manager.active_app()->OnStop();
   }
   
   static void ActiveSensing() {
-    plugin_manager.active_plugin()->OnActiveSensing();
+    plugin_manager.active_app()->OnActiveSensing();
   }
   
   static void Reset() {
-    plugin_manager.active_plugin()->OnReset();
+    plugin_manager.active_app()->OnReset();
   }
 
   static uint8_t CheckChannel(uint8_t channel) {
-    return plugin_manager.active_plugin()->CheckChannel(channel);
+    return plugin_manager.active_app()->CheckChannel(channel);
   }
   
   static void RawByte(uint8_t byte) {
-    plugin_manager.active_plugin()->OnRawByte(byte);
+    plugin_manager.active_app()->OnRawByte(byte);
   }
   
   static void RawMidiData(
@@ -148,7 +148,7 @@ struct MidiHandler : public midi::MidiDevice {
       uint8_t* data,
       uint8_t data_size,
       uint8_t accepted_channel) {
-    plugin_manager.active_plugin()->OnRawMidiData(
+    plugin_manager.active_app()->OnRawMidiData(
         status,
         data,
         data_size,

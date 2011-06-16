@@ -21,7 +21,7 @@
 #include "avrlib/string.h"
 
 #include "midipal/display.h"
-#include "midipal/plugin_manager.h"
+#include "midipal/app_manager.h"
 #include "midipal/resources.h"
 
 namespace midipal {
@@ -38,6 +38,7 @@ uint8_t Ui::page_;
 uint8_t Ui::pot_value_[8];
 uint8_t Ui::editing_;
 uint8_t Ui::read_pots_;
+uint16_t Ui::encoder_hold_time_;
 
 /* </static> */
 
@@ -52,6 +53,7 @@ void Ui::Init() {
   num_pages_ = 0;
   page_ = 0;
   editing_ = 0;
+  encoder_hold_time_ = 0;
 }
 
 /* static */
@@ -73,8 +75,17 @@ void Ui::Poll() {
   if (increment != 0) {
     queue_.AddEvent(CONTROL_ENCODER, 0, increment);
   }
+  if (encoder_.immediate_value() == 0x00) {
+    ++encoder_hold_time_;
+    if (encoder_hold_time_ > 4000) {
+      queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 0xff);
+    }
+  }
   if (encoder_.clicked()) {
-    queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
+    if (encoder_hold_time_ <= 4000) {
+      queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
+    }
+    encoder_hold_time_ = 0;
   }
   if (read_pots_) {
     pots_.Read();
@@ -90,7 +101,7 @@ void Ui::Poll() {
 /* static */
 void Ui::DoEvents() {
   uint8_t redraw = 0;
-  PlugIn* plugin = plugin_manager.active_plugin();
+  App* plugin = plugin_manager.active_app();
   while (queue_.available()) {
     redraw = 1;
     Event e = queue_.PullEvent();
@@ -114,22 +125,26 @@ void Ui::DoEvents() {
         }
       }
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
-      if (!plugin_manager.active_plugin()->OnClick()) {
-        editing_ ^= 1;
-        // Left the editing mode, save settings.
-        if (!editing_) {
-          plugin_manager.active_plugin()->SaveSettings();
+      if (e.value == 1) {
+        if (!plugin_manager.active_app()->OnClick()) {
+          editing_ ^= 1;
+          // Left the editing mode, save settings.
+          if (!editing_) {
+            plugin_manager.active_app()->SaveSettings();
+          }
         }
+      } else {
+        // A long press is detected!
       }
     } else if (e.control_type == CONTROL_POT) {
-      plugin_manager.active_plugin()->OnPot(e.control_id, e.value);
+      plugin_manager.active_app()->OnPot(e.control_id, e.value);
     }
   }
   
   if (queue_.idle_time_ms() > 50) {
     redraw = 1;
     queue_.Touch();
-    plugin_manager.active_plugin()->OnIdle();
+    plugin_manager.active_app()->OnIdle();
   }
   
   if (redraw && !plugin->OnRedraw()) {

@@ -25,7 +25,7 @@
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 #include "midipal/note_stack.h"
-#include "midipal/plugin_manager.h"
+#include "midipal/app_manager.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -48,10 +48,10 @@ static uint16_t clock_counter;
 TIMER_2_TICK {
   uint8_t events = clock.Tick();
   if (events & 1) {
-    plugin_manager.active_plugin()->OnInternalClockTick();
+    plugin_manager.active_app()->OnInternalClockTick();
   }
   if (events & 2) {
-    plugin_manager.active_plugin()->OnInternalClockStep();
+    plugin_manager.active_app()->OnInternalClockStep();
   }
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
@@ -72,7 +72,7 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_plugin(13);
+  plugin_manager.set_active_app(13);
   note_stack.Init();
   event_scheduler.Init();
   
@@ -86,7 +86,7 @@ void Init() {
 
   lcd.Init();
   
-  plugin_manager.active_plugin()->Init();
+  plugin_manager.active_app()->Init();
 
   midi_io.Init();
 }
