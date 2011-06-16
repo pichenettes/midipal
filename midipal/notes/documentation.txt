@@ -1,9 +1,8 @@
 TODO:
-* arpeggio   arpeggiator
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chaos!     chaos!
-* strummer?
+* delay
 
 
 
