@@ -19,7 +19,6 @@
 
 #include "midipal/apps/active_sensing_filter.h"
 
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {

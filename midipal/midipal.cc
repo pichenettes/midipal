@@ -18,6 +18,7 @@
 #include "avrlib/serial.h"
 #include "avrlib/time.h"
 #include "avrlib/timer.h"
+#include "avrlib/watchdog_timer.h"
 
 #include "midi/midi.h"
 #include "midipal/clock.h"
@@ -48,10 +49,10 @@ static uint16_t clock_counter;
 TIMER_2_TICK {
   uint8_t events = clock.Tick();
   if (events & 1) {
-    plugin_manager.active_app()->OnInternalClockTick();
+    app_manager.active_app()->OnInternalClockTick();
   }
   if (events & 2) {
-    plugin_manager.active_app()->OnInternalClockStep();
+    app_manager.active_app()->OnInternalClockStep();
   }
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
@@ -72,7 +73,14 @@ void Init() {
   UCSR0B = 0;
   UCSR1B = 0;
   
-  plugin_manager.set_active_app(13);
+  // Boot the app selector app.
+  app_manager.set_active_app(0);
+  app_manager.active_app()->Init();
+  // Now that the app selector app has booted, we can retrieve the
+  // app to launch.
+  uint8_t launch_app = app_manager.active_app()->GetParameter(0);
+  app_manager.set_active_app(launch_app);
+  
   note_stack.Init();
   event_scheduler.Init();
   
@@ -86,12 +94,13 @@ void Init() {
 
   lcd.Init();
   
-  plugin_manager.active_app()->Init();
+  app_manager.active_app()->Init();
 
   midi_io.Init();
 }
 
 int main(void) {
+  ResetWatchdog();
   Init();
   while (1) {
     display.Tick();

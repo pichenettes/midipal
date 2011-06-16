@@ -30,6 +30,8 @@ class AppManager {
   
   static void set_active_app(uint8_t index);
   static App* active_app() { return active_app_; }
+  static uint8_t num_apps();
+  static uint8_t app_name(uint8_t index);
   
  private:
   static App* active_app_;
@@ -38,7 +40,7 @@ class AppManager {
   DISALLOW_COPY_AND_ASSIGN(AppManager);
 };
 
-extern AppManager plugin_manager;
+extern AppManager app_manager;
 
 }  // namespace midipal
 

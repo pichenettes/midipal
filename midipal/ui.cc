@@ -101,7 +101,7 @@ void Ui::Poll() {
 /* static */
 void Ui::DoEvents() {
   uint8_t redraw = 0;
-  App* plugin = plugin_manager.active_app();
+  App* plugin = app_manager.active_app();
   while (queue_.available()) {
     redraw = 1;
     Event e = queue_.PullEvent();
@@ -126,25 +126,25 @@ void Ui::DoEvents() {
       }
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
       if (e.value == 1) {
-        if (!plugin_manager.active_app()->OnClick()) {
+        if (!app_manager.active_app()->OnClick()) {
           editing_ ^= 1;
           // Left the editing mode, save settings.
           if (!editing_) {
-            plugin_manager.active_app()->SaveSettings();
+            app_manager.active_app()->SaveSettings();
           }
         }
       } else {
-        // A long press is detected!
+        app_manager.set_active_app(0);
       }
     } else if (e.control_type == CONTROL_POT) {
-      plugin_manager.active_app()->OnPot(e.control_id, e.value);
+      app_manager.active_app()->OnPot(e.control_id, e.value);
     }
   }
   
   if (queue_.idle_time_ms() > 50) {
     redraw = 1;
     queue_.Touch();
-    plugin_manager.active_app()->OnIdle();
+    app_manager.active_app()->OnIdle();
   }
   
   if (redraw && !plugin->OnRedraw()) {

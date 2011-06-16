@@ -15,40 +15,35 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Channel merger app.
+// This app is responsible for configuring which app is active.
 
-#ifndef MIDIPAL_PLUGINS_COMBINER_H_
-#define MIDIPAL_PLUGINS_COMBINER_H_
+#ifndef MIDIPAL_PLUGINS_SETUP_H_
+#define MIDIPAL_PLUGINS_SETUP_H_
 
 #include "midipal/app.h"
-#include "midipal/note_map.h"
 
 namespace midipal { namespace apps {
 
-class Combiner : public App {
+class AppSelector : public App {
  public:
-  Combiner() { }
+  AppSelector() { }
 
-  void OnInit();
-  void OnRawMidiData(
-     uint8_t status,
-     uint8_t* data,
-     uint8_t data_size,
-     uint8_t accepted_channel);
+  void OnRawByte(uint8_t byte);
+  
+  uint8_t OnClick();
+  uint8_t OnIncrement(int8_t increment);
+  uint8_t OnRedraw();
  
-  uint8_t settings_size() { return 3; }
-  uint8_t settings_offset() { return SETTINGS_COMBINER; }
-  uint8_t* settings_data() { return &input_channel_; }
-  uint8_t app_name() { return STR_RES_MERGECHN; }
+  uint8_t settings_size() { return 1; }
+  uint8_t settings_offset() { return SETTINGS_SETUP; }
+  uint8_t* settings_data() { return &active_app_; }
 
  private:
-  uint8_t input_channel_;
-  uint8_t num_channels_;
-  uint8_t output_channel_;
-
-  DISALLOW_COPY_AND_ASSIGN(Combiner);
+  uint8_t active_app_;
+  
+  DISALLOW_COPY_AND_ASSIGN(AppSelector);
 };
 
 } }  // namespace midipal::plugins
 
-#endif // MIDIPAL_PLUGINS_COMBINER_H_
+#endif // MIDIPAL_PLUGINS_SETUP_H_

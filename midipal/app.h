@@ -22,6 +22,8 @@
 
 #include "avrlib/base.h"
 
+#include "midipal/resources.h"
+
 namespace midipal {
 
 enum EepromSetting {
@@ -108,6 +110,9 @@ class App {
   virtual uint8_t settings_size() { return 0; }
   virtual uint8_t settings_offset() { return 0; }
   virtual uint8_t* settings_data() { return NULL; }
+  
+  // Used by the app manager to display the app name
+  virtual uint8_t app_name() { return 0; }
   
   virtual void SetParameter(uint8_t key, uint8_t value) {
     settings_data()[key] = value;

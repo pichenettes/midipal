@@ -24,7 +24,6 @@
 
 #include "midipal/clock.h"
 #include "midipal/display.h"
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 static const prog_uint8_t random_octave[8 * 5] PROGMEM = {

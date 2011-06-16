@@ -23,7 +23,6 @@
 
 #include "midi/midi.h"
 
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 #include "midipal/voice_allocator.h"
 

@@ -230,7 +230,7 @@ Type of shuffle/jitter to apply to the clock:
 Amount of shuffle/jitter to apply to the clock.
 
 
-CC knob (@cc knob @)
+CC knob (@cc knob@)
 
 This app turns the MIDIpal into a MIDI controller - sending CC or NRPN messages. All incoming messages are sent to the output -- that is to say, the generated CC/NRPN messages are merged into the MIDI stream. The settings are the following:
 
@@ -258,7 +258,7 @@ Value range. This restricts the range of the @val@ setting on the first page.
 
 
 
-Controller (@cntrller@)
+Controller (@contrllr@)
 
 This app is only useful if you dare opening your MIDIpal. On the circuit board, you will find 8 pads labelled Analog 1..8 to which you can connect any circuit (including a simple potentiometer voltage divider) outputting a voltage in the 0-3.3V range. These are connected to the analog to digital converter of the MIDIpal brain. Voltage changes on these inputs will be translated into CC messages: a voltage of 0V yields a CC value of 0 ; a voltage of 3.3V yields a CC value of 127.
 

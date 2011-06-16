@@ -20,7 +20,21 @@
 # Resource strings for the midipal.
 
 strings = """
-midipal!
+0xfe flt
+arpeggio
+bpm cntr
+cc knob
+chordmem
+clock
+mergechn
+dispatch
+drums
+ear game
+monitor
+randomiz
+contrllr
+splitter
+
 sndOff
 rstCtr
 notOff

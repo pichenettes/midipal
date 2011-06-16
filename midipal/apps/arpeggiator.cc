@@ -26,7 +26,6 @@
 #include "midipal/clock.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/note_stack.h"
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {

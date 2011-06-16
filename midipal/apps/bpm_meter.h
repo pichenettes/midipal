@@ -41,6 +41,8 @@ class BpmMeter : public App {
   uint8_t OnIncrement(int8_t increment);
   uint8_t OnRedraw();
   
+  uint8_t app_name() { return STR_RES_BPM_CNTR; }
+  
  private:
   void PrintBpm();
   void Reset();

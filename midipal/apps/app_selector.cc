@@ -15,40 +15,51 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Channel merger app.
+// Setup app.
 
-#ifndef MIDIPAL_PLUGINS_COMBINER_H_
-#define MIDIPAL_PLUGINS_COMBINER_H_
+#include "midipal/apps/app_selector.h"
 
-#include "midipal/app.h"
-#include "midipal/note_map.h"
+#include "avrlib/string.h"
+#include "avrlib/watchdog_timer.h"
+
+#include "midi/midi.h"
+
+#include "midipal/app_manager.h"
+#include "midipal/display.h"
+#include "midipal/ui.h"
 
 namespace midipal { namespace apps {
 
-class Combiner : public App {
- public:
-  Combiner() { }
+using namespace avrlib;
 
-  void OnInit();
-  void OnRawMidiData(
-     uint8_t status,
-     uint8_t* data,
-     uint8_t data_size,
-     uint8_t accepted_channel);
- 
-  uint8_t settings_size() { return 3; }
-  uint8_t settings_offset() { return SETTINGS_COMBINER; }
-  uint8_t* settings_data() { return &input_channel_; }
-  uint8_t app_name() { return STR_RES_MERGECHN; }
+void AppSelector::OnRawByte(uint8_t byte) {
+  SendNow(byte);
+}
 
- private:
-  uint8_t input_channel_;
-  uint8_t num_channels_;
-  uint8_t output_channel_;
+uint8_t AppSelector::OnClick() {
+  SaveSettings();
+  SystemReset(100);
+  return 1;
+}
 
-  DISALLOW_COPY_AND_ASSIGN(Combiner);
-};
+uint8_t AppSelector::OnIncrement(int8_t increment) {
+  active_app_ += increment;
+  if (active_app_ < 1) {
+    active_app_ = 1;
+  } else if (active_app_ >= app_manager.num_apps()) {
+    active_app_ = app_manager.num_apps() - 1;
+  }
+  return 1;
+}
+
+uint8_t AppSelector::OnRedraw() {
+  ui.Clear();
+  ResourcesManager::LoadStringResource(
+      app_manager.app_name(active_app_),
+      &line_buffer[0], 8);
+  AlignLeft(&line_buffer[0], 8);
+  ui.RefreshScreen();
+  return 1;
+}
 
 } }  // namespace midipal::plugins
-
-#endif // MIDIPAL_PLUGINS_COMBINER_H_

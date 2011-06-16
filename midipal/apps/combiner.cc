@@ -19,7 +19,6 @@
 
 #include "midipal/apps/combiner.h"
 
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {

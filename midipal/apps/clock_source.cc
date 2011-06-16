@@ -21,10 +21,8 @@
 
 #include "avrlib/string.h"
 
-
 #include "midipal/clock.h"
 #include "midipal/display.h"
-#include "midipal/resources.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {

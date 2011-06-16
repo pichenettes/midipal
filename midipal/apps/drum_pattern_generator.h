@@ -50,6 +50,7 @@ class DrumPatternGenerator : public App {
   uint8_t settings_size() { return 10; }
   uint8_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
   uint8_t* settings_data() { return &mode_; }
+  uint8_t app_name() { return STR_RES_DRUMS; }
 
  private:
   void Reset();

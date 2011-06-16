@@ -38,6 +38,7 @@ class Splitter : public App {
   uint8_t settings_size() { return 4; }
   uint8_t settings_offset() { return SETTINGS_SPLITTER; }
   uint8_t* settings_data() { return &input_channel_; }
+  uint8_t app_name() { return STR_RES_SPLITTER; }
 
  private:
   uint8_t input_channel_;

@@ -42,6 +42,7 @@ class ChordMemory : public App {
   uint8_t settings_size() { return 17; }
   uint8_t settings_offset() { return SETTINGS_CHORD_MEMORY; }
   uint8_t* settings_data() { return &channel_; }
+  uint8_t app_name() { return STR_RES_CHORDMEM; }
   
  private:
   void PlayChord(uint8_t type, uint8_t channel, uint8_t note, uint8_t velocity);

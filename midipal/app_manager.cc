@@ -20,6 +20,7 @@
 #include "midipal/app_manager.h"
 
 #include "midipal/apps/active_sensing_filter.h"
+#include "midipal/apps/app_selector.h"
 #include "midipal/apps/arpeggiator.h"
 #include "midipal/apps/bpm_meter.h"
 #include "midipal/apps/cc_knob.h"
@@ -37,6 +38,7 @@
 namespace midipal {
 
 apps::ActiveSensingFilter active_sensing_filter;
+apps::AppSelector app_selector;
 apps::Arpeggiator arpeggiator;
 apps::BpmMeter bpm_meter;
 apps::CcKnob cc_knob;
@@ -52,6 +54,7 @@ apps::Randomizer randomizer;
 apps::Splitter splitter;
 
 App* registry[] = {
+  &app_selector,
   &monitor,
   &active_sensing_filter,
   &bpm_meter,
@@ -69,7 +72,7 @@ App* registry[] = {
 };
 
 /* extern */
-AppManager plugin_manager;
+AppManager app_manager;
 
 /* static */
 App* AppManager::active_app_;
@@ -77,6 +80,16 @@ App* AppManager::active_app_;
 /* static */
 void AppManager::set_active_app(uint8_t index) {
   active_app_ = registry[index];
+}
+
+/* static */
+uint8_t AppManager::num_apps() {
+  return sizeof(registry) / sizeof(App*);
+}
+
+/* static */
+uint8_t AppManager::app_name(uint8_t index) {
+  return registry[index]->app_name();
 }
 
 }  // namespace midipal

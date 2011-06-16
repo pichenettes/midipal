@@ -65,12 +65,13 @@ class Monitor : public App {
   uint8_t OnRedraw();
   uint8_t OnClick();
   
- private:
-  void PrintString(uint8_t channel, uint8_t res_id);
-  
   uint8_t settings_size() { return 1; }
   uint8_t settings_offset() { return SETTINGS_MONITOR; }
   uint8_t* settings_data() { return &monitored_channel_; }
+  uint8_t app_name() { return STR_RES_MONITOR; }
+  
+ private:
+  void PrintString(uint8_t channel, uint8_t res_id);
   
   uint8_t monitored_channel_;
   
