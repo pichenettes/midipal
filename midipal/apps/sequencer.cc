@@ -113,6 +113,10 @@ void Sequencer::OnInternalClockTick() {
 }
 
 void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if (channel != channel_) {
+    return;
+  }
+  
   if (!note_track_) {
     Send3(0x90 | channel, note, velocity);
   }
@@ -142,6 +146,10 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 }
 
 void Sequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if (channel != channel_) {
+    return;
+  }
+  
   if (!note_track_ || !running_) {
     Send3(0x80 | channel, note, velocity);
   }
