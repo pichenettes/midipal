@@ -245,4 +245,4 @@ void DrumPatternGenerator::SetParameter(uint8_t key, uint8_t value) {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

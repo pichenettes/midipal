@@ -17,8 +17,8 @@
 //
 // This app is responsible for configuring which app is active.
 
-#ifndef MIDIPAL_PLUGINS_SETUP_H_
-#define MIDIPAL_PLUGINS_SETUP_H_
+#ifndef MIDIPAL_APPS_SETUP_H_
+#define MIDIPAL_APPS_SETUP_H_
 
 #include "midipal/app.h"
 
@@ -44,6 +44,6 @@ class AppSelector : public App {
   DISALLOW_COPY_AND_ASSIGN(AppSelector);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_SETUP_H_
+#endif // MIDIPAL_APPS_SETUP_H_

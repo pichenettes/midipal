@@ -17,8 +17,8 @@
 //
 // Dispatcher app.
 
-#ifndef MIDIPAL_PLUGINS_DISPATCHER_H_
-#define MIDIPAL_PLUGINS_DISPATCHER_H_
+#ifndef MIDIPAL_APPS_DISPATCHER_H_
+#define MIDIPAL_APPS_DISPATCHER_H_
 
 #include "midipal/app.h"
 #include "midipal/note_map.h"
@@ -78,6 +78,6 @@ class Dispatcher : public App {
   DISALLOW_COPY_AND_ASSIGN(Dispatcher);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_DISPATCHER_H_
+#endif // MIDIPAL_APPS_DISPATCHER_H_

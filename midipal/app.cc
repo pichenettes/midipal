@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Base class implemented by all the "Plug-ins" running on the Midipal.
+// Base class implemented by all the "Apps" running on the Midipal.
 
 #include "midipal/app.h"
 
@@ -28,6 +28,11 @@
 #include "midipal/midi_handler.h"
 
 namespace midipal {
+
+/* extern */
+const prog_uint8_t midi_clock_tick_per_step[15] PROGMEM = {
+  96, 72, 64, 48, 36, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1
+};
   
 using namespace avrlib;
 
@@ -80,8 +85,8 @@ void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
   }
 }
 
-void App::SendLater(uint8_t note, uint8_t velocity, uint8_t when) {
-  event_scheduler.Schedule(note, velocity, when);
+void App::SendLater(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag) {
+  event_scheduler.Schedule(note, velocity, when, tag);
 }
 
 void App::SendScheduledNotes(uint8_t channel) {

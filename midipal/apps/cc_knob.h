@@ -17,8 +17,8 @@
 //
 // MIDI clock generator app.
 
-#ifndef MIDIPAL_PLUGINS_CC_KNOB_H_
-#define MIDIPAL_PLUGINS_CC_KNOB_H_
+#ifndef MIDIPAL_APPS_CC_KNOB_H_
+#define MIDIPAL_APPS_CC_KNOB_H_
 
 #include "midipal/app.h"
 
@@ -54,6 +54,6 @@ class CcKnob : public App {
   DISALLOW_COPY_AND_ASSIGN(CcKnob);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_CC_KNOB_H_
+#endif // MIDIPAL_APPS_CC_KNOB_H_

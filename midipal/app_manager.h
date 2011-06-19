@@ -17,8 +17,8 @@
 //
 // Class responsible for switching between the various apps.
 
-#ifndef MIDIPAL_PLUGIN_MANAGER_H_
-#define MIDIPAL_PLUGIN_MANAGER_H_
+#ifndef MIDIPAL_APP_MANAGER_H_
+#define MIDIPAL_APP_MANAGER_H_
 
 #include "midipal/app.h"
 
@@ -44,4 +44,4 @@ extern AppManager app_manager;
 
 }  // namespace midipal
 
-#endif // MIDIPAL_PLUGIN_MANAGER_H_
+#endif // MIDIPAL_APP_MANAGER_H_

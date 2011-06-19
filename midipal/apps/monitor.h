@@ -17,8 +17,8 @@
 //
 // MIDI monitor app.
 
-#ifndef MIDIPAL_PLUGINS_MONITOR_H_
-#define MIDIPAL_PLUGINS_MONITOR_H_
+#ifndef MIDIPAL_APPS_MONITOR_H_
+#define MIDIPAL_APPS_MONITOR_H_
 
 #include "midipal/app.h"
 
@@ -78,6 +78,6 @@ class Monitor : public App {
   DISALLOW_COPY_AND_ASSIGN(Monitor);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_MONITOR_H_
+#endif // MIDIPAL_APPS_MONITOR_H_

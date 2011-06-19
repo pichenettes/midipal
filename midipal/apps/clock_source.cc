@@ -88,4 +88,4 @@ void ClockSource::Start() {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

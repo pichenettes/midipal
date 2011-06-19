@@ -17,8 +17,8 @@
 //
 // Channel merger app.
 
-#ifndef MIDIPAL_PLUGINS_COMBINER_H_
-#define MIDIPAL_PLUGINS_COMBINER_H_
+#ifndef MIDIPAL_APPS_COMBINER_H_
+#define MIDIPAL_APPS_COMBINER_H_
 
 #include "midipal/app.h"
 #include "midipal/note_map.h"
@@ -49,6 +49,6 @@ class Combiner : public App {
   DISALLOW_COPY_AND_ASSIGN(Combiner);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_COMBINER_H_
+#endif // MIDIPAL_APPS_COMBINER_H_

@@ -17,8 +17,8 @@
 //
 // Arpeggiator app.
 
-#ifndef MIDIPAL_PLUGINS_ARPEGGIATOR_H_
-#define MIDIPAL_PLUGINS_ARPEGGIATOR_H_
+#ifndef MIDIPAL_APPS_ARPEGGIATOR_H_
+#define MIDIPAL_APPS_ARPEGGIATOR_H_
 
 #include "midipal/app.h"
 
@@ -81,6 +81,6 @@ class Arpeggiator : public App {
   DISALLOW_COPY_AND_ASSIGN(Arpeggiator);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_ARPEGGIATOR_H_
+#endif // MIDIPAL_APPS_ARPEGGIATOR_H_

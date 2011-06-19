@@ -70,7 +70,11 @@ uint8_t EventScheduler::Remove(uint8_t note, uint8_t velocity) {
 }
 
 /* static */
-void EventScheduler::Schedule(uint8_t note, uint8_t velocity, uint8_t when) {
+void EventScheduler::Schedule(
+    uint8_t note,
+    uint8_t velocity,
+    uint8_t when,
+    uint8_t tag) {
   // Locate a free entry in the list.
   uint8_t free_slot = 0;
   for (uint8_t i = 1; i < kEventSchedulerSize; ++i) {
@@ -87,6 +91,7 @@ void EventScheduler::Schedule(uint8_t note, uint8_t velocity, uint8_t when) {
   entries_[free_slot].note = note;
   entries_[free_slot].velocity = velocity;
   entries_[free_slot].when = when;
+  entries_[free_slot].tag = tag;
   
   if (!root_ptr_ || when < entries_[root_ptr_].when) {
     entries_[free_slot].next = root_ptr_;

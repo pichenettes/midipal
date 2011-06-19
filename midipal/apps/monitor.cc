@@ -227,4 +227,4 @@ uint8_t Monitor::OnRedraw() {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

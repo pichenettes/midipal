@@ -114,4 +114,4 @@ void ChordMemory::OnAftertouch(
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

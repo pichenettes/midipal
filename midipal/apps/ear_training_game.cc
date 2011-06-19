@@ -216,4 +216,4 @@ uint8_t EarTrainingGame::OnRedraw() {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

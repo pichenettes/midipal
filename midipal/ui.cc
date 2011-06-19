@@ -32,7 +32,7 @@ using namespace avrlib;
 RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> Ui::encoder_;
 PotScanner<8, 0, 8, 7> Ui::pots_;
 EventQueue<32> Ui::queue_;
-PageDefinition Ui::pages_[32];
+PageDefinition Ui::pages_[48];
 uint8_t Ui::num_pages_;
 uint8_t Ui::page_;
 uint8_t Ui::pot_value_[8];
@@ -82,6 +82,8 @@ void Ui::Poll() {
     }
   }
   if (encoder_.clicked()) {
+    // Do not enqueue a click event when the encoder is released after a long
+    // press.
     if (encoder_hold_time_ <= 4000) {
       queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
     }
@@ -101,20 +103,30 @@ void Ui::Poll() {
 /* static */
 void Ui::DoEvents() {
   uint8_t redraw = 0;
-  App* plugin = app_manager.active_app();
+  App* app = app_manager.active_app();
   while (queue_.available()) {
     redraw = 1;
     Event e = queue_.PullEvent();
     if (e.control_type == CONTROL_ENCODER) {
       // Internal handling of the encoder.
-      if (!plugin->OnIncrement(e.value)) {
+      if (!app->OnIncrement(e.value)) {
         if (editing_) {
-          int16_t v = plugin->GetParameter(page_);
-          v = Clip(
-              v + static_cast<int8_t>(e.value),
-              pages_[page_].min,
-              pages_[page_].max);
-          plugin->SetParameter(page_, v);
+          int16_t v;
+          if (pages_[page_].value_res_id == UNIT_SIGNED_INTEGER) {
+            int16_t v = static_cast<int8_t>(app->GetParameter(page_));
+            v = Clip(
+                v + static_cast<int8_t>(e.value),
+                static_cast<int8_t>(pages_[page_].min),
+                static_cast<int8_t>(pages_[page_].max));
+            app->SetParameter(page_, static_cast<int8_t>(v));
+          } else {
+            int16_t v = app->GetParameter(page_);
+            v = Clip(
+                v + static_cast<int8_t>(e.value),
+                pages_[page_].min,
+                pages_[page_].max);
+            app->SetParameter(page_, v);
+          }
         } else {
           page_ += e.value;
           if (page_ == 0xff) {
@@ -147,11 +159,11 @@ void Ui::DoEvents() {
     app_manager.active_app()->OnIdle();
   }
   
-  if (redraw && !plugin->OnRedraw()) {
+  if (redraw && !app->OnRedraw()) {
     PrintKeyValuePair(
         pages_[page_].key_res_id,
         pages_[page_].value_res_id,
-        plugin->GetParameter(page_),
+        app->GetParameter(page_),
         editing_);
   }
 }
@@ -168,20 +180,28 @@ void Ui::PrintKeyValuePair(
   memset(line_buffer, ' ', kLcdWidth);
   ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
   AlignRight(&line_buffer[0], 3);
-  if (value_res_id == UNIT_INTEGER ||
-      value_res_id == UNIT_INTEGER_ALL) {
-    UnsafeItoa(value, 3, &line_buffer[4]);
-    if (value == 0 && value_res_id == UNIT_INTEGER_ALL) {
-        ResourcesManager::LoadStringResource(
-            STR_RES_ALL, &line_buffer[4], 3);
-    }
-  } else if (value_res_id == UNIT_INDEX) {
-    UnsafeItoa(value + 1, 3, &line_buffer[4]);
-  } else if (value_res_id == UNIT_NOTE) {
-    PrintNote(&line_buffer[4], value);
-  } else {
-    ResourcesManager::LoadStringResource(
-        value_res_id + value, &line_buffer[4], 3);
+  switch (value_res_id) {
+    case UNIT_INTEGER:
+    case UNIT_INTEGER_ALL:
+      UnsafeItoa(value, 3, &line_buffer[4]);
+      if (value == 0 && value_res_id == UNIT_INTEGER_ALL) {
+          ResourcesManager::LoadStringResource(
+              STR_RES_ALL, &line_buffer[4], 3);
+      }
+      break;
+    case UNIT_SIGNED_INTEGER:
+      UnsafeItoa(static_cast<int8_t>(value), 3, &line_buffer[4]);
+      break;
+    case UNIT_INDEX:
+      UnsafeItoa(value + 1, 3, &line_buffer[4]);
+      break;
+    case UNIT_NOTE:
+      PrintNote(&line_buffer[4], value);
+      break;
+    default:
+      ResourcesManager::LoadStringResource(
+          value_res_id + value, &line_buffer[4], 3);
+      break;
   }
   AlignRight(&line_buffer[4], 3);
   if (selected) {

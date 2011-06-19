@@ -80,4 +80,4 @@ uint8_t CcKnob::GetParameter(uint8_t key) {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

@@ -33,4 +33,4 @@ void ActiveSensingFilter::OnRawByte(uint8_t byte) {
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

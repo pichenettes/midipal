@@ -41,6 +41,7 @@ enum Unit {
   UNIT_INDEX,
   UNIT_NOTE,
   UNIT_INTEGER_ALL,
+  UNIT_SIGNED_INTEGER,
 };
 
 class Ui {
@@ -87,7 +88,7 @@ class Ui {
   static uint8_t editing_;
   static uint8_t read_pots_;
   static uint8_t pot_value_[8];
-  static PageDefinition pages_[32];
+  static PageDefinition pages_[48];
 };
 
 extern Ui ui;

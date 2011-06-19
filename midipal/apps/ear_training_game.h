@@ -71,6 +71,6 @@ class EarTrainingGame : public App {
   DISALLOW_COPY_AND_ASSIGN(EarTrainingGame);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
 #endif // MIDIPAL_EAR_TRAINING_GAME_H_

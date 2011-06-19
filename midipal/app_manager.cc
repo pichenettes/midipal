@@ -28,6 +28,7 @@
 #include "midipal/apps/clock_source.h"
 #include "midipal/apps/combiner.h"
 #include "midipal/apps/controller.h"
+#include "midipal/apps/delay.h"
 #include "midipal/apps/dispatcher.h"
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/apps/ear_training_game.h"
@@ -46,6 +47,7 @@ apps::ChordMemory chord_memory;
 apps::ClockSource clock_source;
 apps::Combiner combiner;
 apps::Controller controller;
+apps::Delay delay;
 apps::Dispatcher dispatcher;
 apps::DrumPatternGenerator drum_pattern_generator;
 apps::EarTrainingGame ear_training_game;
@@ -68,7 +70,8 @@ App* registry[] = {
   &chord_memory,
   &dispatcher,
   &combiner,
-  &arpeggiator
+  &arpeggiator,
+  &delay
 };
 
 /* extern */

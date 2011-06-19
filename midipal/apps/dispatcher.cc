@@ -116,4 +116,4 @@ void Dispatcher::SendMessage(
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

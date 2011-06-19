@@ -45,4 +45,4 @@ uint8_t Controller::OnPot(uint8_t pot, uint8_t value) {
   Send3(0xb0 | channel_, cc_[pot], value);
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

@@ -61,4 +61,4 @@ void Splitter::OnRawMidiData(
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

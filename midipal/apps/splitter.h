@@ -17,8 +17,8 @@
 //
 // Splitter app.
 
-#ifndef MIDIPAL_PLUGINS_SPLITTER_H_
-#define MIDIPAL_PLUGINS_SPLITTER_H_
+#ifndef MIDIPAL_APPS_SPLITTER_H_
+#define MIDIPAL_APPS_SPLITTER_H_
 
 #include "midipal/app.h"
 
@@ -49,6 +49,6 @@ class Splitter : public App {
   DISALLOW_COPY_AND_ASSIGN(Splitter);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_SPLITTER_H_
+#endif // MIDIPAL_APPS_SPLITTER_H_

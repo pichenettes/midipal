@@ -25,7 +25,7 @@
 
 namespace midipal {
 
-static const uint8_t kEventSchedulerSize = 128;
+static const uint8_t kEventSchedulerSize = 144;
 
 static const uint8_t kFreeSlot = 0xff;
 static const uint8_t kZombieSlot = 0xfe;
@@ -35,6 +35,7 @@ struct SchedulerEntry {
   uint8_t velocity;  // 0 for note off
   uint8_t when;
   uint8_t next;
+  uint8_t tag;
 };
 
 class EventScheduler {
@@ -43,7 +44,10 @@ class EventScheduler {
   
   static void Init();
   static void Tick();
-  static void Schedule(uint8_t note, uint8_t velocity, uint8_t when);
+  static void Schedule(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag);
+  static void Schedule(uint8_t note, uint8_t velocity, uint8_t when) {
+    Schedule(note, velocity, when, 0);
+  }
   static uint8_t Remove(uint8_t note, uint8_t velocity);
   
   static inline const SchedulerEntry& entry(uint8_t address) {
@@ -51,6 +55,9 @@ class EventScheduler {
   }
   static inline const uint8_t root() { return root_ptr_; }
   static inline const uint8_t size() { return size_; }
+  static inline const uint8_t overflow() {
+    return size() >= kEventSchedulerSize - 8;
+  }
 
  private:
   static SchedulerEntry entries_[kEventSchedulerSize];

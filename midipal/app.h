@@ -15,10 +15,10 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Base class implemented by all the "Plug-ins" running on the Midipal.
+// Base class implemented by all the "Apps" running on the Midipal.
 
-#ifndef MIDIPAL_PLUGIN_H_
-#define MIDIPAL_PLUGIN_H_
+#ifndef MIDIPAL_APPS_H_
+#define MIDIPAL_APPS_H_
 
 #include "avrlib/base.h"
 
@@ -44,6 +44,7 @@ enum EepromSetting {
   SETTINGS_DISPATCHER = 176,
   SETTINGS_COMBINER = 192,
   SETTINGS_ARPEGGIATOR = 208,
+  SETTINGS_DELAY = 256,
   SETTINGS_SETUP = 1008
 };
 
@@ -133,7 +134,10 @@ class App {
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);
   void Send3(uint8_t a, uint8_t b, uint8_t c);
-  void SendLater(uint8_t note, uint8_t velocity, uint8_t when);
+  void SendLater(uint8_t note, uint8_t velocity, uint8_t when) {
+    SendLater(note, velocity, when, 0);
+  }
+  void SendLater(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag);
   void SendScheduledNotes(uint8_t channel);
   void FlushQueue(uint8_t channel);
   
@@ -141,6 +145,8 @@ class App {
   DISALLOW_COPY_AND_ASSIGN(App);
 };
 
+extern const prog_uint8_t midi_clock_tick_per_step[];
+
 }  // namespace midipal
 
-#endif // MIDIPAL_PLUGIN_H_
+#endif // MIDIPAL_APPS_H_

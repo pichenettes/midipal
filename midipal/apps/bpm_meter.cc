@@ -133,4 +133,4 @@ uint8_t BpmMeter::OnClick() {
   return 1;
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

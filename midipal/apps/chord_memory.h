@@ -17,8 +17,8 @@
 //
 // Chord memory app.
 
-#ifndef MIDIPAL_PLUGINS_CHORD_MEMORY_H_
-#define MIDIPAL_PLUGINS_CHORD_MEMORY_H_
+#ifndef MIDIPAL_APPS_CHORD_MEMORY_H_
+#define MIDIPAL_APPS_CHORD_MEMORY_H_
 
 #include "midipal/app.h"
 
@@ -56,6 +56,6 @@ class ChordMemory : public App {
   DISALLOW_COPY_AND_ASSIGN(ChordMemory);
 };
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps
 
-#endif // MIDIPAL_PLUGINS_CHORD_MEMORY_H_
+#endif // MIDIPAL_APPS_CHORD_MEMORY_H_

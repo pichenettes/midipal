@@ -15,19 +15,18 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Randomizer app.
+// Delay app.
 
-#ifndef MIDIPAL_APPS_RANDOMIZER_H_
-#define MIDIPAL_APPS_RANDOMIZER_H_
+#ifndef MIDIPAL_APPS_DELAY_H_
+#define MIDIPAL_APPS_DELAY_H_
 
 #include "midipal/app.h"
-#include "midipal/note_map.h"
 
 namespace midipal { namespace apps {
 
-class Randomizer : public App {
+class Delay : public App {
  public:
-  Randomizer() { }
+  Delay() { }
 
   void OnInit();
   void OnRawMidiData(
@@ -37,33 +36,41 @@ class Randomizer : public App {
      uint8_t accepted_channel);
   void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+
+  void OnContinue();
+  void OnStart();
+  void OnStop();
+  void OnClock();
+  void OnInternalClockTick();
+
+  void SetParameter(uint8_t key, uint8_t value);
   
-  uint8_t settings_size() { return 7; }
-  uint8_t settings_offset() { return SETTINGS_RANDOMIZER; }
-  uint8_t* settings_data() { return &channel_; }
-  uint8_t app_name() { return STR_RES_RANDOMIZ; }
+  uint8_t settings_size() { return 9; }
+  uint8_t settings_offset() { return SETTINGS_DELAY; }
+  uint8_t* settings_data() { return &clk_mode_; }
+  uint8_t app_name() { return STR_RES_DELAY; }
+
+ protected:
+  void ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps);
+  void SendEchoes();
   
- private:
-  void SendMessage(
-      uint8_t message,
-      uint8_t channel,
-      uint8_t note,
-      uint8_t velocity);
-  uint8_t ScaleModulationAmount(uint8_t amount);
-  
+  uint8_t running_;
+   
+  uint8_t clk_mode_;
+  uint8_t bpm_;
+  uint8_t groove_template_;
+  uint8_t groove_amount_;
   uint8_t channel_;
-  uint8_t global_amount_;
-  uint8_t note_amount_;
-  uint8_t velocity_amount_;
-  uint8_t cc_amount_[2];
-  uint8_t cc_[2];
+  uint8_t delay_;
+  uint8_t num_taps_;
+  uint8_t velocity_factor_;
+  int8_t transposition_;
+
+  uint8_t velocity_factor_reverse_log_;
   
-  NoteMap<32> map_;
-  
-  DISALLOW_COPY_AND_ASSIGN(Randomizer);
+  DISALLOW_COPY_AND_ASSIGN(Delay);
 };
 
 } }  // namespace midipal::apps
 
-#endif // MIDIPAL_APPS_RANDOMIZER_H_
+#endif  // MIDIPAL_APPS_DELAY_H_

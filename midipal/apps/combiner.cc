@@ -53,4 +53,4 @@ void Combiner::OnRawMidiData(
   }
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

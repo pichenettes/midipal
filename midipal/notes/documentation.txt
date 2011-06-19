@@ -3,6 +3,7 @@ TODO:
 * cc seq     CC sequencer
 * chaos!     chaos!
 * delay
+* transposer and scale mapper?
 
 
 
@@ -421,6 +422,47 @@ Duration of an arpeggio step (the duration of a 'o' or blank in the previous cha
 <lcd>dur /16 </lcd>
 
 Duration of the notes played by the arpeggiator. The default is /96, a MIDI clock tick.
+
+
+Tempo-synchronized delay (@delay@)
+
+This app adds echo to incoming note on and note off messages. The echo duration is specified as a fraction of the duration of a bar - thus, this effect can be synchronized to a tempo clock (be it internal or external).
+
+<lcd>clk int </lcd>
+
+Select an internal or external clock source. When using an external clock source, start, clock and stop MIDI messages must be sent.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock.
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+<lcd>chn   1 </lcd>
+
+Channel on which the echo effect is applied.
+
+<lcd>del 1/4 </lcd>
+
+Delay duration, expressed as a fraction of a bar. For example, when this is set to 1/4, the duration between echoes is equal to the duration of a quarter note.
+
+<lcd>rep   8 </lcd>
+
+Number of echoes to apply. Note that when a complex sequence is played with many overlapping echoes, the internal scheduler buffer can overflow. In this case, a '!' symbol is displayed on screen.
+
+<lcd>vel  16 </lcd>
+
+Velocity dampening. When this value is low, the echoes have a small and fastly decreasing velocity. When this value is high (the maximum being 16), all the echoes are played with the same velocity as the original note.
+
+<lcd>trs   0 </lcd>
+
+Number of semitones by which each echo must be transposed.
 
 
 EVERYTHING IS MISCELLANEOUS

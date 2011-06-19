@@ -39,6 +39,7 @@ static const prog_char str_res_monitor[] PROGMEM = "monitor";
 static const prog_char str_res_randomiz[] PROGMEM = "randomiz";
 static const prog_char str_res_contrllr[] PROGMEM = "contrllr";
 static const prog_char str_res_splitter[] PROGMEM = "splitter";
+static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -137,6 +138,8 @@ static const prog_char str_res__24[] PROGMEM = "/24";
 static const prog_char str_res__32[] PROGMEM = "/32";
 static const prog_char str_res__48[] PROGMEM = "/48";
 static const prog_char str_res__96[] PROGMEM = "/96";
+static const prog_char str_res_rep[] PROGMEM = "rep";
+static const prog_char str_res_trs[] PROGMEM = "trs";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -154,6 +157,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_randomiz,
   str_res_contrllr,
   str_res_splitter,
+  str_res_delay,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
@@ -252,6 +256,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res__32,
   str_res__48,
   str_res__96,
+  str_res_rep,
+  str_res_trs,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {

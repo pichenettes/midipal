@@ -62,4 +62,4 @@ uint8_t AppSelector::OnRedraw() {
   return 1;
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

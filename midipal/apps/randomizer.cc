@@ -120,4 +120,4 @@ void Randomizer::SendMessage(
   }  
 }
 
-} }  // namespace midipal::plugins
+} }  // namespace midipal::apps

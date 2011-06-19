@@ -34,6 +34,7 @@ monitor
 randomiz
 contrllr
 splitter
+delay
 
 sndOff
 rstCtr
@@ -144,4 +145,7 @@ div
 /32
 /48
 /96
+
+rep
+trs
 """
