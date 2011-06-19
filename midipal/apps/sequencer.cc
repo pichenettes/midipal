@@ -118,7 +118,7 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   }
 
   // Step recording.
-  if (ui.editing()) {
+  if (ui.editing() && ui.page() >= 13) {
     if (!running_) {
       Send3(0x90 | channel, note, velocity);
     }
