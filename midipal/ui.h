@@ -89,6 +89,7 @@ class Ui {
   static uint8_t editing() {
     return editing_;
   }
+  static uint8_t page_index();
 
  private:
   static avrlib::RotaryEncoder<

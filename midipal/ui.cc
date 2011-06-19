@@ -118,6 +118,17 @@ void Ui::Poll() {
 }
 
 /* static */
+uint8_t Ui::page_index() {
+  uint8_t p = page_;
+  uint8_t index = 0;
+  while (p >= num_declared_pages_) {
+    p -= stride_;
+    ++index;
+  }
+  return index;
+}
+
+/* static */
 void Ui::DoEvents() {
   uint8_t redraw = 0;
   App* app = app_manager.active_app();

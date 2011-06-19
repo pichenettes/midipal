@@ -1,6 +1,5 @@
 TODO:
-* sequencr   sequencer
-* cc seq     CC sequencer
+* cc lfo     CC LFO
 
 
 
@@ -522,6 +521,103 @@ Generates an additional, mostly random, harmonic line on top of the incoming mel
 * *random*: plays a random note within +/- a fifth of the note you played.
 
 Obviously, all those random modifications are likely to generate annoying junk unless you select a scale. In which case, it will still sound random, but of the "Free-Jazz" flavor of random.
+
+
+Step sequencer (@sequencr@)
+
+This app is a step sequencer which can generate note messages, CCs, or a combination of both, on up to 32 steps.
+
+The following settings are available for each step:
+* Note (represented on the screen by a note icon)
+* Note duration (represented on the screen by a pulse icon)
+* Note velocity (represented on the screen by a triangle icon). Set the velocity to 0 to mark a step as being a rest. 
+* CC value (represented by a knob icon)
+
+Since navigating between the 32 steps x 4 settings = 128 pages can be tedious, you can "simplify" the sequencer operation by:
+* Muting the notes track. In this case, the sequencer only sends CC - and works more like a programmable MIDI LFO.
+* Muting the note duration track. In this case, a default note duration of 1 step will be used.
+* Muting the velocity track. In this case, a default velocity of 100 is used for each step.
+* Muting the CC track. In this case, the sequencer only sends note information.
+
+The muting/unmuting of those track can be used for creative effects - for example, you can temporarily remove the velocity track of a synth sound to make it sound louder.
+
+The sequencer has many settings pages, described in this section.
+
+<lcd>run off </lcd>
+
+Start or stop the sequencer, when it is synchronized to the internal clock -- When the sequencer is synchronized to an external MIDI clock, a proper start/stop MIDI message must be sent for the sequence to start.
+
+You can also start the sequencer by playing a MIDI note, and stop it by replaying the same note.
+
+<lcd>clk int </lcd>
+
+Select an internal or external clock source. When using an external clock source, start, clock and stop MIDI messages must be sent.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock.
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+<lcd>div /16 </lcd>
+
+Duration of a step, in a fraction of a bar. The most common behaviour (TB303, etc.) is one sixteenth note (/16) per step.
+
+<lcd>chn   1 </lcd>
+
+MIDI channel on which the sequenced events will be sent.
+
+<lcd>cc#   7 </lcd>
+
+CC number of the messages sequenced on the CC track.
+
+<lcd>not  on </lcd>
+
+Whether the sequencer sends note messages.
+
+<lcd>dur  on </lcd>
+
+Whether the note duration track is active. When this track is disabled, all notes played by the sequencer have a duration of 1 step.
+
+<lcd>vel  on </lcd>
+
+Whether the velocity track is active. When this track is disabled, a note is played on every step, with a velocity of 100.
+
+<lcd>cc   on </lcd>
+
+Whether the CC track is active.
+
+<lcd>stp    8 </lcd>
+
+Number of steps a sequence is made of.
+
+<lcd>01N   C3 </lcd>
+
+Note for step 1.
+
+<lcd>01D  /96 </lcd>
+
+Duration of the note played at step 1 - here, 1 MIDI clock tick.
+
+<lcd>01V   14 </lcd>
+
+Velocity for step 1. The actual MIDI velocity value sent is 8 times the displayed value. For example, 15 corresponds to the velocity value 120.
+
+<lcd>01C   63 </lcd>
+
+Value of the CC sent at step 1.
+
+
+Some nice things about the sequencer:
+
+* While a sequence is playing, you can transpose it by playing a note on the keyboard. The transposition is relative to C3 if the sequence was started from the menu or from an external MIDI clock ; or relative to the pressed key when the sequence was started from the keyboard.
+* While the MIDIpal is in editing mode, on a note step (in other words, when the screen is displaying something like <lcd>01N   C3 </lcd>), pressing a key on the keyboard doesn't transpose or start the sequence. Instead, it records the played note at the current step.
 
 
 EVERYTHING IS MISCELLANEOUS

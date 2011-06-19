@@ -116,8 +116,20 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (!note_track_) {
     Send3(0x90 | channel, note, velocity);
   }
-  if (
-      running_ &&
+
+  // Step recording.
+  if (ui.editing()) {
+    if (!running_) {
+      Send3(0x90 | channel, note, velocity);
+    }
+    uint8_t offset = U8U8Mul(ui.page_index(), kNumBytesPerStep);
+    sequence_data_[offset] = note;
+    if (velocity_track_) {
+      sequence_data_[offset + 2] = velocity >> 3;
+    }
+    return;
+  }
+  if (running_ &&
       clk_mode_ == CLOCK_MODE_INTERNAL &&
       note == last_note_ &&
       note_track_) {
@@ -130,7 +142,7 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 }
 
 void Sequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (!note_track_) {
+  if (!note_track_ || !running_) {
     Send3(0x80 | channel, note, velocity);
   }
 }
