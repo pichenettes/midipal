@@ -1,11 +1,3 @@
-TODO:
-* cc lfo     CC LFO
-
-
-
-
-
-
 Mutable Instruments MIDIpal user manual
 
 The MIDIpal is a powerful MIDI processor - think of it as a multi-effect operating on MIDI data! It features 16 different MIDI apps, ranging from MIDI debugging or routing basics (monitoring messages, remapping a channel to another one) to compositional or inspirational tools (arpeggiator, pattern generator).
@@ -618,6 +610,90 @@ Some nice things about the sequencer:
 
 * While a sequence is playing, you can transpose it by playing a note on the keyboard. The transposition is relative to C3 if the sequence was started from the menu or from an external MIDI clock ; or relative to the pressed key when the sequence was started from the keyboard.
 * While the MIDIpal is in editing mode, on a note step (in other words, when the screen is displaying something like <lcd>01N   C3 </lcd>), pressing a key on the keyboard doesn't transpose or start the sequence. Instead, it records the played note at the current step.
+
+
+LFO (@lfo@)
+
+This app generates slowly evolving controllers for up to 4 individual CC. Note that there are a few fundamental differences between what this app does and what an LFO on a synth does:
+# The stream of CC is generated at a slow speed, typically 50 samples per second.
+# Instead of controlling the frequency, you control the duration of a cycle, in terms of musical durations.
+
+The following parameters can be adjusted:
+
+<lcd>run off </lcd>
+
+Start or stop the LFOs, when it is synchronized to the internal clock -- When the LFO is synchronized to an external MIDI clock, a proper start/stop MIDI message must be sent for the sequence to start.
+
+<lcd>clk int </lcd>
+
+Select an internal or external clock source. When using an external clock source, start, clock and stop MIDI messages must be sent.
+
+<lcd>bpm 120 </lcd>
+
+Clock tempo, in beats per minutes.
+
+<lcd>grv swg </lcd>
+
+Type of shuffle/jitter to apply to the clock.
+
+<lcd>amt  80 </lcd>
+
+Amount of shuffle/jitter to apply to the clock.
+
+<lcd>res /96 </lcd>
+
+Resolution of the LFO clock. Selecting a high resolution allows for faster modulations and less stepping, but some devices might not like the very dense MIDI streams this generates. Selecting a low resolution might create "stepping" effects.
+
+<lcd>chn   1 </lcd>
+
+MIDI channel on which the CC messages will be sent.
+
+<lcd>ccN   7 </lcd>
+
+CC number sent by the Nth LFO.
+
+<lcd>amN  63 </lcd>
+
+Modulation amount of the Nth LFO. A negative amount inverses the polarity of the LFO waveform.
+
+<lcd>ceN  63 </lcd>
+
+Center value of the Nth LFO. For example, if the modulation amount is 40 and the center value 70, the LFO will oscillate between 70 - 40 = 30 and 70 + 40 = 110.
+
+<lcd>wfN tri </lcd>
+
+Waveform of the Nth LFO. The following waveforms are available:
+
+* *tri*: triangle
+* *sqr*: square
+* *rmp*: ascending ramp. Use a negative modulation amount to get a descending ramp.
+* *sin*: sine wave
+* *si2*: first and second sine harmonics
+* *si3*: first and third sine harmonics
+* *si5*: first and fifth sine harmonics
+* *gg1*: gurggle
+* *gg2*: double gurggle
+* *bt1*: bat (folded triangle) 1
+* *bt2*: bar (folded triangle) 2
+* *sp1*: spike
+* *sp2*: bipolar spike
+* *lp1*: smoothed ramp
+* *lp2*: smoothed square
+* *rs1*: ramp with overshoot
+* *rs2*: square with overshoot
+
+A large fraction of those waveforms has been approved by the International Organization for Dubstep Standardization.
+
+<lcd>rtN 1/8 </lcd>
+
+Period of the Nth LFO. For example, if this is set to 1/4, the LFO will complete a whole cycle every quarter note (beat).
+
+<lcd>syN fre </lcd>
+
+Sync mode of the Nth LFO. The synchronization modes are:
+* *fre*: free running. The LFO oscillates independently of any note message, and its phase is never reset.
+* *not*: note synchronization. The LFO phase is reset to 0 every time a note on message is received.
+* *chd*: chord synchronization. The LFO phase is reset to 0 every time a new "chord" is received. In other words, as long as a note is held, playing new notes will not reset the LFO phase. You need to release all keys and press a new key to reset the LFO phase.
 
 
 EVERYTHING IS MISCELLANEOUS

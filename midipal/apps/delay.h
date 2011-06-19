@@ -46,7 +46,7 @@ class Delay : public App {
   void SetParameter(uint8_t key, uint8_t value);
   
   uint8_t settings_size() { return 9; }
-  uint8_t settings_offset() { return SETTINGS_DELAY; }
+  uint16_t settings_offset() { return SETTINGS_DELAY; }
   uint8_t* settings_data() { return &clk_mode_; }
   uint8_t app_name() { return STR_RES_DELAY; }
 

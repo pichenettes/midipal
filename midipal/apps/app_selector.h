@@ -35,7 +35,7 @@ class AppSelector : public App {
   uint8_t OnRedraw();
  
   uint8_t settings_size() { return 1; }
-  uint8_t settings_offset() { return SETTINGS_SETUP; }
+  uint16_t settings_offset() { return SETTINGS_SETUP; }
   uint8_t* settings_data() { return &active_app_; }
 
  private:

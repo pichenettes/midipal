@@ -15,47 +15,82 @@
 //
 // -----------------------------------------------------------------------------
 //
-// MIDI clock generator app.
+// CC LFO app.
 
-#ifndef MIDIPAL_APPS_CLOCK_SOURCE_H_
-#define MIDIPAL_APPS_CLOCK_SOURCE_H_
+#ifndef MIDIPAL_APPS_LFO_H_
+#define MIDIPAL_APPS_LFO_H_
 
 #include "midipal/app.h"
 
 namespace midipal { namespace apps {
 
-class ClockSource : public App {
+enum LfoSyncMode {
+  LFO_SYNC_FREE_RUNNING,
+  LFO_SYNC_NOTE_ON,
+  LFO_SYNC_START
+};
+
+struct LfoData {
+  uint8_t cc_number;
+  uint8_t amount;
+  uint8_t center_value;
+  uint8_t waveform;
+  uint8_t cycle_duration;
+  uint8_t sync_mode;
+};
+
+const uint8_t kNumLfos = 4;
+
+class Lfo : public App {
  public:
-  ClockSource() { }
+  Lfo() { }
 
   void OnInit();
+  void OnRawMidiData(
+     uint8_t status,
+     uint8_t* data,
+     uint8_t data_size,
+     uint8_t accepted_channel);
+  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  
+  void OnInternalClockTick();
+  void OnContinue();
   void OnStart();
   void OnStop();
-  void OnContinue();
-  void OnRawByte(uint8_t byte);
+  void OnClock();
   
   void SetParameter(uint8_t key, uint8_t value);
   
-  void OnInternalClockTick();
-  
-  uint8_t settings_size() { return 4; }
-  uint16_t settings_offset() { return SETTINGS_CLOCK_SOURCE; }
+  uint8_t settings_size() { return 7 + sizeof(LfoData) * kNumLfos; }
+  uint16_t settings_offset() { return SETTINGS_LFO; }
   uint8_t* settings_data() { return &running_; }
-  uint8_t app_name() { return STR_RES_CLOCK; }
+  uint8_t app_name() { return STR_RES_CC_LFO; }
 
  private:
-  void UpdateCursor();
   void Stop();
   void Start();
+  void Tick();
   
   uint8_t running_;
+  uint8_t clk_mode_;
   uint8_t bpm_;
   uint8_t groove_template_;
   uint8_t groove_amount_;
+  uint8_t clock_division_;  
+  uint8_t channel_;
   
-  DISALLOW_COPY_AND_ASSIGN(ClockSource);
+  LfoData lfo_data_[kNumLfos];
+
+  uint16_t phase_[kNumLfos];
+  uint16_t phase_increment_[kNumLfos];
+  
+  uint8_t tick_;
+  uint8_t midi_clock_prescaler_;
+  
+  DISALLOW_COPY_AND_ASSIGN(Lfo);
 };
 
 } }  // namespace midipal::apps
 
-#endif // MIDIPAL_APPS_CLOCK_SOURCE_H_
+#endif // MIDIPAL_APPS_LFO_H_

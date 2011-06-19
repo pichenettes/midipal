@@ -40,7 +40,7 @@ class ChordMemory : public App {
   uint8_t OnClick();
   
   uint8_t settings_size() { return 17; }
-  uint8_t settings_offset() { return SETTINGS_CHORD_MEMORY; }
+  uint16_t settings_offset() { return SETTINGS_CHORD_MEMORY; }
   uint8_t* settings_data() { return &channel_; }
   uint8_t app_name() { return STR_RES_CHORDMEM; }
   

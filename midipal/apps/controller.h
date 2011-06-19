@@ -38,7 +38,7 @@ class Controller : public App {
   uint8_t OnPot(uint8_t pot, uint8_t value);
   
   uint8_t settings_size() { return 9; }
-  uint8_t settings_offset() { return SETTINGS_CONTROLLER; }
+  uint16_t settings_offset() { return SETTINGS_CONTROLLER; }
   uint8_t* settings_data() { return &channel_; }
   uint8_t app_name() { return STR_RES_CONTRLLR; }
   

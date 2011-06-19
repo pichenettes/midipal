@@ -41,7 +41,7 @@ void Delay::OnInit() {
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
-  ui.AddPage(STR_RES_DELAY, STR_RES_1_1, 0, 10);
+  ui.AddPage(STR_RES_DELAY, STR_RES_2_1, 0, 12);
   ui.AddPage(STR_RES_REP, UNIT_INTEGER, 0, 32);
   ui.AddPage(STR_RES_VEL, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);

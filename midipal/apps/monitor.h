@@ -66,7 +66,7 @@ class Monitor : public App {
   uint8_t OnClick();
   
   uint8_t settings_size() { return 1; }
-  uint8_t settings_offset() { return SETTINGS_MONITOR; }
+  uint16_t settings_offset() { return SETTINGS_MONITOR; }
   uint8_t* settings_data() { return &monitored_channel_; }
   uint8_t app_name() { return STR_RES_MONITOR; }
   

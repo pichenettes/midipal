@@ -40,7 +40,7 @@ class Randomizer : public App {
   void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
   
   uint8_t settings_size() { return 7; }
-  uint8_t settings_offset() { return SETTINGS_RANDOMIZER; }
+  uint16_t settings_offset() { return SETTINGS_RANDOMIZER; }
   uint8_t* settings_data() { return &channel_; }
   uint8_t app_name() { return STR_RES_RANDOMIZ; }
   

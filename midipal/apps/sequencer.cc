@@ -37,7 +37,7 @@ void Sequencer::OnInit() {
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
-  ui.AddPage(STR_RES_DIV, STR_RES_1_1, 0, 14);
+  ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_CC_, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_NOT, STR_RES_OFF, 0, 1);
@@ -46,7 +46,7 @@ void Sequencer::OnInit() {
   ui.AddPage(STR_RES_CC_KNOB, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_STP, UNIT_INTEGER, 1, 32);
   ui.AddRepeatedPage(STR_RES_1, UNIT_NOTE, 0, 127, 32);
-  ui.AddRepeatedPage(STR_RES_2, STR_RES_1_1, 0, 14, 32);
+  ui.AddRepeatedPage(STR_RES_2, STR_RES_2_1, 0, 16, 32);
   ui.AddRepeatedPage(STR_RES_3, UNIT_INTEGER, 0, 15, 32);
   ui.AddRepeatedPage(STR_RES_4, UNIT_INTEGER, 0, 127, 32);
   clock.Update(bpm_, groove_template_, groove_amount_);

@@ -39,7 +39,7 @@ class CcKnob : public App {
   uint8_t GetParameter(uint8_t key);
   
   uint8_t settings_size() { return 6; }
-  uint8_t settings_offset() { return SETTINGS_CC_KNOB; }
+  uint16_t settings_offset() { return SETTINGS_CC_KNOB; }
   uint8_t* settings_data() { return &value_; }
   uint8_t app_name() { return STR_RES_CC_KNOB; }
   

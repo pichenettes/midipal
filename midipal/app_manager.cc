@@ -32,6 +32,7 @@
 #include "midipal/apps/dispatcher.h"
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/apps/ear_training_game.h"
+#include "midipal/apps/lfo.h"
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/randomizer.h"
 #include "midipal/apps/scale_processor.h"
@@ -53,6 +54,7 @@ apps::Delay delay;
 apps::Dispatcher dispatcher;
 apps::DrumPatternGenerator drum_pattern_generator;
 apps::EarTrainingGame ear_training_game;
+apps::Lfo lfo;
 apps::Monitor monitor;
 apps::Randomizer randomizer;
 apps::ScaleProcessor scale_processor;
@@ -77,7 +79,8 @@ App* registry[] = {
   &arpeggiator,
   &delay,
   &scale_processor,
-  &sequencer
+  &sequencer,
+  &lfo
 };
 
 /* extern */

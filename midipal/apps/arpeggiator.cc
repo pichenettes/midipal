@@ -48,8 +48,8 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 14);
-  ui.AddPage(STR_RES_DIV, STR_RES_1_1, 0, 14);
-  ui.AddPage(STR_RES_DUR, STR_RES_1_1, 0, 14);
+  ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
+  ui.AddPage(STR_RES_DUR, STR_RES_2_1, 0, 16);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
   SetParameter(8, clock_division_);  // Force an update of the prescaler.

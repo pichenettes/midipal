@@ -47,6 +47,7 @@ enum EepromSetting {
   SETTINGS_DELAY = 256,
   SETTINGS_SCALE_PROCESSOR = 272,
   SETTINGS_SEQUENCER = 288,
+  SETTINGS_LFO = 512,
   SETTINGS_SETUP = 1008
 };
 
@@ -115,7 +116,7 @@ class App {
   
   // Access to settings data structure
   virtual uint8_t settings_size() { return 0; }
-  virtual uint8_t settings_offset() { return 0; }
+  virtual uint16_t settings_offset() { return 0; }
   virtual uint8_t* settings_data() { return NULL; }
   
   // Used by the app manager to display the app name

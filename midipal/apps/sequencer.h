@@ -49,7 +49,7 @@ class Sequencer : public App {
   uint8_t CheckPageStatus(uint8_t index);
   
   uint8_t settings_size() { return 13 + 32 * kNumBytesPerStep; }
-  uint8_t settings_offset() { return SETTINGS_SEQUENCER; }
+  uint16_t settings_offset() { return SETTINGS_SEQUENCER; }
   uint8_t* settings_data() { return &running_; }
   uint8_t app_name() { return STR_RES_SEQUENCR; }
 

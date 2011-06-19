@@ -63,4 +63,5 @@ resources = [
   (lookup_tables.lookup_tables,
    'lookup_table', 'LUT_RES', 'prog_uint16_t', int, False),
   (characters.characters, 'character', 'CHR_RES', 'prog_uint8_t', int, True),
+  (lookup_tables.waveforms, 'waveform', 'WAV_RES', 'prog_uint8_t', int, True),
 ]

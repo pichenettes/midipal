@@ -39,7 +39,7 @@ class ScaleProcessor : public App {
   void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
 
   uint8_t settings_size() { return 6; }
-  uint8_t settings_offset() { return SETTINGS_SCALE_PROCESSOR; }
+  uint16_t settings_offset() { return SETTINGS_SCALE_PROCESSOR; }
   uint8_t* settings_data() { return &channel_; }
   uint8_t app_name() { return STR_RES_SCALE; }
 

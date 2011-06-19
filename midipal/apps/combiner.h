@@ -37,7 +37,7 @@ class Combiner : public App {
      uint8_t accepted_channel);
  
   uint8_t settings_size() { return 3; }
-  uint8_t settings_offset() { return SETTINGS_COMBINER; }
+  uint16_t settings_offset() { return SETTINGS_COMBINER; }
   uint8_t* settings_data() { return &input_channel_; }
   uint8_t app_name() { return STR_RES_MERGECHN; }
 
