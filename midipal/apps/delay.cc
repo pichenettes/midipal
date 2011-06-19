@@ -43,7 +43,7 @@ void Delay::OnInit() {
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_DELAY, STR_RES_1_1, 0, 10);
-  ui.AddPage(STR_RES_REP, UNIT_INTEGER, 1, 32);
+  ui.AddPage(STR_RES_REP, UNIT_INTEGER, 0, 32);
   ui.AddPage(STR_RES_VEL, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);
   
@@ -126,9 +126,7 @@ void Delay::SendEchoes() {
       } else {
         Send3(0x90 | channel_, entry.note, entry.velocity);
       }
-      if (entry.tag) {
-        ScheduleEchoes(entry.note, entry.velocity, entry.tag);
-      }
+      ScheduleEchoes(entry.note, entry.velocity, entry.tag);
     }
     current = entry.next;
   }
@@ -136,6 +134,9 @@ void Delay::SendEchoes() {
 }
 
 void Delay::ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps) {
+  if (num_taps == 0) {
+    return;
+  }
   uint8_t delay = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, delay_);
   uint8_t min_velocity_value = velocity > 0 ? 1 : 0;

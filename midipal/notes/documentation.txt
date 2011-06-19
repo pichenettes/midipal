@@ -2,7 +2,6 @@ TODO:
 * sequencr   sequencer
 * cc seq     CC sequencer
 * chaos!     chaos!
-* delay
 * transposer and scale mapper?
 
 

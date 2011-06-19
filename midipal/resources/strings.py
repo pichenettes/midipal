@@ -35,6 +35,7 @@ randomiz
 contrllr
 splitter
 delay
+scale
 
 sndOff
 rstCtr
@@ -148,4 +149,38 @@ div
 
 rep
 trs
+
+off_
+mir
+alt
+trk
+  rnd
+
+roo
+scl
+
+C
+C#
+D
+D#
+E
+F
+F#
+G
+G#
+A
+A#
+B
+ C
+Db
+ D
+Eb
+ E
+ F
+Gb
+ G
+Ab
+ A
+Bb
+ B
 """

@@ -40,6 +40,7 @@ static const prog_char str_res_randomiz[] PROGMEM = "randomiz";
 static const prog_char str_res_contrllr[] PROGMEM = "contrllr";
 static const prog_char str_res_splitter[] PROGMEM = "splitter";
 static const prog_char str_res_delay[] PROGMEM = "delay";
+static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -140,6 +141,37 @@ static const prog_char str_res__48[] PROGMEM = "/48";
 static const prog_char str_res__96[] PROGMEM = "/96";
 static const prog_char str_res_rep[] PROGMEM = "rep";
 static const prog_char str_res_trs[] PROGMEM = "trs";
+static const prog_char str_res_off_[] PROGMEM = "off ";
+static const prog_char str_res_mir[] PROGMEM = "mir";
+static const prog_char str_res_alt[] PROGMEM = "alt";
+static const prog_char str_res_trk[] PROGMEM = "trk";
+static const prog_char str_res___rnd[] PROGMEM = "rnd";
+static const prog_char str_res_roo[] PROGMEM = "roo";
+static const prog_char str_res_scl[] PROGMEM = "scl";
+static const prog_char str_res_c[] PROGMEM = "C";
+static const prog_char str_res_c_[] PROGMEM = "C#";
+static const prog_char str_res_d[] PROGMEM = "D";
+static const prog_char str_res_d_[] PROGMEM = "D#";
+static const prog_char str_res_e[] PROGMEM = "E";
+static const prog_char str_res_f[] PROGMEM = "F";
+static const prog_char str_res_f_[] PROGMEM = "F#";
+static const prog_char str_res_g[] PROGMEM = "G";
+static const prog_char str_res_g_[] PROGMEM = "G#";
+static const prog_char str_res_a[] PROGMEM = "A";
+static const prog_char str_res_a_[] PROGMEM = "A#";
+static const prog_char str_res_b[] PROGMEM = "B";
+static const prog_char str_res__c[] PROGMEM = "C";
+static const prog_char str_res_db[] PROGMEM = "Db";
+static const prog_char str_res__d[] PROGMEM = "D";
+static const prog_char str_res_eb[] PROGMEM = "Eb";
+static const prog_char str_res__e[] PROGMEM = "E";
+static const prog_char str_res__f[] PROGMEM = "F";
+static const prog_char str_res_gb[] PROGMEM = "Gb";
+static const prog_char str_res__g[] PROGMEM = "G";
+static const prog_char str_res_ab[] PROGMEM = "Ab";
+static const prog_char str_res__a[] PROGMEM = "A";
+static const prog_char str_res_bb[] PROGMEM = "Bb";
+static const prog_char str_res__b[] PROGMEM = "B";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -158,6 +190,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_contrllr,
   str_res_splitter,
   str_res_delay,
+  str_res_scale,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
@@ -258,6 +291,37 @@ PROGMEM const prog_char* string_table[] = {
   str_res__96,
   str_res_rep,
   str_res_trs,
+  str_res_off_,
+  str_res_mir,
+  str_res_alt,
+  str_res_trk,
+  str_res___rnd,
+  str_res_roo,
+  str_res_scl,
+  str_res_c,
+  str_res_c_,
+  str_res_d,
+  str_res_d_,
+  str_res_e,
+  str_res_f,
+  str_res_f_,
+  str_res_g,
+  str_res_g_,
+  str_res_a,
+  str_res_a_,
+  str_res_b,
+  str_res__c,
+  str_res_db,
+  str_res__d,
+  str_res_eb,
+  str_res__e,
+  str_res__f,
+  str_res_gb,
+  str_res__g,
+  str_res_ab,
+  str_res__a,
+  str_res_bb,
+  str_res__b,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
