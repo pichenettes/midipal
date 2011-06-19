@@ -50,6 +50,30 @@ extern const prog_uint16_t lut_res_groove_lag[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_human[] PROGMEM;
 extern const prog_uint16_t lut_res_groove_monkey[] PROGMEM;
 extern const prog_uint16_t lut_res_euclidian_patterns[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_0[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_1[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_2[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_3[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_4[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_5[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_6[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_7[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_8[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_9[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_10[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_11[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_12[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_13[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_14[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_15[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_16[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_18[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_19[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_20[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_21[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_22[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_23[] PROGMEM;
+extern const prog_uint16_t lut_res_scale_24[] PROGMEM;
 extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES_0XFE_FLT 0  // 0xfe flt
 #define STR_RES_ARPEGGIO 1  // arpeggio
@@ -174,30 +198,57 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define STR_RES___RND 120  //   rnd
 #define STR_RES_ROO 121  // roo
 #define STR_RES_SCL 122  // scl
-#define STR_RES_C 123  // C
-#define STR_RES_C_ 124  // C#
-#define STR_RES_D 125  // D
-#define STR_RES_D_ 126  // D#
-#define STR_RES_E 127  // E
-#define STR_RES_F 128  // F
-#define STR_RES_F_ 129  // F#
-#define STR_RES_G 130  // G
-#define STR_RES_G_ 131  // G#
-#define STR_RES_A 132  // A
-#define STR_RES_A_ 133  // A#
-#define STR_RES_B 134  // B
-#define STR_RES__C 135  //  C
-#define STR_RES_DB 136  // Db
-#define STR_RES__D 137  //  D
-#define STR_RES_EB 138  // Eb
-#define STR_RES__E 139  //  E
-#define STR_RES__F 140  //  F
-#define STR_RES_GB 141  // Gb
-#define STR_RES__G 142  //  G
-#define STR_RES_AB 143  // Ab
-#define STR_RES__A 144  //  A
-#define STR_RES_BB 145  // Bb
-#define STR_RES__B 146  //  B
+#define STR_RES_VOI 123  // voi
+#define STR_RES_HRM 124  // hrm
+#define STR_RES_CHR 125  // chr
+#define STR_RES_ION 126  // ion
+#define STR_RES_DOR 127  // dor
+#define STR_RES_PHR 128  // phr
+#define STR_RES_LYD 129  // lyd
+#define STR_RES_MIX 130  // mix
+#define STR_RES_AEO 131  // aeo
+#define STR_RES_LOC 132  // loc
+#define STR_RES_BMJ 133  // bmj
+#define STR_RES_BMN 134  // bmn
+#define STR_RES_PMJ 135  // pmj
+#define STR_RES_PMN 136  // pmn
+#define STR_RES_BHR 137  // bhr
+#define STR_RES_SHR 138  // shr
+#define STR_RES_RUP 139  // rup
+#define STR_RES_TOD 140  // tod
+#define STR_RES_RAG 141  // rag
+#define STR_RES_KAA 142  // kaa
+#define STR_RES_MEG 143  // meg
+#define STR_RES_MLK 144  // mlk
+#define STR_RES_DPK 145  // dpk
+#define STR_RES_FLK 146  // flk
+#define STR_RES_JAP 147  // jap
+#define STR_RES_GAM 148  // gam
+#define STR_RES_WHL 149  // whl
+#define STR_RES_C 150  // C
+#define STR_RES_C_ 151  // C#
+#define STR_RES_D 152  // D
+#define STR_RES_D_ 153  // D#
+#define STR_RES_E 154  // E
+#define STR_RES_F 155  // F
+#define STR_RES_F_ 156  // F#
+#define STR_RES_G 157  // G
+#define STR_RES_G_ 158  // G#
+#define STR_RES_A 159  // A
+#define STR_RES_A_ 160  // A#
+#define STR_RES_B 161  // B
+#define STR_RES__C 162  //  C
+#define STR_RES_DB 163  // Db
+#define STR_RES__D 164  //  D
+#define STR_RES_EB 165  // Eb
+#define STR_RES__E 166  //  E
+#define STR_RES__F 167  //  F
+#define STR_RES_GB 168  // Gb
+#define STR_RES__G 169  //  G
+#define STR_RES_AB 170  // Ab
+#define STR_RES__A 171  //  A
+#define STR_RES_BB 172  // Bb
+#define STR_RES__B 173  //  B
 #define LUT_RES_ARPEGGIATOR_PATTERNS 0
 #define LUT_RES_ARPEGGIATOR_PATTERNS_SIZE 15
 #define LUT_RES_DRUM_PATTERNS 1
@@ -216,6 +267,56 @@ extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 #define LUT_RES_GROOVE_MONKEY_SIZE 16
 #define LUT_RES_EUCLIDIAN_PATTERNS 8
 #define LUT_RES_EUCLIDIAN_PATTERNS_SIZE 144
+#define LUT_RES_SCALE_0 9
+#define LUT_RES_SCALE_0_SIZE 12
+#define LUT_RES_SCALE_1 10
+#define LUT_RES_SCALE_1_SIZE 12
+#define LUT_RES_SCALE_2 11
+#define LUT_RES_SCALE_2_SIZE 12
+#define LUT_RES_SCALE_3 12
+#define LUT_RES_SCALE_3_SIZE 12
+#define LUT_RES_SCALE_4 13
+#define LUT_RES_SCALE_4_SIZE 12
+#define LUT_RES_SCALE_5 14
+#define LUT_RES_SCALE_5_SIZE 12
+#define LUT_RES_SCALE_6 15
+#define LUT_RES_SCALE_6_SIZE 12
+#define LUT_RES_SCALE_7 16
+#define LUT_RES_SCALE_7_SIZE 12
+#define LUT_RES_SCALE_8 17
+#define LUT_RES_SCALE_8_SIZE 12
+#define LUT_RES_SCALE_9 18
+#define LUT_RES_SCALE_9_SIZE 12
+#define LUT_RES_SCALE_10 19
+#define LUT_RES_SCALE_10_SIZE 12
+#define LUT_RES_SCALE_11 20
+#define LUT_RES_SCALE_11_SIZE 12
+#define LUT_RES_SCALE_12 21
+#define LUT_RES_SCALE_12_SIZE 12
+#define LUT_RES_SCALE_13 22
+#define LUT_RES_SCALE_13_SIZE 12
+#define LUT_RES_SCALE_14 23
+#define LUT_RES_SCALE_14_SIZE 12
+#define LUT_RES_SCALE_15 24
+#define LUT_RES_SCALE_15_SIZE 12
+#define LUT_RES_SCALE_16 25
+#define LUT_RES_SCALE_16_SIZE 12
+#define LUT_RES_SCALE_17 26
+#define LUT_RES_SCALE_17_SIZE 12
+#define LUT_RES_SCALE_18 27
+#define LUT_RES_SCALE_18_SIZE 12
+#define LUT_RES_SCALE_19 28
+#define LUT_RES_SCALE_19_SIZE 12
+#define LUT_RES_SCALE_20 29
+#define LUT_RES_SCALE_20_SIZE 12
+#define LUT_RES_SCALE_21 30
+#define LUT_RES_SCALE_21_SIZE 12
+#define LUT_RES_SCALE_22 31
+#define LUT_RES_SCALE_22_SIZE 12
+#define LUT_RES_SCALE_23 32
+#define LUT_RES_SCALE_23_SIZE 12
+#define LUT_RES_SCALE_24 33
+#define LUT_RES_SCALE_24_SIZE 12
 #define CHR_RES_DIGITS_10 0
 #define CHR_RES_DIGITS_10_SIZE 56
 typedef avrlib::ResourcesManager<

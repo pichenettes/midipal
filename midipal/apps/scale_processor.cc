@@ -26,19 +26,30 @@
 #include "midipal/clock.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/note_stack.h"
+#include "midipal/notes.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
+
+enum VoiceMode {
+  VOICE_MODE_OFF,
+  VOICE_MODE_MIRROR,
+  VOICE_MODE_ALTERNATE,
+  VOICE_MODE_TRACK,
+  VOICE_MODE_RANDOM,
+};
   
 using namespace avrlib;
 
 void ScaleProcessor::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 23);
-  ui.AddPage(STR_RES_SCL, UNIT_INDEX, 0, 15);
+  ui.AddPage(STR_RES_SCL, STR_RES_CHR, 0, 24);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);
-  ui.AddPage(STR_RES_PT1, UNIT_SIGNED_INTEGER, -24, 24);
-  ui.AddPage(STR_RES_PT2, STR_RES_OFF_, 0, 4);
+  ui.AddPage(STR_RES_VOI, UNIT_SIGNED_INTEGER, -24, 24);
+  ui.AddPage(STR_RES_HRM, STR_RES_OFF_, 0, 4);
+  previous_note_ = 0;
+  flip_ = 0;
 }
 
 void ScaleProcessor::OnRawMidiData(
@@ -89,7 +100,61 @@ void ScaleProcessor::ProcessNoteMessage(
     uint8_t message,
     uint8_t note,
     uint8_t velocity) {
-  Send3(message | channel_, note, velocity);
+  note = Transpose(note, original_);
+  Send3(
+      message | channel_,
+      Constraint(note, root_, scale_),
+      velocity);
+  if (voice_1_) {
+    Send3(
+        message | channel_,
+        Constraint(Transpose(note, voice_1_), root_, scale_),
+        velocity);
+  }
+  if (voice_2_) {
+    if (message == 0x90) {
+      if (previous_note_ == 0) {
+        voice_2_note_ = note;
+      } else {
+        int16_t voice_2_note = voice_2_note_;
+        int16_t delta = static_cast<int16_t>(note) - previous_note_;
+        switch (voice_2_) {
+          case VOICE_MODE_MIRROR:
+            voice_2_note -= delta;
+            break;
+          case VOICE_MODE_ALTERNATE:
+            flip_ ^= 1;
+            voice_2_note += flip_ ? delta : -delta;
+            break;
+          case VOICE_MODE_TRACK:
+            voice_2_note += U8U8MulShift8(Random::GetByte(), 5) - 2;
+            break;
+          case VOICE_MODE_RANDOM:
+            voice_2_note = static_cast<int16_t>(note) + \
+                U8U8MulShift8(Random::GetByte(), 14) - 7;
+            break;
+        }
+        while (voice_2_note > static_cast<int16_t>(note) + 24) {
+          voice_2_note -= 12;
+        }
+        while (voice_2_note < static_cast<int16_t>(note) - 24) {
+          voice_2_note += 12;
+        }
+        voice_2_note_ = Clip(voice_2_note, 0, 127);
+      }
+      previous_note_ = note;
+      voice_2_note_ = Constraint(voice_2_note_, root_, scale_);
+      note_map.Put(note, voice_2_note_);
+    }
+    
+    NoteMapEntry* entry = note_map.Find(note);
+    if (entry) {
+      Send3(message | channel_, entry->value, velocity);
+      if (message == 0x80) {
+        entry->note = 0xff;
+      }
+    }
+  }
 }
 
 } }  // namespace midipal::apps

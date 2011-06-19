@@ -23,6 +23,7 @@
 
 #include "midi/midi.h"
 
+#include "midipal/notes.h"
 #include "midipal/ui.h"
 #include "midipal/voice_allocator.h"
 
@@ -68,20 +69,20 @@ void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       if (counter_ >= num_voices_) {
         counter_ = 0;
       }
-      map_.Put(note, (counter_ + base_channel_) & 0xf);
+      note_map.Put(note, (counter_ + base_channel_) & 0xf);
       break;
 
     case DISPATCHER_POLYPHONIC_ALLOCATOR:
       voice_allocator.set_size(num_voices_);
-      map_.Put(note, voice_allocator.NoteOn(note));
+      note_map.Put(note, voice_allocator.NoteOn(note));
       break;
       
     case DISPATCHER_RANDOM:
-      map_.Put(note, Random::GetByte() % num_voices_);
+      note_map.Put(note, Random::GetByte() % num_voices_);
       break;
     
     case DISPATCHER_STACK:
-      map_.Put(note, 0xff);
+      note_map.Put(note, 0xff);
       break;
   }
   SendMessage(0x90, channel, note, velocity);
@@ -101,7 +102,7 @@ void Dispatcher::SendMessage(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  NoteMapEntry* entry = map_.Find(note);
+  NoteMapEntry* entry = note_map.Find(note);
   if (entry) {
     if (entry-> value == 0xff) {
       for (uint8_t i = 0; i < num_voices_; ++i) {

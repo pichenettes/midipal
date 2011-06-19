@@ -1,20 +1,22 @@
 Midipal, the MIDI swiss army knife.
 
-A midi in, a midi out, a small display, an encoder ; 16 awesome features:
+A midi in, a midi out, a small display, an encoder ; 18 awesome features:
 
 * Active Sensing filter
 * MIDI monitor
 * BPM counter
-* Clock source
-* CC knob
-* Ear training game
-* Euclidian pattern generator
-* Drum pattern generator
-* Arpeggiator
-* Step sequencer
-* CC sequencer
+* Keyboard splitter
+* Note dispatcher / voice stealing / polyphonic driver
+* Channels merger
+* Clock source, with swing
+* CC and NRPN knob
+* 8 pots/sensors voltage reader/controller
+* Drum pattern generator (including Euclidian patterns)
+* Note, velocity and CC randomizer
 * Chord memory
-* Chaos!
-* ??
-* ??
-* ??
+* Arpeggiator
+* CC step sequencer
+* 303-like note sequencer
+* Tempo-synchronized note delay (with transposition and decay velocity)
+* Scale processor / harmonizer
+* Ear training game

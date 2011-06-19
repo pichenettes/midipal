@@ -148,6 +148,33 @@ static const prog_char str_res_trk[] PROGMEM = "trk";
 static const prog_char str_res___rnd[] PROGMEM = "rnd";
 static const prog_char str_res_roo[] PROGMEM = "roo";
 static const prog_char str_res_scl[] PROGMEM = "scl";
+static const prog_char str_res_voi[] PROGMEM = "voi";
+static const prog_char str_res_hrm[] PROGMEM = "hrm";
+static const prog_char str_res_chr[] PROGMEM = "chr";
+static const prog_char str_res_ion[] PROGMEM = "ion";
+static const prog_char str_res_dor[] PROGMEM = "dor";
+static const prog_char str_res_phr[] PROGMEM = "phr";
+static const prog_char str_res_lyd[] PROGMEM = "lyd";
+static const prog_char str_res_mix[] PROGMEM = "mix";
+static const prog_char str_res_aeo[] PROGMEM = "aeo";
+static const prog_char str_res_loc[] PROGMEM = "loc";
+static const prog_char str_res_bmj[] PROGMEM = "bmj";
+static const prog_char str_res_bmn[] PROGMEM = "bmn";
+static const prog_char str_res_pmj[] PROGMEM = "pmj";
+static const prog_char str_res_pmn[] PROGMEM = "pmn";
+static const prog_char str_res_bhr[] PROGMEM = "bhr";
+static const prog_char str_res_shr[] PROGMEM = "shr";
+static const prog_char str_res_rup[] PROGMEM = "rup";
+static const prog_char str_res_tod[] PROGMEM = "tod";
+static const prog_char str_res_rag[] PROGMEM = "rag";
+static const prog_char str_res_kaa[] PROGMEM = "kaa";
+static const prog_char str_res_meg[] PROGMEM = "meg";
+static const prog_char str_res_mlk[] PROGMEM = "mlk";
+static const prog_char str_res_dpk[] PROGMEM = "dpk";
+static const prog_char str_res_flk[] PROGMEM = "flk";
+static const prog_char str_res_jap[] PROGMEM = "jap";
+static const prog_char str_res_gam[] PROGMEM = "gam";
+static const prog_char str_res_whl[] PROGMEM = "whl";
 static const prog_char str_res_c[] PROGMEM = "C";
 static const prog_char str_res_c_[] PROGMEM = "C#";
 static const prog_char str_res_d[] PROGMEM = "D";
@@ -298,6 +325,33 @@ PROGMEM const prog_char* string_table[] = {
   str_res___rnd,
   str_res_roo,
   str_res_scl,
+  str_res_voi,
+  str_res_hrm,
+  str_res_chr,
+  str_res_ion,
+  str_res_dor,
+  str_res_phr,
+  str_res_lyd,
+  str_res_mix,
+  str_res_aeo,
+  str_res_loc,
+  str_res_bmj,
+  str_res_bmn,
+  str_res_pmj,
+  str_res_pmn,
+  str_res_bhr,
+  str_res_shr,
+  str_res_rup,
+  str_res_tod,
+  str_res_rag,
+  str_res_kaa,
+  str_res_meg,
+  str_res_mlk,
+  str_res_dpk,
+  str_res_flk,
+  str_res_jap,
+  str_res_gam,
+  str_res_whl,
   str_res_c,
   str_res_c_,
   str_res_d,
@@ -380,6 +434,102 @@ const prog_uint16_t lut_res_euclidian_patterns[] PROGMEM = {
    11997,  16125,  16383,  65535,      0,      1,    257,   2113,
     4369,  10537,  21161,  21845,  44461,  56797,  65021,  65535,
 };
+const prog_uint16_t lut_res_scale_0[] PROGMEM = {
+       0,      1,      2,      3,      4,      5,      6,      7,
+       8,      9,     10,     11,
+};
+const prog_uint16_t lut_res_scale_1[] PROGMEM = {
+       0,      0,      2,      2,      4,      5,      5,      7,
+       7,      9,      9,     11,
+};
+const prog_uint16_t lut_res_scale_2[] PROGMEM = {
+       0,      0,      2,      3,      3,      5,      5,      7,
+       7,      9,     10,     10,
+};
+const prog_uint16_t lut_res_scale_3[] PROGMEM = {
+       0,      1,      1,      3,      3,      5,      5,      7,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_4[] PROGMEM = {
+       0,      0,      2,      2,      4,      4,      6,      7,
+       7,      9,      9,     11,
+};
+const prog_uint16_t lut_res_scale_5[] PROGMEM = {
+       0,      0,      2,      2,      4,      5,      5,      7,
+       7,      9,     10,     10,
+};
+const prog_uint16_t lut_res_scale_6[] PROGMEM = {
+       0,      0,      2,      3,      3,      5,      5,      7,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_7[] PROGMEM = {
+       0,      1,      1,      3,      3,      5,      6,      6,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_8[] PROGMEM = {
+       0,      0,      3,      3,      4,      4,      7,      7,
+       7,      9,     10,     10,
+};
+const prog_uint16_t lut_res_scale_9[] PROGMEM = {
+       0,      0,      3,      3,      3,      5,      6,      7,
+       7,     10,     10,     10,
+};
+const prog_uint16_t lut_res_scale_10[] PROGMEM = {
+       0,      0,      2,      2,      4,      4,      7,      7,
+       7,      9,      9,      9,
+};
+const prog_uint16_t lut_res_scale_11[] PROGMEM = {
+       0,      0,      3,      3,      3,      5,      5,      7,
+       7,     10,     10,     10,
+};
+const prog_uint16_t lut_res_scale_12[] PROGMEM = {
+       0,      1,      1,      4,      4,      5,      5,      7,
+       8,      8,     11,     11,
+};
+const prog_uint16_t lut_res_scale_13[] PROGMEM = {
+       0,      1,      1,      4,      4,      4,      6,      7,
+       8,      8,     11,     11,
+};
+const prog_uint16_t lut_res_scale_14[] PROGMEM = {
+       0,      1,      1,      3,      3,      5,      5,      7,
+       7,     10,     10,     11,
+};
+const prog_uint16_t lut_res_scale_15[] PROGMEM = {
+       0,      1,      1,      3,      3,      6,      6,      7,
+       8,      8,     11,     11,
+};
+const prog_uint16_t lut_res_scale_16[] PROGMEM = {
+       0,      0,      2,      2,      4,      5,      5,      5,
+       9,      9,     10,     11,
+};
+const prog_uint16_t lut_res_scale_18[] PROGMEM = {
+       0,      0,      2,      2,      5,      5,      5,      7,
+       7,      9,      9,      9,
+};
+const prog_uint16_t lut_res_scale_19[] PROGMEM = {
+       0,      0,      3,      3,      3,      5,      5,      8,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_20[] PROGMEM = {
+       0,      0,      3,      3,      4,      4,      6,      6,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_21[] PROGMEM = {
+       0,      1,      1,      3,      4,      5,      5,      7,
+       8,      8,     10,     10,
+};
+const prog_uint16_t lut_res_scale_22[] PROGMEM = {
+       0,      1,      1,      1,      5,      5,      5,      7,
+       8,      8,      8,      8,
+};
+const prog_uint16_t lut_res_scale_23[] PROGMEM = {
+       0,      1,      1,      3,      3,      3,      7,      7,
+       8,      8,      8,      8,
+};
+const prog_uint16_t lut_res_scale_24[] PROGMEM = {
+       0,      0,      2,      2,      4,      4,      6,      6,
+       8,      8,     10,     10,
+};
 
 
 PROGMEM const prog_uint16_t* lookup_table_table[] = {
@@ -392,6 +542,31 @@ PROGMEM const prog_uint16_t* lookup_table_table[] = {
   lut_res_groove_human,
   lut_res_groove_monkey,
   lut_res_euclidian_patterns,
+  lut_res_scale_0,
+  lut_res_scale_1,
+  lut_res_scale_2,
+  lut_res_scale_3,
+  lut_res_scale_4,
+  lut_res_scale_5,
+  lut_res_scale_6,
+  lut_res_scale_7,
+  lut_res_scale_8,
+  lut_res_scale_9,
+  lut_res_scale_10,
+  lut_res_scale_11,
+  lut_res_scale_12,
+  lut_res_scale_13,
+  lut_res_scale_14,
+  lut_res_scale_15,
+  lut_res_scale_16,
+  lut_res_scale_2,
+  lut_res_scale_18,
+  lut_res_scale_19,
+  lut_res_scale_20,
+  lut_res_scale_21,
+  lut_res_scale_22,
+  lut_res_scale_23,
+  lut_res_scale_24,
 };
 
 const prog_uint8_t chr_res_digits_10[] PROGMEM = {

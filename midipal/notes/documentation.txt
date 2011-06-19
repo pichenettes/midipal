@@ -1,8 +1,6 @@
 TODO:
 * sequencr   sequencer
 * cc seq     CC sequencer
-* chaos!     chaos!
-* transposer and scale mapper?
 
 
 
@@ -39,7 +37,7 @@ If you want to change a parameter, click on the encoder. Brackets appear around 
 
 <lcd>bpm[123]</lcd>
 
-Turn the encoder to increase or decrease the value. Click again once you are done. The brackets disappear, and your modification is kept in memory (there is no save button - everything is saved).
+Turn the encoder to increase or decrease the value. Click again once you are done. The brackets disappear, and your modification is kept in memory (there is no save button because everything is always saved).
 
 <lcd>bpm 123 </lcd>
 
@@ -464,6 +462,68 @@ Velocity dampening. When this value is low, the echoes have a small and fastly d
 Number of semitones by which each echo must be transposed.
 
 
+Scale and harmony processor (@scale@)
+
+This app can transpose incoming note messages, and "round" them to the nearest note in one of the 25 preset scales. It can also harmonizes the incoming note at a fixed interval and/or through algorithmic modification of the played melody.
+
+<lcd>chn   1 </lcd>
+
+Channel on which the scale / transposition / harmony modifications have to be applied.
+
+<lcd>roo   C </lcd>
+
+Root note of the target scale.
+
+<lcd>scl chr </lcd>
+
+Target scale. All notes outside of this scale are "shifted" to their nearest neighbour in the scale. For example, if a C major scale is selected, and if you play a chromatic scale (C, C#, D, D#, E...), what will be heard will be C, C, D, D, E, F, F, G, G, A, A, B. The available scales are:
+
+* *chr*: chromatic scale. Since all the incoming notes are in the chromatic scale, no scale modification is applied when this scale is selected.
+* *ion*: ionian mode (major scale).
+* *dor*: dorian mode (russian minor scale).
+* *phr*: phrygian mode.
+* *lyd*: lydian mode.
+* *mix*: mixolydian mode.
+* *aeo*: aeolian mode (minor scale).
+* *loc*: locrian mode.
+* *bmj*: major Blues scale.
+* *bmn*: major Blues scale.
+* *pmj*: pentatonic major scale.
+* *pmn*: pentatonic minor scale.
+* *bhr*: raga Bhairav.
+* *shr*: raga Shri.
+* *rup*: raga Rupavati.
+* *tod*: raga Todi.
+* *rag*: raga Rageshri.
+* *kaa*: raga Kaafi.
+* *meg*: raga Meg.
+* *mlk*: raga Malkauns.
+* *dpk*: raga Deepak.
+* *flk*: Folkish scale.
+* *jap*: Japanese scale.
+* *gam*: Balinese Gamelan scale.
+* *whl*: Whole tones.
+
+<lcd>trs   0 </lcd>
+
+Transposition to apply to the incoming notes.
+
+<lcd>voi   0 </lcd>
+
+When set to a non-zero value, a parallel harmony N semitones apart from the incoming melody is played. For example, when set to -24, the incoming notes are doubled 2 octaves below. Note that the generated notes are also subject to scale restriction.
+
+<lcd>hrm off </lcd>
+
+Generates an additional, mostly random, harmonic line on top of the incoming melody. Several algorithms are available to generate the harmony:
+
+* *mir*: mirrors the interval played on the incoming melody. If you play an ascending scale, a descending scale will be added.
+* *alt*: alternates between following what you play, and the *mirror* mode.
+* *trk*: tracks the interval you play, plus or minus a few semitones. For example, if you play a fifth, a major third, and an octave, the harmonized line might play a fourth, a minor third, then an octave.
+* *random*: plays a random note within +/- a fifth of the note you played.
+
+Obviously, all those random modifications are likely to generate annoying junk unless you select a scale. In which case, it will still sound random, but of the "Free-Jazz" flavor of random.
+
+
 EVERYTHING IS MISCELLANEOUS
 
 Ear training game (@ear game@)
@@ -490,5 +550,5 @@ Number of notes to identify, from 2 to 4.
 
 <lcd>rst  no </lcd>
 
-Change this setting to yes to clear the accuracy score.
+Change this setting to yes to clear the accuracy score in memory.
 

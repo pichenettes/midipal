@@ -23,6 +23,7 @@
 
 #include "midi/midi.h"
 
+#include "midipal/notes.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
@@ -88,7 +89,7 @@ void Randomizer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
           ScaleModulationAmount(note_amount_));
     }
 
-    map_.Put(note, new_note);
+    note_map.Put(note, new_note);
 
     Send3(0x90 | channel, new_note, velocity);
   }
@@ -110,7 +111,7 @@ void Randomizer::SendMessage(
   if (channel_ && channel_ != (channel + 1)) {
     Send3(message | channel, note, velocity);
   } else {
-    NoteMapEntry* entry = map_.Find(note);
+    NoteMapEntry* entry = note_map.Find(note);
     if (entry) {
       Send3(message | channel, entry->value, velocity);
       if (message == 0x80) {

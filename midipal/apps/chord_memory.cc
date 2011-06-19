@@ -19,8 +19,6 @@
 
 #include "midipal/apps/chord_memory.h"
 
-#include "avrlib/random.h"
-
 #include "midi/midi.h"
 
 #include "midipal/ui.h"

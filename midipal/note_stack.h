@@ -89,14 +89,6 @@ class NoteStack {
 
 extern NoteStack note_stack;
 
-
-struct Note {
-  uint8_t octave;
-  uint8_t note;
-};
-
-Note FactorizeMidiNote(uint8_t note);
-
 }  // namespace midipal
 
 #endif // MIDIPAL_NOTE_STACK_H_

@@ -22,6 +22,7 @@
 
 #include "midipal/clock.h"
 #include "midipal/display.h"
+#include "midipal/notes.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {

@@ -59,8 +59,6 @@ class Randomizer : public App {
   uint8_t cc_amount_[2];
   uint8_t cc_[2];
   
-  NoteMap<32> map_;
-  
   DISALLOW_COPY_AND_ASSIGN(Randomizer);
 };
 

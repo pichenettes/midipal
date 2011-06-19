@@ -19,13 +19,12 @@
 
 #include "midipal/apps/delay.h"
 
-#include "avrlib/random.h"
-
 #include "midipal/display.h"
 
 #include "midipal/clock.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/note_stack.h"
+#include "midipal/notes.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
@@ -144,15 +143,7 @@ void Delay::ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps) {
   if (velocity < min_velocity_value) {
     velocity = min_velocity_value;
   }
-  if (transposition_ < 0) {
-    if (note >= -transposition_) {
-      note += transposition_;
-    }
-  } else {
-    if (note < 127 - transposition_) {
-      note += transposition_;
-    }
-  }
+  note = Transpose(note, transposition_);
   SendLater(note, velocity, delay, num_taps - 1);
   if (event_scheduler.overflow()) {
     display.set_status('!');

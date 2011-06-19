@@ -72,7 +72,6 @@ class Dispatcher : public App {
   uint8_t base_channel_;
   uint8_t num_voices_;
 
-  NoteMap<32> map_;
   uint8_t counter_;
   
   DISALLOW_COPY_AND_ASSIGN(Dispatcher);

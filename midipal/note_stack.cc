@@ -22,17 +22,6 @@
 #include <string.h>
 
 namespace midipal {
-  
-Note FactorizeMidiNote(uint8_t note) {
-  Note n;
-  n.note = note;
-  n.octave = 0;
-  while (n.note >= 12) {
-    n.note -= 12;
-    ++n.octave;
-  }
-  return n;
-}
 
 static const uint8_t kFreeSlot = 0xff;
 

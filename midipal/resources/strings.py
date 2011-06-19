@@ -158,6 +158,34 @@ trk
 
 roo
 scl
+voi
+hrm
+
+chr
+ion
+dor
+phr
+lyd
+mix
+aeo
+loc
+bmj
+bmn
+pmj
+pmn
+bhr
+shr
+rup
+tod
+rag
+kaa
+meg
+mlk
+dpk
+flk
+jap
+gam
+whl
 
 C
 C#
