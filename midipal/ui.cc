@@ -265,8 +265,8 @@ void Ui::PrintKeyValuePair(
   }
   AlignRight(&line_buffer[4], 3);
   if (selected) {
-    line_buffer[3] = '>';
-    line_buffer[7] = '<';
+    line_buffer[3] = '[';
+    line_buffer[7] = ']';
   }
   display.Print(0, line_buffer);
 }
