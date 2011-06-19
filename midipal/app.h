@@ -46,6 +46,7 @@ enum EepromSetting {
   SETTINGS_ARPEGGIATOR = 208,
   SETTINGS_DELAY = 256,
   SETTINGS_SCALE_PROCESSOR = 272,
+  SETTINGS_SEQUENCER = 288,
   SETTINGS_SETUP = 1008
 };
 
@@ -59,6 +60,10 @@ class App {
   App() { }
   
   void Init();
+  
+  // Can be used to save/load settings in EEPROM.
+  void SaveSetting(uint8_t index);
+  void SaveSettingWord(uint8_t setting_id, uint16_t value);
   void SaveSettings();
   
   virtual void OnInit() { }
@@ -122,16 +127,13 @@ class App {
   virtual uint8_t GetParameter(uint8_t key) {
     return settings_data()[key];
   }
+  virtual uint8_t CheckPageStatus(uint8_t index) { return 1; }
   
   // Event handlers for clock.
   virtual void OnInternalClockTick() { }
   virtual void OnInternalClockStep() { }
 
  protected:
-  // Can be used to save/load settings in EEPROM.
-  void SaveSetting(uint8_t setting_id, uint8_t value);
-  void SaveSettingWord(uint8_t setting_id, uint16_t value);
-  
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);
   void Send3(uint8_t a, uint8_t b, uint8_t c);

@@ -115,6 +115,49 @@ X..XX
 ..XXX
 """]
 
+sequencer_icons = [
+"""
+...X.
+...XX
+...XX
+...X.
+...X.
+.XXX.
+XXXX.
+.XX..
+""",
+"""
+.....
+.....
+.....
+XXX..
+X.X..
+X.X..
+X.XXX
+.....
+""",
+"""
+.....
+....X
+...XX
+..XXX
+.XXXX
+XXXXX
+XXXXX
+.....
+""",
+"""
+.....
+.....
+.XXX.
+X.X.X
+X...X
+X...X
+.XXX.
+.....
+"""]
+
 characters = [
-    ('digits_10', Convert(digits_10))
+    ('digits_10', Convert(digits_10)),
+    ('sequencer_icons', Convert(sequencer_icons))
 ]

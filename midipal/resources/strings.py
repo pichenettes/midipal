@@ -36,6 +36,7 @@ contrllr
 splitter
 delay
 scale
+sequencr
 
 sndOff
 rstCtr
@@ -211,4 +212,10 @@ Ab
  A
 Bb
  B
+ 
+stp
+\x01
+\x02
+\x03
+\x04
 """

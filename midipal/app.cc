@@ -55,8 +55,10 @@ void App::SaveSettings() {
       settings_size());
 }
 
-void App::SaveSetting(uint8_t setting_id, uint8_t value) {
-  eeprom_write_byte((uint8_t*)(setting_id), value);
+void App::SaveSetting(uint8_t index) {
+  eeprom_write_byte(
+      (uint8_t*)(settings_offset()) + index,
+      settings_data()[index]);
 }
 
 void App::SaveSettingWord(uint8_t setting_id, uint16_t value) {

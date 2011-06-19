@@ -22,7 +22,7 @@
 
 #include "avrlib/base.h"
 
-static const uint8_t kMaxPolyphony = 32;
+static const uint8_t kMaxPolyphony = 24;
 
 namespace midipal {
 

@@ -60,7 +60,7 @@ using namespace avrlib;
 
 void EarTrainingGame::OnInit() {
   ui.AddPage(STR_RES_LVL, UNIT_INDEX, 0, 4);
-  ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, 4);
+  ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, kMaxNotes);
   ui.AddPage(STR_RES_RST, STR_RES_NO, 0, 1);
   GenerateChallenge();
   clock.Update(130, 0, 0);
@@ -87,7 +87,7 @@ void EarTrainingGame::GenerateChallenge() {
   root += ResourcesManager::Lookup<uint8_t, uint8_t>(
       random_octave, (Random::GetByte() & 0x07) + 8 * level_);
   played_notes_[0] = root;
-  for (uint8_t i = 1; i < 8; ++i) {
+  for (uint8_t i = 1; i < kMaxNotes; ++i) {
     int8_t interval = ResourcesManager::Lookup<int8_t, uint8_t>(
         random_interval, (Random::GetByte() & 0x0f) + 16 * level_);
     int8_t sign = ResourcesManager::Lookup<int8_t, uint8_t>(

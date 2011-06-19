@@ -33,8 +33,10 @@ RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> Ui::encoder_;
 PotScanner<8, 0, 8, 7> Ui::pots_;
 EventQueue<32> Ui::queue_;
 PageDefinition Ui::pages_[48];
+uint8_t Ui::num_declared_pages_;
 uint8_t Ui::num_pages_;
 uint8_t Ui::page_;
+uint8_t Ui::stride_;
 uint8_t Ui::pot_value_[8];
 uint8_t Ui::editing_;
 uint8_t Ui::read_pots_;
@@ -50,7 +52,9 @@ void Ui::Init() {
   encoder_.Init();
   pots_.Init();
   read_pots_ = 0;
+  num_declared_pages_ = 0;
   num_pages_ = 0;
+  stride_ = 0;
   page_ = 0;
   editing_ = 0;
   encoder_hold_time_ = 0;
@@ -62,11 +66,24 @@ void Ui::AddPage(
     uint8_t value_res_id,
     uint8_t min,
     uint8_t max) {
-  pages_[num_pages_].key_res_id = key_res_id;
-  pages_[num_pages_].value_res_id = value_res_id;
-  pages_[num_pages_].min = min;
-  pages_[num_pages_].max = max;
+  pages_[num_declared_pages_].key_res_id = key_res_id;
+  pages_[num_declared_pages_].value_res_id = value_res_id;
+  pages_[num_declared_pages_].min = min;
+  pages_[num_declared_pages_].max = max;
+  ++num_declared_pages_;
   ++num_pages_;
+}
+
+/* static */
+void Ui::AddRepeatedPage(
+    uint8_t key_res_id,
+    uint8_t value_res_id,
+    uint8_t min,
+    uint8_t max,
+    uint8_t num_repetitions) {
+  AddPage(key_res_id, value_res_id, min, max);
+  num_pages_ += (num_repetitions - 1);
+  ++stride_;
 }
 
 /* static */
@@ -104,6 +121,16 @@ void Ui::Poll() {
 void Ui::DoEvents() {
   uint8_t redraw = 0;
   App* app = app_manager.active_app();
+  
+  uint8_t p = page_;
+  uint8_t index = 0;
+  while (p >= num_declared_pages_) {
+    p -= stride_;
+    ++index;
+  }
+  
+  const PageDefinition& page_def = pages_[p];
+  
   while (queue_.available()) {
     redraw = 1;
     Event e = queue_.PullEvent();
@@ -112,27 +139,37 @@ void Ui::DoEvents() {
       if (!app->OnIncrement(e.value)) {
         if (editing_) {
           int16_t v;
-          if (pages_[page_].value_res_id == UNIT_SIGNED_INTEGER) {
+          if (page_def.value_res_id == UNIT_SIGNED_INTEGER) {
             int16_t v = static_cast<int8_t>(app->GetParameter(page_));
             v = Clip(
                 v + static_cast<int8_t>(e.value),
-                static_cast<int8_t>(pages_[page_].min),
-                static_cast<int8_t>(pages_[page_].max));
+                static_cast<int8_t>(page_def.min),
+                static_cast<int8_t>(page_def.max));
             app->SetParameter(page_, static_cast<int8_t>(v));
           } else {
             int16_t v = app->GetParameter(page_);
             v = Clip(
                 v + static_cast<int8_t>(e.value),
-                pages_[page_].min,
-                pages_[page_].max);
+                page_def.min,
+                page_def.max);
             app->SetParameter(page_, v);
           }
         } else {
-          page_ += e.value;
-          if (page_ == 0xff) {
-            page_ = 0;
-          } else if (page_ >= num_pages_) {
-            page_ = num_pages_ - 1;
+          uint8_t current_page = page_;
+          while (1) {
+            page_ += e.value;
+            if (page_ == 0xff) {
+              page_ = 0;
+            } else if (page_ >= num_pages_) {
+              page_ = num_pages_ - 1;
+            }
+            uint8_t page_status = app->CheckPageStatus(page_);
+            if (page_status == PAGE_GOOD) {
+              break;
+            } else if (page_status == PAGE_LAST) {
+              page_ = current_page;
+              break;
+            }
           }
         }
       }
@@ -142,7 +179,7 @@ void Ui::DoEvents() {
           editing_ ^= 1;
           // Left the editing mode, save settings.
           if (!editing_) {
-            app_manager.active_app()->SaveSettings();
+            app_manager.active_app()->SaveSetting(page_);
           }
         }
       } else {
@@ -161,8 +198,9 @@ void Ui::DoEvents() {
   
   if (redraw && !app->OnRedraw()) {
     PrintKeyValuePair(
-        pages_[page_].key_res_id,
-        pages_[page_].value_res_id,
+        page_def.key_res_id,
+        index,
+        page_def.value_res_id,
         app->GetParameter(page_),
         editing_);
   }
@@ -174,12 +212,23 @@ static const prog_char octaves[] PROGMEM = "-012345678";
 /* static */
 void Ui::PrintKeyValuePair(
     uint8_t key_res_id,
+    uint8_t index,
     uint8_t value_res_id,
     uint8_t value,
     uint8_t selected) {
   memset(line_buffer, ' ', kLcdWidth);
   ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
   AlignRight(&line_buffer[0], 3);
+  
+  // This is a hack to add the index id on the step sequencer pages.
+  if (line_buffer[2] < 0x20) {
+    UnsafeItoa(index + 1, 2, &line_buffer[0]);
+    AlignRight(&line_buffer[0], 2);
+    if (line_buffer[0] == ' ') {
+      line_buffer[0] = '0';
+    }
+  }
+  
   switch (value_res_id) {
     case UNIT_INTEGER:
     case UNIT_INTEGER_ALL:

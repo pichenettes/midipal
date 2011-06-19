@@ -44,6 +44,12 @@ enum Unit {
   UNIT_SIGNED_INTEGER,
 };
 
+enum PageScrollingStatus {
+  PAGE_BAD = 0,
+  PAGE_GOOD = 1,
+  PAGE_LAST = 2
+};
+
 class Ui {
  public:
   static void Init();
@@ -54,6 +60,7 @@ class Ui {
 
   static void PrintKeyValuePair(
       uint8_t key_res_id,
+      uint8_t index,
       uint8_t value_res_id,
       uint8_t value,
       uint8_t selected);
@@ -72,6 +79,12 @@ class Ui {
       uint8_t value_res_id,
       uint8_t min,
       uint8_t max);
+  static void AddRepeatedPage(
+      uint8_t key_res_id,
+      uint8_t value_res_id,
+      uint8_t min,
+      uint8_t max,
+      uint8_t num_repetitions);
     
   static uint8_t editing() {
     return editing_;
@@ -83,7 +96,9 @@ class Ui {
   static avrlib::PotScanner<8, 0, 8, 7> pots_;
   static avrlib::EventQueue<32> queue_;
   static uint16_t encoder_hold_time_;
+  static uint8_t num_declared_pages_;
   static uint8_t num_pages_;
+  static uint8_t stride_;
   static uint8_t page_;
   static uint8_t editing_;
   static uint8_t read_pots_;

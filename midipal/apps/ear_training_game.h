@@ -24,6 +24,8 @@
 
 namespace midipal { namespace apps {
 
+const uint8_t kMaxNotes = 4;
+
 class EarTrainingGame : public App {
  public:
   EarTrainingGame() { }
@@ -57,8 +59,8 @@ class EarTrainingGame : public App {
   uint16_t num_attempts_;
   
   uint8_t step_counter_;
-  uint8_t played_notes_[8];
-  uint8_t recorded_notes_[8];
+  uint8_t played_notes_[kMaxNotes];
+  uint8_t recorded_notes_[kMaxNotes];
   uint8_t record_ptr_;
   uint8_t play_ptr_;
   uint8_t wait_;

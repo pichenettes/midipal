@@ -41,6 +41,7 @@ static const prog_char str_res_contrllr[] PROGMEM = "contrllr";
 static const prog_char str_res_splitter[] PROGMEM = "splitter";
 static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_scale[] PROGMEM = "scale";
+static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -199,6 +200,12 @@ static const prog_char str_res_ab[] PROGMEM = "Ab";
 static const prog_char str_res__a[] PROGMEM = "A";
 static const prog_char str_res_bb[] PROGMEM = "Bb";
 static const prog_char str_res__b[] PROGMEM = "B";
+static const prog_char str_res__[] PROGMEM = "";
+static const prog_char str_res_stp[] PROGMEM = "stp";
+static const prog_char str_res_1[] PROGMEM = "";
+static const prog_char str_res_2[] PROGMEM = "";
+static const prog_char str_res_3[] PROGMEM = "";
+static const prog_char str_res_4[] PROGMEM = "";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -218,6 +225,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_splitter,
   str_res_delay,
   str_res_scale,
+  str_res_sequencr,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
@@ -376,6 +384,12 @@ PROGMEM const prog_char* string_table[] = {
   str_res__a,
   str_res_bb,
   str_res__b,
+  str_res__,
+  str_res_stp,
+  str_res_1,
+  str_res_2,
+  str_res_3,
+  str_res_4,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
@@ -578,10 +592,17 @@ const prog_uint8_t chr_res_digits_10[] PROGMEM = {
       16,     16,     16,     23,      4,      6,      1,      6,
       16,     16,     16,     19,      4,      7,      5,      7,
 };
+const prog_uint8_t chr_res_sequencer_icons[] PROGMEM = {
+       2,      3,      3,      2,      2,     14,     30,     12,
+       0,      0,      0,     28,     20,     20,     23,      0,
+       0,      1,      3,      7,     15,     31,     31,      0,
+       0,      0,     14,     21,     17,     17,     14,      0,
+};
 
 
 const prog_uint8_t* character_table[] = {
   chr_res_digits_10,
+  chr_res_sequencer_icons,
 };
 
 

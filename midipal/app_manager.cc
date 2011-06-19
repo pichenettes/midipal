@@ -35,6 +35,7 @@
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/randomizer.h"
 #include "midipal/apps/scale_processor.h"
+#include "midipal/apps/sequencer.h"
 #include "midipal/apps/splitter.h"
 
 namespace midipal {
@@ -55,6 +56,7 @@ apps::EarTrainingGame ear_training_game;
 apps::Monitor monitor;
 apps::Randomizer randomizer;
 apps::ScaleProcessor scale_processor;
+apps::Sequencer sequencer;
 apps::Splitter splitter;
 
 App* registry[] = {
@@ -74,7 +76,8 @@ App* registry[] = {
   &combiner,
   &arpeggiator,
   &delay,
-  &scale_processor
+  &scale_processor,
+  &sequencer
 };
 
 /* extern */

@@ -150,10 +150,6 @@ void Arpeggiator::Tick() {
   
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
-    bitmask_ <<= 1;
-    if (!bitmask_) {
-      bitmask_ = 1;
-    }
     uint16_t pattern = ResourcesManager::Lookup<uint16_t, uint8_t>(
         lut_res_arpeggiator_patterns,
         pattern_);
@@ -176,12 +172,16 @@ void Arpeggiator::Tick() {
           midi_clock_tick_per_step, duration_));
       StepArpeggio();
     }
+    bitmask_ <<= 1;
+    if (!bitmask_) {
+      bitmask_ = 1;
+    }
   }
 }
 
 void Arpeggiator::Start() {
   running_ = 1;
-  bitmask_ = 0x8000;
+  bitmask_ = 1;
   tick_ = midi_clock_prescaler_ - 1;
   current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
   StartArpeggio();
