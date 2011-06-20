@@ -43,6 +43,7 @@ static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
+static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -238,8 +239,8 @@ static const prog_char str_res_sin[] PROGMEM = "sin";
 static const prog_char str_res_si2[] PROGMEM = "si2";
 static const prog_char str_res_si3[] PROGMEM = "si3";
 static const prog_char str_res_si5[] PROGMEM = "si5";
-static const prog_char str_res_gr1[] PROGMEM = "gr1";
-static const prog_char str_res_gr2[] PROGMEM = "gr2";
+static const prog_char str_res_gg1[] PROGMEM = "gg1";
+static const prog_char str_res_gg2[] PROGMEM = "gg2";
 static const prog_char str_res_bt1[] PROGMEM = "bt1";
 static const prog_char str_res_bt2[] PROGMEM = "bt2";
 static const prog_char str_res_sp1[] PROGMEM = "sp1";
@@ -273,6 +274,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_scale,
   str_res_sequencr,
   str_res_cc_lfo,
+  str_res__reset_,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
@@ -468,8 +470,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res_si2,
   str_res_si3,
   str_res_si5,
-  str_res_gr1,
-  str_res_gr2,
+  str_res_gg1,
+  str_res_gg2,
   str_res_bt1,
   str_res_bt2,
   str_res_sp1,

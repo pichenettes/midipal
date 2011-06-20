@@ -58,6 +58,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t ear_training_game_factory_data[7] PROGMEM = {
+  0, 2, 0, 0, 0, 0, 0
+};
+
 void EarTrainingGame::OnInit() {
   ui.AddPage(STR_RES_LVL, UNIT_INDEX, 0, 4);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, kMaxNotes);
@@ -214,6 +219,10 @@ uint8_t EarTrainingGame::OnRedraw() {
   } else {
     return 0;
   }
+}
+
+const prog_uint8_t* EarTrainingGame::factory_data() {
+  return ear_training_game_factory_data;
 }
 
 } }  // namespace midipal::apps

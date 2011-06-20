@@ -30,6 +30,16 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t lfo_factory_data[31] PROGMEM = {
+  0, 0, 120, 0, 0, 16, 0,
+  
+  7, 63, 63, 0, 2, 0,
+  10, 0, 63, 0, 4, 0,
+  74, 0, 63, 0, 2, 0,
+  71, 0, 63, 0, 4, 0,
+};
+
 void Lfo::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
@@ -71,7 +81,9 @@ void Lfo::SetParameter(uint8_t key, uint8_t value) {
     }
   }
   static_cast<uint8_t*>(&running_)[key] = value;
-  clock.Update(bpm_, groove_template_, groove_amount_);
+  if (key < 5) {
+    clock.Update(bpm_, groove_template_, groove_amount_);
+  }
   midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, clock_division_);
   uint16_t factor = midi_clock_prescaler_;
@@ -178,6 +190,10 @@ void Lfo::Tick() {
       }
     }
   }
+}
+
+const prog_uint8_t* Lfo::factory_data() {
+  return lfo_factory_data;
 }
 
 } }  // namespace midipal::apps

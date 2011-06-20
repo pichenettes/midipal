@@ -30,6 +30,44 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t sequencer_factory_data[141] PROGMEM = {
+  0, 0, 120, 0, 0,
+  12, 0, 74, 1, 1, 1, 1, 8,
+  48, 12, 15, 127,
+  48, 12,  0, 127,
+  60, 12, 15, 112,
+  60, 12,  0, 112,
+  48, 12, 15, 96,
+  48, 12,  0, 96,
+  60, 12, 15, 80,
+  60, 12,  0, 80,
+  48, 12, 15, 64,
+  48, 12,  0, 64,
+  60, 12, 15, 48,
+  60, 12,  0, 48,
+  48, 12, 15, 32,
+  48, 12,  0, 32,
+  60, 12, 15, 16,
+  60, 12,  0, 16,
+  48, 12, 15, 0,
+  48, 12,  0, 0,
+  60, 12, 15, 16,
+  60, 12,  0, 16,
+  48, 12, 15, 32,
+  48, 12,  0, 32,
+  60, 12, 15, 48,
+  60, 12,  0, 48,
+  48, 12, 15, 64,
+  48, 12,  0, 64,
+  60, 12, 15, 80,
+  60, 12,  0, 80,
+  48, 12, 15, 96,
+  48, 12,  0, 96,
+  60, 12, 15, 112,
+  60, 12,  0, 112,
+};
+
 void Sequencer::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_sequencer_icons, 4, 1);
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
@@ -76,7 +114,9 @@ void Sequencer::SetParameter(uint8_t key, uint8_t value) {
     }
   }
   static_cast<uint8_t*>(&running_)[key] = value;
-  clock.Update(bpm_, groove_template_, groove_amount_);
+  if (key < 5) {
+    clock.Update(bpm_, groove_template_, groove_amount_);
+  }
   midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, clock_division_);
 }
@@ -259,6 +299,10 @@ uint8_t Sequencer::CheckPageStatus(uint8_t index) {
   if (index == 3 && !cc_track_) {
     return PAGE_BAD;
   }
+}
+
+const prog_uint8_t* Sequencer::factory_data() {
+  return sequencer_factory_data;
 }
 
 } }  // namespace midipal::apps

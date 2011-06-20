@@ -39,6 +39,11 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_RANDOM,
 };
 
+/* extern */
+const prog_uint8_t arpeggiator_factory_data[10] PROGMEM = {
+  0, 120, 0, 0, 0, 0, 1, 0, 12, 14
+};
+
 void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
@@ -248,6 +253,10 @@ void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
     current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
     StartArpeggio();
   }
+}
+
+const prog_uint8_t* Arpeggiator::factory_data() {
+  return arpeggiator_factory_data;
 }
 
 } }  // namespace midipal::apps

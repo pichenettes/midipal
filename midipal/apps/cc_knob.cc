@@ -27,6 +27,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t cc_knob_factory_data[6] PROGMEM = {
+  63, 0, 0, 7, 0, 127
+};
+
 void CcKnob::OnInit() {
   ui.AddPage(STR_RES_VAL, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
@@ -78,6 +83,10 @@ uint8_t CcKnob::GetParameter(uint8_t key) {
   } else {
     return static_cast<uint8_t*>(&value_)[key];
   }
+}
+
+const prog_uint8_t* CcKnob::factory_data() {
+  return cc_knob_factory_data;
 }
 
 } }  // namespace midipal::apps

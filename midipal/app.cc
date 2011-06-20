@@ -61,7 +61,15 @@ void App::SaveSetting(uint8_t index) {
       settings_data()[index]);
 }
 
-void App::SaveSettingWord(uint8_t setting_id, uint16_t value) {
+void App::ResetToFactorySettings() {
+  memcpy_P(
+      settings_data(),
+      factory_data(),
+      settings_size());
+  SaveSettings();
+}
+
+void App::SaveSettingWord(uint16_t setting_id, uint16_t value) {
   eeprom_write_word((uint16_t*)(setting_id), value);
 }
 

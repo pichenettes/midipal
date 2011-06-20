@@ -25,6 +25,11 @@
 
 namespace midipal { namespace apps {
 
+/* extern */
+const prog_uint8_t controller_factory_data[9] PROGMEM = {
+  0, 7, 10, 74, 71, 73, 80, 72, 91
+};
+
 void Controller::OnInit() {
   ui.set_read_pots(1);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
@@ -43,6 +48,10 @@ void Controller::OnRawMidiData(
 
 uint8_t Controller::OnPot(uint8_t pot, uint8_t value) {
   Send3(0xb0 | channel_, cc_[pot], value);
+}
+
+const prog_uint8_t* Controller::factory_data() {
+  return controller_factory_data;
 }
 
 } }  // namespace midipal::apps

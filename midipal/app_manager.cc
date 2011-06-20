@@ -100,8 +100,9 @@ uint8_t AppManager::num_apps() {
 }
 
 /* static */
-uint8_t AppManager::app_name(uint8_t index) {
-  return registry[index]->app_name();
+App* AppManager::mutable_app(uint8_t index) {
+  return registry[index];
 }
+
 
 }  // namespace midipal

@@ -46,6 +46,7 @@ class EarTrainingGame : public App {
   uint8_t settings_size() { return 7; }
   uint16_t settings_offset() { return SETTINGS_EAR_TRAINING; }
   uint8_t* settings_data() { return &level_; }
+  const prog_uint8_t* factory_data();
   uint8_t app_name() { return STR_RES_EAR_GAME; }
   
  private:

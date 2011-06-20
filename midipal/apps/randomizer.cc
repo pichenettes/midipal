@@ -30,6 +30,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t randomizer_factory_data[8] PROGMEM = {
+  0, 127, 12, 32, 0, 0, 7, 10
+};
+
 void Randomizer::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
@@ -119,6 +124,10 @@ void Randomizer::SendMessage(
       }
     }
   }  
+}
+
+const prog_uint8_t* Randomizer::factory_data() {
+  return randomizer_factory_data;
 }
 
 } }  // namespace midipal::apps

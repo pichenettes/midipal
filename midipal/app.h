@@ -64,8 +64,9 @@ class App {
   
   // Can be used to save/load settings in EEPROM.
   void SaveSetting(uint8_t index);
-  void SaveSettingWord(uint8_t setting_id, uint16_t value);
+  void SaveSettingWord(uint16_t setting_id, uint16_t value);
   void SaveSettings();
+  void ResetToFactorySettings();
   
   virtual void OnInit() { }
   
@@ -106,7 +107,11 @@ class App {
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel) { }
-    
+  
+  // Event handlers for internal clock.
+  virtual void OnInternalClockTick() { }
+  virtual void OnInternalClockStep() { }
+  
   // Event handlers for UI.
   virtual uint8_t OnIncrement(int8_t increment) { return 0; }
   virtual uint8_t OnClick() { return 0; }
@@ -118,10 +123,11 @@ class App {
   virtual uint8_t settings_size() { return 0; }
   virtual uint16_t settings_offset() { return 0; }
   virtual uint8_t* settings_data() { return NULL; }
+  virtual const prog_uint8_t* factory_data() { return NULL; }
   
   // Used by the app manager to display the app name
   virtual uint8_t app_name() { return 0; }
-  
+
   virtual void SetParameter(uint8_t key, uint8_t value) {
     settings_data()[key] = value;
   }
@@ -130,10 +136,6 @@ class App {
   }
   virtual uint8_t CheckPageStatus(uint8_t index) { return 1; }
   
-  // Event handlers for clock.
-  virtual void OnInternalClockTick() { }
-  virtual void OnInternalClockStep() { }
-
  protected:
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);

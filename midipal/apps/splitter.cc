@@ -25,6 +25,11 @@
 
 namespace midipal { namespace apps {
 
+/* extern */
+const prog_uint8_t splitter_factory_data[4] PROGMEM = {
+  0, 48, 0, 1
+};
+  
 void Splitter::OnInit() {
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_SPL, UNIT_NOTE, 20, 108);
@@ -59,6 +64,10 @@ void Splitter::OnRawMidiData(
     }
     Send(status, data, data_size);
   }
+}
+
+const prog_uint8_t* Splitter::factory_data() {
+  return splitter_factory_data;
 }
 
 } }  // namespace midipal::apps

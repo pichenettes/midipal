@@ -41,6 +41,7 @@ class ScaleProcessor : public App {
   uint8_t settings_size() { return 6; }
   uint16_t settings_offset() { return SETTINGS_SCALE_PROCESSOR; }
   uint8_t* settings_data() { return &channel_; }
+  const prog_uint8_t* factory_data();
   uint8_t app_name() { return STR_RES_SCALE; }
 
  protected:

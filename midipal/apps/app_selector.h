@@ -28,6 +28,7 @@ class AppSelector : public App {
  public:
   AppSelector() { }
 
+  void OnInit();
   void OnRawByte(uint8_t byte);
   
   uint8_t OnClick();
@@ -40,6 +41,7 @@ class AppSelector : public App {
 
  private:
   uint8_t active_app_;
+  uint8_t selected_item_;
   
   DISALLOW_COPY_AND_ASSIGN(AppSelector);
 };

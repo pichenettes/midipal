@@ -25,6 +25,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t combiner_factory_data[3] PROGMEM = {
+  0, 3, 0
+};
+
 void Combiner::OnInit() {
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 1, 16);
@@ -51,6 +56,10 @@ void Combiner::OnRawMidiData(
     }
     Send(type | channel, data, data_size);
   }
+}
+
+const prog_uint8_t* Combiner::factory_data() {
+  return combiner_factory_data;
 }
 
 } }  // namespace midipal::apps

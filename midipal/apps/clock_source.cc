@@ -27,6 +27,11 @@
 
 namespace midipal { namespace apps {
 
+/* extern */
+const prog_uint8_t clock_source_factory_data[4] PROGMEM = {
+  0, 120, 0, 0
+};
+
 void ClockSource::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
@@ -86,6 +91,10 @@ void ClockSource::Start() {
     SendNow(0xfa);
     running_ = 1;
   }
+}
+
+const prog_uint8_t* ClockSource::factory_data() {
+  return clock_source_factory_data;
 }
 
 } }  // namespace midipal::apps

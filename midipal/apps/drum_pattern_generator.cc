@@ -26,7 +26,12 @@
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
-  
+
+/* extern */
+const prog_uint8_t drum_pattern_generator_factory_data[10] PROGMEM = {
+  0, 0, 120, 0, 0, 9, 36, 40, 42, 56
+};
+
 static const prog_uint8_t sizes[12] PROGMEM = {
   0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16  
 };
@@ -241,9 +246,13 @@ void DrumPatternGenerator::AllNotesOff() {
 
 void DrumPatternGenerator::SetParameter(uint8_t key, uint8_t value) {
   static_cast<uint8_t*>(&mode_)[key] = value;
-  if (key < 4) {
+  if (key < 5) {
     clock.Update(bpm_, groove_template_, groove_amount_);
   }
+}
+
+const prog_uint8_t* DrumPatternGenerator::factory_data() {
+  return drum_pattern_generator_factory_data;
 }
 
 } }  // namespace midipal::apps

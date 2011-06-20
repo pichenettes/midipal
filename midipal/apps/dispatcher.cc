@@ -31,6 +31,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t dispatcher_factory_data[4] PROGMEM = {
+  0, 0, 0, 3
+};
+
 void Dispatcher::OnInit() {
   voice_allocator.Init();
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
@@ -115,6 +120,10 @@ void Dispatcher::SendMessage(
       entry->note = 0xff;
     }
   }
+}
+
+const prog_uint8_t* Dispatcher::factory_data() {
+  return dispatcher_factory_data;
 }
 
 } }  // namespace midipal::apps

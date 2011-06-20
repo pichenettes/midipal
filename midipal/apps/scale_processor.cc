@@ -41,6 +41,11 @@ enum VoiceMode {
   
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t scale_processor_factory_data[6] PROGMEM = {
+  0, 0, 1, 0, -12, 0
+};
+
 void ScaleProcessor::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 23);
@@ -155,6 +160,10 @@ void ScaleProcessor::ProcessNoteMessage(
       }
     }
   }
+}
+
+const prog_uint8_t* ScaleProcessor::factory_data() {
+  return scale_processor_factory_data;
 }
 
 } }  // namespace midipal::apps

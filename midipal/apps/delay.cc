@@ -29,11 +29,16 @@
 
 namespace midipal { namespace apps {
   
+using namespace avrlib;
+
 static const prog_uint8_t velocity_factor[16] PROGMEM = {
   31, 60, 87, 112, 134, 155, 174, 191, 206, 219, 230, 239, 246, 251, 253, 255
 };
 
-using namespace avrlib;
+/* extern */
+const prog_uint8_t delay_factory_data[9] PROGMEM = {
+  0, 120, 0, 0, 0, 8, 4, 10, 0
+};
 
 void Delay::OnInit() {
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
@@ -157,6 +162,10 @@ void Delay::SetParameter(uint8_t key, uint8_t value) {
   }
   velocity_factor_reverse_log_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       velocity_factor, velocity_factor_);
+}
+
+const prog_uint8_t* Delay::factory_data() {
+  return delay_factory_data;
 }
 
 } }  // namespace midipal::apps

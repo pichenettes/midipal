@@ -48,6 +48,7 @@ class Arpeggiator : public App {
   uint8_t settings_size() { return 10; }
   uint16_t settings_offset() { return SETTINGS_ARPEGGIATOR; }
   uint8_t* settings_data() { return &clk_mode_; }
+  const prog_uint8_t* factory_data();
   uint8_t app_name() { return STR_RES_ARPEGGIO; }
 
  protected:

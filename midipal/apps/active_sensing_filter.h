@@ -34,6 +34,7 @@ class ActiveSensingFilter : public App {
   uint8_t settings_size() { return 1; }
   uint16_t settings_offset() { return SETTINGS_0XFE_FILTER; }
   uint8_t* settings_data() { return &enabled_; }
+  const prog_uint8_t* factory_data();
   uint8_t app_name() { return STR_RES_0XFE_FLT; }
   
  private:

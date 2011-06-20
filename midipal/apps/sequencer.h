@@ -51,6 +51,7 @@ class Sequencer : public App {
   uint8_t settings_size() { return 13 + 32 * kNumBytesPerStep; }
   uint16_t settings_offset() { return SETTINGS_SEQUENCER; }
   uint8_t* settings_data() { return &running_; }
+  const prog_uint8_t* factory_data();
   uint8_t app_name() { return STR_RES_SEQUENCR; }
 
  private:

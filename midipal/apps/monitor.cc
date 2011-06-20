@@ -28,6 +28,9 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t monitor_factory_data[1] PROGMEM = { 0 };
+
 void Monitor::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
   ui.Clear();
@@ -225,6 +228,10 @@ uint8_t Monitor::OnRedraw() {
   } else {
     return 0;
   }
+}
+
+const prog_uint8_t* Monitor::factory_data() {
+  return monitor_factory_data;
 }
 
 } }  // namespace midipal::apps

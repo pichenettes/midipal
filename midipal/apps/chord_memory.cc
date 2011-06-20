@@ -27,6 +27,11 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* extern */
+const prog_uint8_t chord_memory_factory_data[17] PROGMEM = {
+  0, 4, 60, 63, 67, 70, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48
+};
+
 void ChordMemory::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
 }
@@ -45,6 +50,8 @@ void ChordMemory::OnRawMidiData(
 uint8_t ChordMemory::OnClick() {
   if (!ui.editing()) {
     num_notes_ = 0;
+  } else {
+    SaveSettings();
   }
   return 0;
 }
@@ -110,6 +117,10 @@ void ChordMemory::OnAftertouch(
   } else {
     PlayChord(0xa0, channel, note, velocity);
   }
+}
+
+const prog_uint8_t* ChordMemory::factory_data() {
+  return chord_memory_factory_data;
 }
 
 } }  // namespace midipal::apps

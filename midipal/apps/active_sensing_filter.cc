@@ -23,6 +23,10 @@
 
 namespace midipal { namespace apps {
 
+const prog_uint8_t active_sensing_filter_factory_data[1] PROGMEM = {
+  1,
+};
+
 void ActiveSensingFilter::OnInit() {
   ui.AddPage(STR_RES_FLT, STR_RES_OFF, 0, 1);
 }
@@ -31,6 +35,10 @@ void ActiveSensingFilter::OnRawByte(uint8_t byte) {
   if (byte != 0xfe || !enabled_) {
     SendNow(byte);
   }
+}
+
+const prog_uint8_t* ActiveSensingFilter::factory_data() {
+  return active_sensing_filter_factory_data;
 }
 
 } }  // namespace midipal::apps
