@@ -135,7 +135,7 @@ void Ui::DoEvents() {
   
   uint8_t p = page_;
   uint8_t index = 0;
-  while (p >= num_declared_pages_) {
+  while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
     p -= stride_;
     ++index;
   }

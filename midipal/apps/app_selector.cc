@@ -34,6 +34,9 @@ using namespace avrlib;
 
 void AppSelector::OnInit() {
   selected_item_ = active_app_;
+  if (selected_item_ == 0) {
+    selected_item_ = 1;
+  }
 }
 
 void AppSelector::OnRawByte(uint8_t byte) {
