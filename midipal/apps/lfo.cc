@@ -175,9 +175,12 @@ void Lfo::Tick() {
     tick_ = 0;
     for (uint8_t i = 0; i < kNumLfos; ++i) {
       uint8_t value;
+      uint8_t skip = 0;
       if (lfo_data_[i].waveform == 17) {
         if (phase_[i] < phase_increment_[i]) {
           value = Random::GetByte();
+        } else {
+          skip = 1;
         }
       } else {
         uint16_t offset = U8U8Mul(lfo_data_[i].waveform, 129);
@@ -186,7 +189,7 @@ void Lfo::Tick() {
             phase_[i] >> 1);
       }
       phase_[i] += phase_increment_[i];
-      if (lfo_data_[i].amount) {
+      if (lfo_data_[i].amount && !skip) {
         int16_t scaled_value = static_cast<int16_t>(lfo_data_[i].center_value) + 
             S8S8MulShift8(lfo_data_[i].amount << 1, value - 128);
         scaled_value = Clip(scaled_value, 0, 127);

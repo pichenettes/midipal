@@ -83,9 +83,9 @@ App* registry[] = {
   &delay,
   &scale_processor,
   &sequencer,
-  &lfo
+  &lfo,
 
-  &ear_training_game,
+  &ear_training_game
 };
 
 /* extern */

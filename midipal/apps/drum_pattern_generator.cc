@@ -218,8 +218,8 @@ void DrumPatternGenerator::Tick() {
         }
         ++euclidian_step_count_[part];
         euclidian_bitmask_[part] <<= 1;
-        if (euclidian_step_count_[part] == ResourcesManager::Lookup<uint16_t, uint8_t>(
-                  sizes, euclidian_num_steps_[part])) {
+        if (euclidian_step_count_[part] == ResourcesManager::Lookup<
+                uint16_t, uint8_t>(sizes, euclidian_num_steps_[part])) {
           euclidian_step_count_[part] = 0;
           euclidian_bitmask_[part] = 1;
         }

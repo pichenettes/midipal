@@ -237,6 +237,7 @@ Increments for LFOs
 periods = [384, 288, 192, 144, 96, 72, 64, 48, 36, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1]
 
 increments = 65536 / numpy.array(periods)
+increments[-1] = 65535
 
 lookup_tables.append(('increments', increments))
 

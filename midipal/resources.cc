@@ -643,7 +643,7 @@ const prog_uint16_t lut_res_scale_24[] PROGMEM = {
 const prog_uint16_t lut_res_increments[] PROGMEM = {
      170,    227,    341,    455,    682,    910,   1024,   1365,
     1820,   2048,   2730,   4096,   5461,   8192,  10922,  16384,
-   21845,  32768,  65536,
+   21845,  32768,  65535,
 };
 
 
