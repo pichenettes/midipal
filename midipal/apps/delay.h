@@ -45,7 +45,7 @@ class Delay : public App {
 
   void SetParameter(uint8_t key, uint8_t value);
   
-  uint8_t settings_size() { return 9; }
+  uint8_t settings_size() { return 10; }
   uint16_t settings_offset() { return SETTINGS_DELAY; }
   uint8_t* settings_data() { return &clk_mode_; }
   const prog_uint8_t* factory_data();
@@ -66,6 +66,7 @@ class Delay : public App {
   uint8_t num_taps_;
   uint8_t velocity_factor_;
   int8_t transposition_;
+  int8_t doppler_;
 
   uint8_t velocity_factor_reverse_log_;
   

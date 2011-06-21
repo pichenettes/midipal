@@ -36,8 +36,8 @@ static const prog_uint8_t velocity_factor[16] PROGMEM = {
 };
 
 /* extern */
-const prog_uint8_t delay_factory_data[9] PROGMEM = {
-  0, 120, 0, 0, 0, 8, 4, 10, 0
+const prog_uint8_t delay_factory_data[10] PROGMEM = {
+  0, 120, 0, 0, 0, 8, 4, 10, 0, 0
 };
 
 void Delay::OnInit() {
@@ -50,6 +50,7 @@ void Delay::OnInit() {
   ui.AddPage(STR_RES_REP, UNIT_INTEGER, 0, 32);
   ui.AddPage(STR_RES_VEL, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);
+  ui.AddPage(STR_RES_DPL, UNIT_SIGNED_INTEGER, -63, 63);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
   SetParameter(5, delay_);  // Force an update of the prescaler.
@@ -141,15 +142,23 @@ void Delay::ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps) {
   if (num_taps == 0) {
     return;
   }
-  uint8_t delay = ResourcesManager::Lookup<uint8_t, uint8_t>(
+  int8_t doppler_iterations = num_taps_ - num_taps;
+  if (doppler_iterations < 0) {
+    doppler_iterations = 0;
+  }
+  int16_t delay = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, delay_);
+  for (uint8_t i = 0; i < doppler_iterations && doppler_; ++i) {
+    delay += S16S8MulShift8(delay, doppler_ << 1);
+  }
+
   uint8_t min_velocity_value = velocity > 0 ? 1 : 0;
   velocity = U8U8MulShift8(velocity, velocity_factor_reverse_log_);
   if (velocity < min_velocity_value) {
     velocity = min_velocity_value;
   }
   note = Transpose(note, transposition_);
-  SendLater(note, velocity, delay, num_taps - 1);
+  SendLater(note, velocity, Clip(delay, 1, 255), num_taps - 1);
   if (event_scheduler.overflow()) {
     display.set_status('!');
   }

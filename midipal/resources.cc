@@ -148,6 +148,7 @@ static const prog_char str_res__48[] PROGMEM = "/48";
 static const prog_char str_res__96[] PROGMEM = "/96";
 static const prog_char str_res_rep[] PROGMEM = "rep";
 static const prog_char str_res_trs[] PROGMEM = "trs";
+static const prog_char str_res_dpl[] PROGMEM = "dpl";
 static const prog_char str_res_off_[] PROGMEM = "off ";
 static const prog_char str_res_mir[] PROGMEM = "mir";
 static const prog_char str_res_alt[] PROGMEM = "alt";
@@ -380,6 +381,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res__96,
   str_res_rep,
   str_res_trs,
+  str_res_dpl,
   str_res_off_,
   str_res_mir,
   str_res_alt,
