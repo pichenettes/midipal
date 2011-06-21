@@ -54,6 +54,7 @@ class ScaleProcessor : public App {
   uint8_t voice_1_;
   uint8_t voice_2_;
   
+  uint8_t lowest_note_;
   uint8_t previous_note_;
   uint8_t voice_2_note_;
   uint8_t flip_;

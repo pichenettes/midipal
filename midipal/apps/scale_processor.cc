@@ -48,7 +48,7 @@ const prog_uint8_t scale_processor_factory_data[6] PROGMEM = {
 
 void ScaleProcessor::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
-  ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 23);
+  ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 24);
   ui.AddPage(STR_RES_SCL, STR_RES_CHR, 0, 24);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);
   ui.AddPage(STR_RES_VOI, UNIT_SIGNED_INTEGER, -24, 24);
@@ -77,6 +77,8 @@ void ScaleProcessor::OnNoteOn(
   if (channel != channel_) {
     return;
   }
+  note_stack.NoteOn(note, velocity);
+  lowest_note_ = FactorizeMidiNote(note_stack.sorted_note(0).note).note;
   ProcessNoteMessage(0x90, note, velocity);
 }
 
@@ -87,6 +89,7 @@ void ScaleProcessor::OnNoteOff(
   if (channel != channel_) {
     return;
   }
+  note_stack.NoteOff(note);
   ProcessNoteMessage(0x80, note, velocity);
 }
 
@@ -106,10 +109,31 @@ void ScaleProcessor::ProcessNoteMessage(
     uint8_t note,
     uint8_t velocity) {
   note = Transpose(note, original_);
+  
+  if (root_ == 24) {
+    // Dynamic root mode.
+    if (message == 0x90) {
+      note_map.Put(note, Constraint(note, lowest_note_, scale_));
+    }
+    NoteMapEntry* entry = note_map.Find(note);
+    if (entry) {
+      Send3(message | channel_, entry->value, velocity);
+      if (voice_1_) {
+        Send3(
+            message | channel_,
+            Transpose(entry->value, voice_1_),
+            velocity);
+      }
+    }
+    return;
+  }
+  
+  // Static root.
   Send3(
       message | channel_,
       Constraint(note, root_, scale_),
       velocity);
+  
   if (voice_1_) {
     Send3(
         message | channel_,

@@ -207,6 +207,7 @@ static const prog_char str_res_ab[] PROGMEM = "Ab";
 static const prog_char str_res__a[] PROGMEM = "A";
 static const prog_char str_res_bb[] PROGMEM = "Bb";
 static const prog_char str_res__b[] PROGMEM = "B";
+static const prog_char str_res_key[] PROGMEM = "key";
 static const prog_char str_res__[] PROGMEM = "";
 static const prog_char str_res_stp[] PROGMEM = "stp";
 static const prog_char str_res_1[] PROGMEM = "";
@@ -440,6 +441,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res__a,
   str_res_bb,
   str_res__b,
+  str_res_key,
   str_res__,
   str_res_stp,
   str_res_1,
