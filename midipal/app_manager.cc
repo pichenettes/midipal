@@ -63,24 +63,29 @@ apps::Splitter splitter;
 
 App* registry[] = {
   &app_selector,
+  
   &monitor,
-  &active_sensing_filter,
   &bpm_meter,
+  
+  &active_sensing_filter,
+  &splitter,
+  &dispatcher,
+  &combiner,
+
   &clock_source,
   &cc_knob,
   &controller,
-  &ear_training_game,
+  
   &drum_pattern_generator,
-  &splitter,
   &randomizer,
   &chord_memory,
-  &dispatcher,
-  &combiner,
   &arpeggiator,
   &delay,
   &scale_processor,
   &sequencer,
   &lfo
+
+  &ear_training_game,
 };
 
 /* extern */
