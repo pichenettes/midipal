@@ -20,7 +20,7 @@
 #include "midipal/apps/lfo.h"
 
 #include "avrlib/op.h"
-#include "avrlib/string.h"
+#include "avrlib/random.h"
 
 #include "midipal/clock.h"
 #include "midipal/note_stack.h"
@@ -53,7 +53,7 @@ void Lfo::OnInit() {
     ui.AddPage(STR_RES_CC1 + i, UNIT_INTEGER, 0, 127);
     ui.AddPage(STR_RES_AM1 + i, UNIT_SIGNED_INTEGER, -63, 63);
     ui.AddPage(STR_RES_CE1 + i, UNIT_INTEGER, 0, 127);
-    ui.AddPage(STR_RES_WF1 + i, STR_RES_TRI, 0, 16);
+    ui.AddPage(STR_RES_WF1 + i, STR_RES_TRI, 0, 17);
     ui.AddPage(STR_RES_RT1 + i, STR_RES_4_1, 0, 18);
     ui.AddPage(STR_RES_SY1 + i, STR_RES_FRE, 0, 2);
   }
@@ -174,10 +174,17 @@ void Lfo::Tick() {
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
     for (uint8_t i = 0; i < kNumLfos; ++i) {
-      uint16_t offset = U8U8Mul(lfo_data_[i].waveform, 129);
-      uint8_t value = InterpolateSample(
-          wav_res_lfo_waveforms + offset,
-          phase_[i] >> 1);
+      uint8_t value;
+      if (lfo_data_[i].waveform == 17) {
+        if (phase_[i] < phase_increment_[i]) {
+          value = Random::GetByte();
+        }
+      } else {
+        uint16_t offset = U8U8Mul(lfo_data_[i].waveform, 129);
+        value = InterpolateSample(
+            wav_res_lfo_waveforms + offset,
+            phase_[i] >> 1);
+      }
       phase_[i] += phase_increment_[i];
       if (lfo_data_[i].amount) {
         int16_t scaled_value = static_cast<int16_t>(lfo_data_[i].center_value) + 

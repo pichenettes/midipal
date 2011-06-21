@@ -249,6 +249,7 @@ static const prog_char str_res_lp1[] PROGMEM = "lp1";
 static const prog_char str_res_lp2[] PROGMEM = "lp2";
 static const prog_char str_res_rs1[] PROGMEM = "rs1";
 static const prog_char str_res_rs2[] PROGMEM = "rs2";
+static const prog_char str_res_s_h[] PROGMEM = "s&h";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
 static const prog_char str_res__not[] PROGMEM = "not";
@@ -480,6 +481,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_lp2,
   str_res_rs1,
   str_res_rs2,
+  str_res_s_h,
   str_res_res,
   str_res_fre,
   str_res__not,
