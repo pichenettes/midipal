@@ -133,16 +133,13 @@ void Ui::DoEvents() {
   uint8_t redraw = 0;
   App* app = app_manager.active_app();
   
-  uint8_t p = page_;
-  uint8_t index = 0;
-  while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
-    p -= stride_;
-    ++index;
-  }
-  
-  const PageDefinition& page_def = pages_[p];
-  
   while (queue_.available()) {
+    uint8_t p = page_;
+    while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
+      p -= stride_;
+    }
+    const PageDefinition& page_def = pages_[p];
+    
     redraw = 1;
     Event e = queue_.PullEvent();
     if (e.control_type == CONTROL_ENCODER) {
@@ -208,6 +205,14 @@ void Ui::DoEvents() {
   }
   
   if (redraw && !app->OnRedraw()) {
+    uint8_t p = page_;
+    uint8_t index = 0;
+    while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
+      p -= stride_;
+      ++index;
+    }
+    const PageDefinition& page_def = pages_[p];
+    
     PrintKeyValuePair(
         page_def.key_res_id,
         index,
