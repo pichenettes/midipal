@@ -137,6 +137,7 @@ class App {
   virtual uint8_t CheckPageStatus(uint8_t index) { return 1; }
   
  protected:
+  void FlushOutputBuffer(uint8_t size);
   void SendNow(uint8_t byte);
   void Send(uint8_t status, uint8_t* data, uint8_t size);
   void Send3(uint8_t a, uint8_t b, uint8_t c);

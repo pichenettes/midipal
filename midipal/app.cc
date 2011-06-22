@@ -74,16 +74,36 @@ void App::SaveSettingWord(uint16_t setting_id, uint16_t value) {
 }
 
 void App::SendNow(uint8_t byte) {
-  midi_out.Overwrite(byte);
+  midi_out.Write(byte);
 }
 
 void App::Send3(uint8_t a, uint8_t b, uint8_t c) {
+  // "Choke" handling of overflow: MIDI processing is slowed down until all
+  // messagea are flushed.
+  /*FlushOutputBuffer(3);
   MidiHandler::OutputBuffer::Write(a);
   MidiHandler::OutputBuffer::Write(b);
-  MidiHandler::OutputBuffer::Write(c);
+  MidiHandler::OutputBuffer::Write(c);*/
+  
+  // Another way of dealing with overflow: do not attempt to write messages in
+  // case of overflow.
+  if (MidiHandler::OutputBuffer::writable() < 3) {
+    return;
+  }
+  MidiHandler::OutputBuffer::Overwrite(a);
+  MidiHandler::OutputBuffer::Overwrite(b);
+  MidiHandler::OutputBuffer::Overwrite(c);  
 }
 
 void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
+  // FlushOutputBuffer(size);
+  
+  // Another way of dealing with overflow: do not attempt to write messages in
+  // case of overflow.
+  if (MidiHandler::OutputBuffer::writable() < size) {
+    return;
+  }
+  
   MidiHandler::OutputBuffer::Write(status);
   if (size) {
     MidiHandler::OutputBuffer::Write(*data++);
@@ -92,6 +112,12 @@ void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
   if (size) {
     MidiHandler::OutputBuffer::Write(*data++);
     --size;
+  }
+}
+
+void App::FlushOutputBuffer(uint8_t requested_size) {
+  while (MidiHandler::OutputBuffer::writable() < requested_size) {
+    midi_out.Write(MidiHandler::OutputBuffer::Read());
   }
 }
 
