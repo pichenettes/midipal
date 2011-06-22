@@ -23,6 +23,7 @@
 
 #include "avrlib/serial.h"
 
+#include "midipal/display.h"
 #include "midipal/hardware_config.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
@@ -78,32 +79,14 @@ void App::SendNow(uint8_t byte) {
 }
 
 void App::Send3(uint8_t a, uint8_t b, uint8_t c) {
-  // "Choke" handling of overflow: MIDI processing is slowed down until all
-  // messagea are flushed.
-  /*FlushOutputBuffer(3);
+  FlushOutputBuffer(3);
   MidiHandler::OutputBuffer::Write(a);
   MidiHandler::OutputBuffer::Write(b);
-  MidiHandler::OutputBuffer::Write(c);*/
-  
-  // Another way of dealing with overflow: do not attempt to write messages in
-  // case of overflow.
-  if (MidiHandler::OutputBuffer::writable() < 3) {
-    return;
-  }
-  MidiHandler::OutputBuffer::Overwrite(a);
-  MidiHandler::OutputBuffer::Overwrite(b);
-  MidiHandler::OutputBuffer::Overwrite(c);  
+  MidiHandler::OutputBuffer::Write(c);
 }
 
 void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
-  // FlushOutputBuffer(size);
-  
-  // Another way of dealing with overflow: do not attempt to write messages in
-  // case of overflow.
-  if (MidiHandler::OutputBuffer::writable() < size) {
-    return;
-  }
-  
+  FlushOutputBuffer(size);
   MidiHandler::OutputBuffer::Write(status);
   if (size) {
     MidiHandler::OutputBuffer::Write(*data++);
@@ -117,6 +100,7 @@ void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
 
 void App::FlushOutputBuffer(uint8_t requested_size) {
   while (MidiHandler::OutputBuffer::writable() < requested_size) {
+    display.set_status('!');
     midi_out.Write(MidiHandler::OutputBuffer::Read());
   }
 }
