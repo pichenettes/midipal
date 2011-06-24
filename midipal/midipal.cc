@@ -90,6 +90,10 @@ void Init() {
   // Now that the app selector app has booted, we can retrieve the
   // app to launch.
   uint8_t launch_app = app.GetParameter(0);
+  if (launch_app >= app.num_apps()) {
+    launch_app = 0;
+    app.SetParameter(0, launch_app);
+  }
   app.Launch(launch_app);
   
   display.Init();
