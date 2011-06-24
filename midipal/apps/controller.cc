@@ -25,11 +25,64 @@
 
 namespace midipal { namespace apps {
 
-/* extern */
 const prog_uint8_t controller_factory_data[9] PROGMEM = {
   0, 7, 10, 74, 71, 73, 80, 72, 91
 };
 
+/* static */
+uint8_t Controller::channel_;
+
+/* static */
+uint8_t Controller::cc_[8];
+
+/* static */
+const prog_AppInfo Controller::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  NULL, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  &OnPot, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  9, // settings_size
+  SETTINGS_CONTROLLER, // settings_offset
+  &channel_, // settings_data
+  controller_factory_data, // factory_data
+  STR_RES_CONTRLLR, // app_name
+};
+
+/* static */
 void Controller::OnInit() {
   ui.set_read_pots(1);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
@@ -38,20 +91,18 @@ void Controller::OnInit() {
   }
 }
 
+/* static */
 void Controller::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  Send(status, data, data_size);
+  app.Send(status, data, data_size);
 }
 
+/* static */
 uint8_t Controller::OnPot(uint8_t pot, uint8_t value) {
-  Send3(0xb0 | channel_, cc_[pot], value);
-}
-
-const prog_uint8_t* Controller::factory_data() {
-  return controller_factory_data;
+  app.Send3(0xb0 | channel_, cc_[pot], value);
 }
 
 } }  // namespace midipal::apps

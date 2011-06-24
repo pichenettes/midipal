@@ -25,7 +25,7 @@
 
 namespace midipal {
 
-static const uint8_t kEventSchedulerSize = 128;
+static const uint8_t kEventSchedulerSize = 100;
 
 static const uint8_t kFreeSlot = 0xff;
 static const uint8_t kZombieSlot = 0xfe;

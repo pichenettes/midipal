@@ -25,17 +25,74 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t combiner_factory_data[3] PROGMEM = {
   0, 3, 0
 };
 
+/* static */
+uint8_t Combiner::input_channel_;
+
+/* static */
+uint8_t Combiner::num_channels_;
+
+/* static */
+uint8_t Combiner::output_channel_;
+
+/* static */
+const prog_AppInfo Combiner::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  NULL, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  3, // settings_size
+  SETTINGS_COMBINER, // settings_offset
+  &input_channel_, // settings_data
+  combiner_factory_data, // factory_data
+  STR_RES_MERGECHN, // app_name
+};
+
+/* static */
 void Combiner::OnInit() {
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 1, 16);
   ui.AddPage(STR_RES_OUT, UNIT_INDEX, 0, 15);
 }
 
+/* static */
 void Combiner::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -45,7 +102,7 @@ void Combiner::OnRawMidiData(
   uint8_t channel = status & 0x0f;
   // Pass-through real time messages.
   if (type == 0xf0) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   } else {
     uint8_t in_range = channel >= input_channel_ && \
         channel < input_channel_ + num_channels_;
@@ -54,12 +111,8 @@ void Combiner::OnRawMidiData(
     if (in_range) {
       channel = output_channel_;
     }
-    Send(type | channel, data, data_size);
+    app.Send(type | channel, data, data_size);
   }
-}
-
-const prog_uint8_t* Combiner::factory_data() {
-  return combiner_factory_data;
 }
 
 } }  // namespace midipal::apps

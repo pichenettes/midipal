@@ -28,15 +28,66 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t monitor_factory_data[1] PROGMEM = { 0 };
 
+/* static */
+uint8_t Monitor::monitored_channel_;
+
+/* static */
+const prog_AppInfo Monitor::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  &OnNoteAftertouch, // void (*OnNoteAftertouch)(uint8_t, uint8_t);
+  &OnAftertouch, // void (*OnAftertouch)(uint8_t, uint8_t, uint8_t);
+  &OnControlChange, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  &OnProgramChange, // void (*OnProgramChange)(uint8_t, uint8_t);
+  &OnPitchBend, // void (*OnPitchBend)(uint8_t, uint16_t);
+  &OnAllSoundOff, // void (*OnAllSoundOff)(uint8_t);
+  &OnResetAllControllers, // void (*OnResetAllControllers)(uint8_t);
+  &OnLocalControl, // void (*OnLocalControl)(uint8_t, uint8_t);
+  &OnAllNotesOff, // void (*OnAllNotesOff)(uint8_t);
+  &OnOmniModeOff, // void (*OnOmniModeOff)(uint8_t);
+  &OnOmniModeOn, // void (*OnOmniModeOn)(uint8_t);
+  &OnMonoModeOn, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  &OnPolyModeOn, // void (*OnPolyModeOn)(uint8_t);
+  &OnSysExStart, // void (*OnSysExStart)();
+  &OnSysExByte, // void (*OnSysExByte)(uint8_t);
+  &OnSysExEnd, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  &OnActiveSensing, // void (*OnActiveSensing)();
+  &OnReset, // void (*OnReset)();
+  &CheckChannel, // uint8_t (*CheckChannel)(uint8_t);
+  &OnRawByte, // void (*OnRawByte)(uint8_t);
+  NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)();
+  &OnRedraw, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)();
+  1, // settings_size
+  SETTINGS_MONITOR, // settings_offset
+  &monitored_channel_, // settings_data
+  monitor_factory_data, // factory_data
+  STR_RES_MONITOR, // app_name,
+};
+
+/* static */
 void Monitor::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_digits_10, 7, 1);
   ui.Clear();
   ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
 }
 
+/* static */
 void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   // 01234567
   // 1 C#7 7f
@@ -47,6 +98,7 @@ void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
@@ -56,7 +108,11 @@ void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.RefreshScreen();
 }
 
-void Monitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+/* static */
+void Monitor::OnNoteAftertouch(
+    uint8_t channel,
+    uint8_t note,
+    uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   ui.PrintNote(&line_buffer[2], note);
@@ -65,6 +121,7 @@ void Monitor::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
@@ -75,6 +132,7 @@ void Monitor::OnAftertouch(uint8_t channel, uint8_t velocity) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnControlChange(
     uint8_t channel,
     uint8_t controller,
@@ -89,6 +147,7 @@ void Monitor::OnControlChange(
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnProgramChange(uint8_t channel, uint8_t program) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
@@ -99,6 +158,7 @@ void Monitor::OnProgramChange(uint8_t channel, uint8_t program) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
@@ -108,6 +168,7 @@ void Monitor::OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
   if (ui.editing()) {
     return;
@@ -119,14 +180,17 @@ void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnAllSoundOff(uint8_t channel) {
   PrintString(channel, STR_RES_SNDOFF);
 }
 
+/* static */
 void Monitor::OnResetAllControllers(uint8_t channel) {
   PrintString(channel, STR_RES_RSTCTR);
 }
 
+/* static */
 void Monitor::OnLocalControl(uint8_t channel, uint8_t state) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
@@ -137,42 +201,47 @@ void Monitor::OnLocalControl(uint8_t channel, uint8_t state) {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnAllNotesOff(uint8_t channel) {
   PrintString(channel, STR_RES_NOTOFF);
 }
 
+/* static */
 void Monitor::OnOmniModeOff(uint8_t channel) {
   PrintString(channel, STR_RES_OMNOFF);
 }
 
+/* static */
 void Monitor::OnOmniModeOn(uint8_t channel) {
   PrintString(channel, STR_RES_OMNION);
 }
 
+/* static */
 void Monitor::OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
   PrintString(channel, STR_RES_MONOON);
 }
 
+/* static */
 void Monitor::OnPolyModeOn(uint8_t channel) {
   PrintString(channel, STR_RES_POLYON);
 }
 
+/* static */
 void Monitor::OnSysExStart() {
   PrintString(0xff, STR_RES_SYSX__);
 }
 
+/* static */
 void Monitor::OnSysExByte(uint8_t sysex_byte) {
   PrintString(0xff, STR_RES__SYSX_);
 }
 
+/* static */
 void Monitor::OnSysExEnd() {
   PrintString(0xff, STR_RES___SYSX);
 }
 
-void Monitor::OnBozoByte(uint8_t bozo_byte) {
-
-}
-
+/* static */
 void Monitor::OnClock() {
   if (ui.editing()) {
     return;
@@ -182,18 +251,22 @@ void Monitor::OnClock() {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnStart() {
   PrintString(0xff, STR_RES_START);
 }
 
+/* static */
 void Monitor::OnContinue() {
   PrintString(0xff, STR_RES_CONT_);
 }
 
+/* static */
 void Monitor::OnStop() {
   PrintString(0xff, STR_RES_STOP);
 }
 
+/* static */
 void Monitor::OnActiveSensing() {
   if (ui.editing()) {
     return;
@@ -203,35 +276,36 @@ void Monitor::OnActiveSensing() {
   ui.RefreshScreen();
 }
 
+/* static */
 void Monitor::OnReset() {
   PrintString(0xff, STR_RES_RESET);
 }
 
+/* static */
 uint8_t Monitor::CheckChannel(uint8_t channel) {
   return (ui.editing() == 0) && 
       ((monitored_channel_ == 0) || (channel + 1 == monitored_channel_));
 }
 
+/* static */
 void Monitor::OnRawByte(uint8_t byte) {
-  SendNow(byte);
+  app.SendNow(byte);
 }
 
+/* static */
 uint8_t Monitor::OnClick() {
   ui.Clear();
   ui.RefreshScreen();
   return 0;
 }
 
+/* static */
 uint8_t Monitor::OnRedraw() {
   if (!ui.editing()) {
     return 1;  // Prevent the default screen redraw handler to be called.
   } else {
     return 0;
   }
-}
-
-const prog_uint8_t* Monitor::factory_data() {
-  return monitor_factory_data;
 }
 
 } }  // namespace midipal::apps

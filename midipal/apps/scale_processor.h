@@ -24,40 +24,39 @@
 
 namespace midipal { namespace apps {
 
-class ScaleProcessor : public App {
+class ScaleProcessor {
  public:
   ScaleProcessor() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
 
-  uint8_t settings_size() { return 6; }
-  uint16_t settings_offset() { return SETTINGS_SCALE_PROCESSOR; }
-  uint8_t* settings_data() { return &channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_SCALE; }
+  static const prog_AppInfo app_info_;
 
  protected:
-  void ProcessNoteMessage(uint8_t message, uint8_t note, uint8_t velocity);
+  static void ProcessNoteMessage(
+      uint8_t message,
+      uint8_t note,
+      uint8_t velocity);
    
-  uint8_t channel_;
-  uint8_t root_;
-  uint8_t scale_;
-  uint8_t original_;
-  uint8_t voice_1_;
-  uint8_t voice_2_;
+  static uint8_t channel_;
+  static uint8_t root_;
+  static uint8_t scale_;
+  static uint8_t original_;
+  static uint8_t voice_1_;
+  static uint8_t voice_2_;
   
-  uint8_t lowest_note_;
-  uint8_t previous_note_;
-  uint8_t voice_2_note_;
-  uint8_t flip_;
+  static uint8_t lowest_note_;
+  static uint8_t previous_note_;
+  static uint8_t voice_2_note_;
+  static uint8_t flip_;
 
   DISALLOW_COPY_AND_ASSIGN(ScaleProcessor);
 };

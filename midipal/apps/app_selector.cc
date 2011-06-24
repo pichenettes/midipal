@@ -24,7 +24,6 @@
 
 #include "midi/midi.h"
 
-#include "midipal/app_manager.h"
 #include "midipal/display.h"
 #include "midipal/ui.h"
 
@@ -32,6 +31,60 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* static */
+uint8_t AppSelector::active_app_;
+
+/* static */
+uint8_t AppSelector::selected_item_;
+
+/* static */
+const prog_AppInfo AppSelector::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  NULL, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  &OnRawByte, // void (*OnRawByte)(uint8_t);
+  NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  &OnRedraw, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  1, // settings_size
+  SETTINGS_SETUP, // settings_offset
+  &active_app_, // settings_data
+  0, // factory_data
+  0, // app_name
+};
+
+/* static */
 void AppSelector::OnInit() {
   selected_item_ = active_app_;
   if (selected_item_ == 0) {
@@ -39,45 +92,53 @@ void AppSelector::OnInit() {
   }
 }
 
+/* static */
 void AppSelector::OnRawByte(uint8_t byte) {
-  SendNow(byte);
+  app.SendNow(byte);
 }
 
+/* static */
 uint8_t AppSelector::OnClick() {
-  if (selected_item_ == app_manager.num_apps()) {
-    for (uint8_t i = 1; i < app_manager.num_apps(); ++i) {
-      app_manager.mutable_app(i)->ResetToFactorySettings();
+  if (selected_item_ == app.num_apps()) {
+    for (uint8_t i = 1; i < app.num_apps(); ++i) {
+      app.Launch(i);
+      app.ResetToFactorySettings();
     }
+    app.Launch(0);
     active_app_ = 0;
   } else {
     active_app_ = selected_item_;
   }
-  SaveSettings();
+  app.SaveSettings();
   SystemReset(100);
   return 1;
 }
 
+/* static */
 uint8_t AppSelector::OnIncrement(int8_t increment) {
   selected_item_ += increment;
   if (selected_item_ < 1) {
     selected_item_ = 1;
-  } else if (selected_item_ > app_manager.num_apps()) {
-    selected_item_ = app_manager.num_apps();
+  } else if (selected_item_ > app.num_apps()) {
+    selected_item_ = app.num_apps();
   }
   return 1;
 }
 
+/* static */
 uint8_t AppSelector::OnRedraw() {
   ui.Clear();
-  if (selected_item_ == app_manager.num_apps()) {
+  if (selected_item_ == app.num_apps()) {
     ResourcesManager::LoadStringResource(
         STR_RES__RESET_,
         &line_buffer[0], 8);
   } else {
+    app.Launch(selected_item_);
     ResourcesManager::LoadStringResource(
-        app_manager.mutable_app(selected_item_)->app_name(),
+        app.app_name(),
         &line_buffer[0], 8);
   }
+  app.Launch(0);
   AlignLeft(&line_buffer[0], 8);
   ui.RefreshScreen();
   return 1;

@@ -24,28 +24,24 @@
 
 namespace midipal { namespace apps {
 
-class Splitter : public App {
+class Splitter {
  public:
   Splitter() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
  
-  uint8_t settings_size() { return 4; }
-  uint16_t settings_offset() { return SETTINGS_SPLITTER; }
-  uint8_t* settings_data() { return &input_channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_SPLITTER; }
-
+  static const prog_AppInfo app_info_;
+ 
  private:
-  uint8_t input_channel_;
-  uint8_t split_point_;
-  uint8_t lower_channel_;
-  uint8_t upper_channel_;
+  static uint8_t input_channel_;
+  static uint8_t split_point_;
+  static uint8_t lower_channel_;
+  static uint8_t upper_channel_;
   
   DISALLOW_COPY_AND_ASSIGN(Splitter);
 };

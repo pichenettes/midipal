@@ -24,51 +24,47 @@
 
 namespace midipal { namespace apps {
 
-class Delay : public App {
+class Delay {
  public:
   Delay() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
 
-  void OnContinue();
-  void OnStart();
-  void OnStop();
-  void OnClock();
-  void OnInternalClockTick();
+  static void OnContinue();
+  static void OnStart();
+  static void OnStop();
+  static void OnClock();
+  static void OnInternalClockTick();
 
-  void SetParameter(uint8_t key, uint8_t value);
+  static void SetParameter(uint8_t key, uint8_t value);
   
-  uint8_t settings_size() { return 10; }
-  uint16_t settings_offset() { return SETTINGS_DELAY; }
-  uint8_t* settings_data() { return &clk_mode_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_DELAY; }
+  static const prog_AppInfo app_info_;
 
  protected:
-  void ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps);
-  void SendEchoes();
+  static void ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps);
+  static void SendEchoes();
   
-  uint8_t running_;
+  static uint8_t running_;
    
-  uint8_t clk_mode_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
-  uint8_t channel_;
-  uint8_t delay_;
-  uint8_t num_taps_;
-  uint8_t velocity_factor_;
-  int8_t transposition_;
-  int8_t doppler_;
+  static uint8_t clk_mode_;
+  static uint8_t bpm_;
+  static uint8_t groove_template_;
+  static uint8_t groove_amount_;
+  static uint8_t channel_;
+  static uint8_t delay_;
+  static uint8_t num_taps_;
+  static uint8_t velocity_factor_;
+  static int8_t transposition_;
+  static int8_t doppler_;
 
-  uint8_t velocity_factor_reverse_log_;
+  static uint8_t velocity_factor_reverse_log_;
   
   DISALLOW_COPY_AND_ASSIGN(Delay);
 };

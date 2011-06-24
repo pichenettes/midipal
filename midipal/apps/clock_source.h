@@ -24,35 +24,31 @@
 
 namespace midipal { namespace apps {
 
-class ClockSource : public App {
+class ClockSource {
  public:
   ClockSource() { }
 
-  void OnInit();
-  void OnStart();
-  void OnStop();
-  void OnContinue();
-  void OnRawByte(uint8_t byte);
+  static void OnInit();
+  static void OnStart();
+  static void OnStop();
+  static void OnContinue();
+  static void OnRawByte(uint8_t byte);
   
-  void SetParameter(uint8_t key, uint8_t value);
+  static void SetParameter(uint8_t key, uint8_t value);
   
-  void OnInternalClockTick();
+  static void OnInternalClockTick();
   
-  uint8_t settings_size() { return 4; }
-  uint16_t settings_offset() { return SETTINGS_CLOCK_SOURCE; }
-  uint8_t* settings_data() { return &running_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_CLOCK; }
-
+  static const prog_AppInfo app_info_;
+  
  private:
-  void UpdateCursor();
-  void Stop();
-  void Start();
+  static void UpdateCursor();
+  static void Stop();
+  static void Start();
   
-  uint8_t running_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
+  static uint8_t running_;
+  static uint8_t bpm_;
+  static uint8_t groove_template_;
+  static uint8_t groove_amount_;
   
   DISALLOW_COPY_AND_ASSIGN(ClockSource);
 };

@@ -12,13 +12,9 @@
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-// -----------------------------------------------------------------------------
-//
-// Base class implemented by all the "Apps" running on the Midipal.
 
-#ifndef MIDIPAL_APPS_H_
-#define MIDIPAL_APPS_H_
+#ifndef MIDIPAL_APP_H_
+#define MIDIPAL_APP_H_
 
 #include "avrlib/base.h"
 
@@ -56,104 +52,311 @@ enum ClockMode {
   CLOCK_MODE_EXTERNAL
 };
 
+struct AppInfo {
+  void (*OnInit)();
+  void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  void (*OnAftertouch)(uint8_t, uint8_t);
+  void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  void (*OnProgramChange)(uint8_t, uint8_t);
+  void (*OnPitchBend)(uint8_t, uint16_t);
+  void (*OnAllSoundOff)(uint8_t);
+  void (*OnResetAllControllers)(uint8_t);
+  void (*OnLocalControl)(uint8_t, uint8_t);
+  void (*OnAllNotesOff)(uint8_t);
+  void (*OnOmniModeOff)(uint8_t);
+  void (*OnOmniModeOn)(uint8_t);
+  void (*OnMonoModeOn)(uint8_t, uint8_t);
+  void (*OnPolyModeOn)(uint8_t);
+  void (*OnSysExStart)();
+  void (*OnSysExByte)(uint8_t);
+  void (*OnSysExEnd)();
+  void (*OnClock)();
+  void (*OnStart)();
+  void (*OnContinue)();
+  void (*OnStop)();
+  void (*OnActiveSensing)();
+  void (*OnReset)();
+  uint8_t (*CheckChannel)(uint8_t);
+  void (*OnRawByte)(uint8_t);
+  void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  void (*OnInternalClockTick)();
+  void (*OnInternalClockStep)();
+  uint8_t (*OnIncrement)(int8_t);
+  uint8_t (*OnClick)();
+  uint8_t (*OnPot)(uint8_t, uint8_t);
+  uint8_t (*OnRedraw)();
+  void (*OnIdle)();
+  void (*SetParameter)(uint8_t, uint8_t);
+  uint8_t (*GetParameter)(uint8_t);
+  uint8_t (*CheckPageStatus)(uint8_t);
+
+  uint8_t settings_size;
+  uint16_t settings_offset;
+  uint8_t* settings_data;
+  const prog_uint8_t* factory_data;
+  uint8_t app_name;
+};
+
+typedef AppInfo PROGMEM prog_AppInfo;
+
 class App {
  public:
   App() { }
   
-  void Init();
+  static void Init();
   
   // Can be used to save/load settings in EEPROM.
-  void SaveSetting(uint8_t index);
-  void SaveSettingWord(uint16_t setting_id, uint16_t value);
-  void SaveSettings();
-  void ResetToFactorySettings();
+  static void SaveSetting(uint8_t index);
+  static void SaveSettingWord(uint16_t setting_id, uint16_t value);
+  static void SaveSettings();
+  static void ResetToFactorySettings();
+  static void Launch(uint8_t app_index);
   
-  virtual void OnInit() { }
+  static void OnInit() {
+    if (app_info_.OnInit) {
+      (*app_info_.OnInit)();
+    }
+  }
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+    if (app_info_.OnNoteOn) {
+      (*app_info_.OnNoteOn)(channel, note, velocity);
+    }
+  }
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+    if (app_info_.OnNoteOff) {
+      (*app_info_.OnNoteOff)(channel, note, velocity);
+    }
+  }
+  static void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+    if (app_info_.OnNoteAftertouch) {
+      (*app_info_.OnNoteAftertouch)(channel, note, velocity);
+    }
+  }
+  static void OnAftertouch(uint8_t channel, uint8_t velocity) {
+    if (app_info_.OnAftertouch) {
+      (*app_info_.OnAftertouch)(channel, velocity);
+    }
+  }
+  static void OnControlChange(uint8_t channel, uint8_t controller,
+                               uint8_t value) {
+    if (app_info_.OnControlChange) {
+      (*app_info_.OnControlChange)(channel, controller, value);
+    }
+  }
+  static void OnProgramChange(uint8_t channel, uint8_t program) {
+    if (app_info_.OnProgramChange) {
+      (*app_info_.OnProgramChange)(channel, program);
+    }
+  }
+  static void OnPitchBend(uint8_t channel, uint16_t pitch_bend) {
+    if (app_info_.OnPitchBend) {
+      (*app_info_.OnPitchBend)(channel, pitch_bend);
+    }
+  }
+  static void OnAllSoundOff(uint8_t channel) {
+    if (app_info_.OnAllSoundOff) {
+      (*app_info_.OnAllSoundOff)(channel);
+    }
+  }
+  static void OnResetAllControllers(uint8_t channel) {
+    if (app_info_.OnResetAllControllers) {
+      (*app_info_.OnResetAllControllers)(channel);
+    }
+  }
+  static void OnLocalControl(uint8_t channel, uint8_t state) {
+    if (app_info_.OnLocalControl) {
+      (*app_info_.OnLocalControl)(channel, state);
+    }
+  }
+  static void OnAllNotesOff(uint8_t channel) {
+    if (app_info_.OnAllNotesOff) {
+      (*app_info_.OnAllNotesOff)(channel);
+    }
+  }
+  static void OnOmniModeOff(uint8_t channel) {
+    if (app_info_.OnOmniModeOff) {
+      (*app_info_.OnOmniModeOff)(channel);
+    }
+  }
+  static void OnOmniModeOn(uint8_t channel) {
+    if (app_info_.OnOmniModeOn) {
+      (*app_info_.OnOmniModeOn)(channel);
+    }
+  }
+  static void OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
+    if (app_info_.OnMonoModeOn) {
+      (*app_info_.OnMonoModeOn)(channel, num_channels);
+    }
+  }
+  static void OnPolyModeOn(uint8_t channel) {
+    if (app_info_.OnPolyModeOn) {
+      (*app_info_.OnPolyModeOn)(channel);
+    }
+  }
+  static void OnSysExStart() {
+    if (app_info_.OnSysExStart) {
+      (*app_info_.OnSysExStart)();
+    }
+  }
+  static void OnSysExByte(uint8_t sysex_byte) {
+    if (app_info_.OnSysExByte) {
+      (*app_info_.OnSysExByte)(sysex_byte);
+    }
+  }
+  static void OnSysExEnd() {
+    if (app_info_.OnSysExEnd) {
+      (*app_info_.OnSysExEnd)();
+    }
+  }
+
+  static void OnClock() {
+    if (app_info_.OnClock) {
+      (*app_info_.OnClock)();
+    }
+  }
+  static void OnStart() {
+    if (app_info_.OnStart) {
+      (*app_info_.OnStart)();
+    }
+  }
+  static void OnContinue() {
+    if (app_info_.OnContinue) {
+      (*app_info_.OnContinue)();
+    }
+  }
+  static void OnStop() {
+    if (app_info_.OnStop) {
+      (*app_info_.OnStop)();
+    }
+  }
+  static void OnActiveSensing() {
+    if (app_info_.OnActiveSensing) {
+      (*app_info_.OnActiveSensing)();
+    }
+  }
+  static void OnReset() {
+    if (app_info_.OnReset) {
+      (*app_info_.OnReset)();
+    }
+  }
+
+  static uint8_t CheckChannel(uint8_t channel) { 
+    if (app_info_.CheckChannel) {
+      return (*app_info_.CheckChannel)(channel);
+    } else {
+      return 1;
+    }
+  }
   
-  // Event handlers for MIDI input.
-  virtual void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) { }
-  virtual void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) { }
-  virtual void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) { }
-  virtual void OnAftertouch(uint8_t channel, uint8_t velocity) { }
-  virtual void OnControlChange(uint8_t channel, uint8_t controller,
-                               uint8_t value) { }
-  virtual void OnProgramChange(uint8_t channel, uint8_t program) { }
-  virtual void OnPitchBend(uint8_t channel, uint16_t pitch_bend) { }
-
-  virtual void OnAllSoundOff(uint8_t channel) { }
-  virtual void OnResetAllControllers(uint8_t channel) { }
-  virtual void OnLocalControl(uint8_t channel, uint8_t state) { }
-  virtual void OnAllNotesOff(uint8_t channel) { }
-  virtual void OnOmniModeOff(uint8_t channel) { }
-  virtual void OnOmniModeOn(uint8_t channel) { }
-  virtual void OnMonoModeOn(uint8_t channel, uint8_t num_channels) { }
-  virtual void OnPolyModeOn(uint8_t channel) { }
-  virtual void OnSysExStart() { }
-  virtual void OnSysExByte(uint8_t sysex_byte) { }
-  virtual void OnSysExEnd() { }
-  virtual void OnBozoByte(uint8_t bozo_byte) { }
-
-  virtual void OnClock() { }
-  virtual void OnStart() { }
-  virtual void OnContinue() { }
-  virtual void OnStop() { }
-  virtual void OnActiveSensing() { }
-  virtual void OnReset() { }
-
-  virtual uint8_t CheckChannel(uint8_t channel) { return 1; }
-  virtual void OnRawByte(uint8_t byte) { }
-  virtual void OnRawMidiData(
+  static void OnRawByte(uint8_t byte) {
+   if (app_info_.OnRawByte) {
+      (*app_info_.OnRawByte)(byte);
+    }
+  }
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
-     uint8_t accepted_channel) { }
+     uint8_t accepted_channel) {
+    if (app_info_.OnRawMidiData) {
+      (*app_info_.OnRawMidiData)(status, data, data_size, accepted_channel);
+    }
+  }
   
   // Event handlers for internal clock.
-  virtual void OnInternalClockTick() { }
-  virtual void OnInternalClockStep() { }
+  static void OnInternalClockTick() {
+    if (app_info_.OnInternalClockTick) {
+      (*app_info_.OnInternalClockTick)();
+    }
+  }
+  static void OnInternalClockStep() {
+    if (app_info_.OnInternalClockStep) {
+      (*app_info_.OnInternalClockStep)();
+    }
+  }
   
   // Event handlers for UI.
-  virtual uint8_t OnIncrement(int8_t increment) { return 0; }
-  virtual uint8_t OnClick() { return 0; }
-  virtual uint8_t OnPot(uint8_t pot, uint8_t value) { return 0; }
-  virtual uint8_t OnRedraw() { return 0; }
-  virtual void OnIdle() { }
+  static uint8_t OnIncrement(int8_t increment) { 
+    if (app_info_.OnIncrement) {
+      return (*app_info_.OnIncrement)(increment);
+    }
+  }
+  static uint8_t OnClick() {
+    if (app_info_.OnClick) {
+      return (*app_info_.OnClick)();
+    }
+  }
+  static uint8_t OnPot(uint8_t pot, uint8_t value) {
+    if (app_info_.OnPot) {
+      return (*app_info_.OnPot)(pot, value);
+    }
+  }
+  static uint8_t OnRedraw() { 
+    if (app_info_.OnRedraw) {
+      return (*app_info_.OnRedraw)();
+    }
+  }
+  static void OnIdle() {
+    if (app_info_.OnIdle) {
+      return (*app_info_.OnIdle)();
+    }
+  }
+  
+  // Parameter and page checking.
+  static void SetParameter(uint8_t key, uint8_t value) {
+    if (app_info_.SetParameter) {
+      (*app_info_.SetParameter)(key, value);
+    } else {
+      settings_data()[key] = value;
+    }
+  }
+  static uint8_t GetParameter(uint8_t key) {
+    if (app_info_.GetParameter) {
+      return (*app_info_.GetParameter)(key);
+    } else {
+      return settings_data()[key];
+    }
+  }
+  static uint8_t CheckPageStatus(uint8_t index) { 
+    if (app_info_.CheckPageStatus) {
+      return (*app_info_.CheckPageStatus)(index);
+    } else {
+      return 1;
+    }
+  }
   
   // Access to settings data structure
-  virtual uint8_t settings_size() { return 0; }
-  virtual uint16_t settings_offset() { return 0; }
-  virtual uint8_t* settings_data() { return NULL; }
-  virtual const prog_uint8_t* factory_data() { return NULL; }
-  
-  // Used by the app manager to display the app name
-  virtual uint8_t app_name() { return 0; }
+  static uint8_t settings_size() { return app_info_.settings_size; }
+  static uint16_t settings_offset() { return app_info_.settings_offset; }
+  static uint8_t* settings_data() { return app_info_.settings_data; }
+  static const prog_uint8_t* factory_data() { return app_info_.factory_data; }
+  static uint8_t app_name() { return app_info_.app_name; }
 
-  virtual void SetParameter(uint8_t key, uint8_t value) {
-    settings_data()[key] = value;
-  }
-  virtual uint8_t GetParameter(uint8_t key) {
-    return settings_data()[key];
-  }
-  virtual uint8_t CheckPageStatus(uint8_t index) { return 1; }
-  
- protected:
-  void FlushOutputBuffer(uint8_t size);
-  void SendNow(uint8_t byte);
-  void Send(uint8_t status, uint8_t* data, uint8_t size);
-  void Send3(uint8_t a, uint8_t b, uint8_t c);
-  void SendLater(uint8_t note, uint8_t velocity, uint8_t when) {
+  static void FlushOutputBuffer(uint8_t size);
+  static void SendNow(uint8_t byte);
+  static void Send(uint8_t status, uint8_t* data, uint8_t size);
+  static void Send3(uint8_t a, uint8_t b, uint8_t c);
+  static void SendLater(uint8_t note, uint8_t velocity, uint8_t when) {
     SendLater(note, velocity, when, 0);
   }
-  void SendLater(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag);
-  void SendScheduledNotes(uint8_t channel);
-  void FlushQueue(uint8_t channel);
+  static void SendLater(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag);
+  static void SendScheduledNotes(uint8_t channel);
+  static void FlushQueue(uint8_t channel);
+  
+  static uint8_t num_apps();
   
  private:
+  static AppInfo app_info_;
+  
   DISALLOW_COPY_AND_ASSIGN(App);
 };
 
 extern const prog_uint8_t midi_clock_tick_per_step[];
 
+extern App app;
+
 }  // namespace midipal
 
-#endif // MIDIPAL_APPS_H_
+#endif // MIDIPAL_APP_H_

@@ -21,12 +21,12 @@
 #include "avrlib/watchdog_timer.h"
 
 #include "midi/midi.h"
+#include "midipal/app.h"
 #include "midipal/clock.h"
 #include "midipal/display.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 #include "midipal/note_stack.h"
-#include "midipal/app_manager.h"
 #include "midipal/resources.h"
 #include "midipal/ui.h"
 
@@ -38,23 +38,26 @@ using namespace midipal;
 Serial<MidiPort, 31250, BUFFERED, POLLED> midi_io;
 MidiStreamParser<MidiHandler> midi_parser;
 
-ISR(USART0_RX_vect) {
+ISR(USART_RX_vect) {
+  LedIn::High();
   midi_parser.PushByte(SerialInput<MidiPort>::ImmediateRead());
 }
 
 static uint8_t sub_clock;
 static uint8_t sub_clock_2;
-static uint16_t clock_counter;
+static volatile uint16_t clock_counter;
 
 TIMER_2_TICK {
+  ++clock_counter;
   uint8_t events = clock.Tick();
   if (events & 1) {
-    app_manager.active_app()->OnInternalClockTick();
+    app.OnInternalClockTick();
   }
   if (events & 2) {
-    app_manager.active_app()->OnInternalClockStep();
+    app.OnInternalClockStep();
   }
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
+    LedOut::High();
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
   }
   sub_clock = (sub_clock + 1) & 31;
@@ -64,6 +67,8 @@ TIMER_2_TICK {
     sub_clock_2 = ~sub_clock_2;
     if (sub_clock_2) {  // 1kHz
       TickSystemClock();
+      LedOut::Low();
+      LedIn::Low();
     }
   }
 }
@@ -71,15 +76,18 @@ TIMER_2_TICK {
 void Init() {
   sei();
   UCSR0B = 0;
-  UCSR1B = 0;
+  
+  LedOut::set_mode(DIGITAL_OUTPUT);
+  LedIn::set_mode(DIGITAL_OUTPUT);
   
   // Boot the app selector app.
-  app_manager.set_active_app(0);
-  app_manager.active_app()->Init();
+  app.Launch(0);
+  app.Init();
+
   // Now that the app selector app has booted, we can retrieve the
   // app to launch.
-  uint8_t launch_app = app_manager.active_app()->GetParameter(0);
-  app_manager.set_active_app(launch_app);
+  uint8_t launch_app = app.GetParameter(0);
+  app.Launch(launch_app);
   
   note_stack.Init();
   event_scheduler.Init();
@@ -94,7 +102,7 @@ void Init() {
 
   lcd.Init();
   
-  app_manager.active_app()->Init();
+  app.Init();
 
   midi_io.Init();
 }

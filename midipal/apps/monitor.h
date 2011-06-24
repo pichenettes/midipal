@@ -24,57 +24,52 @@
 
 namespace midipal { namespace apps {
 
-class Monitor : public App {
+class Monitor {
  public:
   Monitor() { }
 
-  void OnInit();
+  static void OnInit();
 
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t velocity);
-  void OnControlChange(uint8_t channel, uint8_t controller,
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnAftertouch(uint8_t channel, uint8_t velocity);
+  static void OnControlChange(uint8_t channel, uint8_t controller,
     uint8_t value);
-  void OnProgramChange(uint8_t channel, uint8_t program);
-  void OnPitchBend(uint8_t channel, uint16_t pitch_bend);
+  static void OnProgramChange(uint8_t channel, uint8_t program);
+  static void OnPitchBend(uint8_t channel, uint16_t pitch_bend);
 
-  void OnAllSoundOff(uint8_t channel);
-  void OnResetAllControllers(uint8_t channel);
-  void OnLocalControl(uint8_t channel, uint8_t state);
-  void OnAllNotesOff(uint8_t channel);
-  void OnOmniModeOff(uint8_t channel);
-  void OnOmniModeOn(uint8_t channel);
-  void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
-  void OnPolyModeOn(uint8_t channel);
-  void OnSysExStart();
-  void OnSysExByte(uint8_t sysex_byte);
-  void OnSysExEnd();
-  void OnBozoByte(uint8_t bozo_byte);
+  static void OnAllSoundOff(uint8_t channel);
+  static void OnResetAllControllers(uint8_t channel);
+  static void OnLocalControl(uint8_t channel, uint8_t state);
+  static void OnAllNotesOff(uint8_t channel);
+  static void OnOmniModeOff(uint8_t channel);
+  static void OnOmniModeOn(uint8_t channel);
+  static void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
+  static void OnPolyModeOn(uint8_t channel);
+  static void OnSysExStart();
+  static void OnSysExByte(uint8_t sysex_byte);
+  static void OnSysExEnd();
 
-  void OnClock();
-  void OnStart();
-  void OnContinue();
-  void OnStop();
-  void OnActiveSensing();
-  void OnReset();
-  void OnRawByte(uint8_t byte);
+  static void OnClock();
+  static void OnStart();
+  static void OnContinue();
+  static void OnStop();
+  static void OnActiveSensing();
+  static void OnReset();
+  static void OnRawByte(uint8_t byte);
 
-  uint8_t CheckChannel(uint8_t channel);
+  static uint8_t CheckChannel(uint8_t channel);
      
-  uint8_t OnRedraw();
-  uint8_t OnClick();
+  static uint8_t OnRedraw();
+  static uint8_t OnClick();
   
-  uint8_t settings_size() { return 1; }
-  uint16_t settings_offset() { return SETTINGS_MONITOR; }
-  uint8_t* settings_data() { return &monitored_channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_MONITOR; }
+  static const prog_AppInfo app_info_;
   
  private:
-  void PrintString(uint8_t channel, uint8_t res_id);
+  static void PrintString(uint8_t channel, uint8_t res_id);
   
-  uint8_t monitored_channel_;
+  static uint8_t monitored_channel_;
   
   DISALLOW_COPY_AND_ASSIGN(Monitor);
 };

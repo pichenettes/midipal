@@ -26,50 +26,46 @@ namespace midipal { namespace apps {
 
 const uint8_t kMaxNotes = 4;
 
-class EarTrainingGame : public App {
+class EarTrainingGame {
  public:
   EarTrainingGame() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  void OnInternalClockStep();
-  uint8_t OnRedraw();
-  uint8_t OnClick();
-  uint8_t OnIncrement(int8_t value);
+  static void OnInternalClockStep();
+  static uint8_t OnRedraw();
+  static uint8_t OnClick();
+  static uint8_t OnIncrement(int8_t value);
   
-  uint8_t settings_size() { return 7; }
-  uint16_t settings_offset() { return SETTINGS_EAR_TRAINING; }
-  uint8_t* settings_data() { return &level_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_EAR_GAME; }
+  static const prog_AppInfo app_info_;
   
  private:
-  void GenerateChallenge();
-  void StartChallenge();
+  static void GenerateChallenge();
+  static void StartChallenge();
   
-  uint8_t level_;
-  uint8_t num_notes_;
-  uint8_t confirm_reset_;
-  uint16_t num_games_;
-  uint16_t num_attempts_;
+  static uint8_t level_;
+  static uint8_t num_notes_;
+  static uint8_t confirm_reset_;
+  static uint16_t num_games_;
+  static uint16_t num_attempts_;
   
-  uint8_t step_counter_;
-  uint8_t played_notes_[kMaxNotes];
-  uint8_t recorded_notes_[kMaxNotes];
-  uint8_t record_ptr_;
-  uint8_t play_ptr_;
-  uint8_t wait_;
-  uint8_t attempts_;
-  uint8_t new_challenge_;
-  uint8_t show_score_;
+  static uint8_t step_counter_;
+  static uint8_t played_notes_[kMaxNotes];
+  static uint8_t recorded_notes_[kMaxNotes];
+  static uint8_t record_ptr_;
+  static uint8_t play_ptr_;
+  static uint8_t wait_;
+  static uint8_t attempts_;
+  static uint8_t new_challenge_;
+  static uint8_t show_score_;
 
-  uint8_t seeded_;
+  static uint8_t seeded_;
   
   DISALLOW_COPY_AND_ASSIGN(EarTrainingGame);
 };

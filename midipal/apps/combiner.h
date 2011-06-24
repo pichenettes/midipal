@@ -25,27 +25,23 @@
 
 namespace midipal { namespace apps {
 
-class Combiner : public App {
+class Combiner {
  public:
   Combiner() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
  
-  uint8_t settings_size() { return 3; }
-  uint16_t settings_offset() { return SETTINGS_COMBINER; }
-  uint8_t* settings_data() { return &input_channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_MERGECHN; }
-
+  static const prog_AppInfo app_info_;
+ 
  private:
-  uint8_t input_channel_;
-  uint8_t num_channels_;
-  uint8_t output_channel_;
+  static uint8_t input_channel_;
+  static uint8_t num_channels_;
+  static uint8_t output_channel_;
 
   DISALLOW_COPY_AND_ASSIGN(Combiner);
 };

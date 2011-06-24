@@ -25,40 +25,36 @@
 
 namespace midipal { namespace apps {
 
-class Randomizer : public App {
+class Randomizer {
  public:
   Randomizer() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  uint8_t settings_size() { return 8; }
-  uint16_t settings_offset() { return SETTINGS_RANDOMIZER; }
-  uint8_t* settings_data() { return &channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_RANDOMIZ; }
+  static const prog_AppInfo app_info_;
   
  private:
-  void SendMessage(
+  static void SendMessage(
       uint8_t message,
       uint8_t channel,
       uint8_t note,
       uint8_t velocity);
-  uint8_t ScaleModulationAmount(uint8_t amount);
+  static uint8_t ScaleModulationAmount(uint8_t amount);
   
-  uint8_t channel_;
-  uint8_t global_amount_;
-  uint8_t note_amount_;
-  uint8_t velocity_amount_;
-  uint8_t cc_amount_[2];
-  uint8_t cc_[2];
+  static uint8_t channel_;
+  static uint8_t global_amount_;
+  static uint8_t note_amount_;
+  static uint8_t velocity_amount_;
+  static uint8_t cc_amount_[2];
+  static uint8_t cc_[2];
   
   DISALLOW_COPY_AND_ASSIGN(Randomizer);
 };

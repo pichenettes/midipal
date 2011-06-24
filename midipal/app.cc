@@ -28,6 +28,26 @@
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 
+#include "midipal/apps/active_sensing_filter.h"
+#include "midipal/apps/app_selector.h"
+#include "midipal/apps/arpeggiator.h"
+#include "midipal/apps/bpm_meter.h"
+#include "midipal/apps/cc_knob.h"
+#include "midipal/apps/chord_memory.h"
+#include "midipal/apps/clock_source.h"
+#include "midipal/apps/combiner.h"
+#include "midipal/apps/controller.h"
+#include "midipal/apps/delay.h"
+#include "midipal/apps/dispatcher.h"
+#include "midipal/apps/drum_pattern_generator.h"
+#include "midipal/apps/ear_training_game.h"
+#include "midipal/apps/lfo.h"
+#include "midipal/apps/monitor.h"
+#include "midipal/apps/randomizer.h"
+#include "midipal/apps/scale_processor.h"
+#include "midipal/apps/sequencer.h"
+#include "midipal/apps/splitter.h"
+
 namespace midipal {
 
 /* extern */
@@ -39,6 +59,38 @@ using namespace avrlib;
 
 Serial<MidiPort, 31250, DISABLED, POLLED> midi_out;
 
+/* static */
+AppInfo App::app_info_;
+
+const AppInfo* registry[] = {
+  &apps::AppSelector::app_info_,
+  
+  &apps::Monitor::app_info_,
+  &apps::BpmMeter::app_info_,
+  
+  &apps::ActiveSensingFilter::app_info_,
+  &apps::Splitter::app_info_,
+  &apps::Dispatcher::app_info_,
+  &apps::Combiner::app_info_,
+
+  &apps::ClockSource::app_info_,
+  &apps::CcKnob::app_info_,
+  &apps::Controller::app_info_,
+
+  &apps::DrumPatternGenerator::app_info_,
+  &apps::Randomizer::app_info_,
+  &apps::ChordMemory::app_info_,
+  &apps::Arpeggiator::app_info_,
+  &apps::Delay::app_info_,
+  &apps::ScaleProcessor::app_info_,
+  &apps::Sequencer::app_info_,
+  &apps::Lfo::app_info_,
+
+  &apps::EarTrainingGame::app_info_
+};
+
+
+/* static */
 void App::Init() {
   // Load settings.
   eeprom_read_block(
@@ -49,6 +101,7 @@ void App::Init() {
   OnInit();
 }
 
+/* static */
 void App::SaveSettings() {
   eeprom_write_block(
       settings_data(),
@@ -56,12 +109,14 @@ void App::SaveSettings() {
       settings_size());
 }
 
+/* static */
 void App::SaveSetting(uint8_t index) {
   eeprom_write_byte(
       (uint8_t*)(settings_offset()) + index,
       settings_data()[index]);
 }
 
+/* static */
 void App::ResetToFactorySettings() {
   memcpy_P(
       settings_data(),
@@ -70,14 +125,23 @@ void App::ResetToFactorySettings() {
   SaveSettings();
 }
 
+/* static */
+void App::Launch(uint8_t app_index) {
+  memcpy_P(&app_info_, registry[app_index], sizeof(AppInfo));
+}
+
+/* static */
 void App::SaveSettingWord(uint16_t setting_id, uint16_t value) {
   eeprom_write_word((uint16_t*)(setting_id), value);
 }
 
+/* static */
 void App::SendNow(uint8_t byte) {
+  LedOut::High();
   midi_out.Write(byte);
 }
 
+/* static */
 void App::Send3(uint8_t a, uint8_t b, uint8_t c) {
   FlushOutputBuffer(3);
   MidiHandler::OutputBuffer::Write(a);
@@ -85,6 +149,7 @@ void App::Send3(uint8_t a, uint8_t b, uint8_t c) {
   MidiHandler::OutputBuffer::Write(c);
 }
 
+/* static */
 void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
   FlushOutputBuffer(size);
   MidiHandler::OutputBuffer::Write(status);
@@ -98,6 +163,7 @@ void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
   }
 }
 
+/* static */
 void App::FlushOutputBuffer(uint8_t requested_size) {
   while (MidiHandler::OutputBuffer::writable() < requested_size) {
     display.set_status('!');
@@ -105,10 +171,12 @@ void App::FlushOutputBuffer(uint8_t requested_size) {
   }
 }
 
+/* static */
 void App::SendLater(uint8_t note, uint8_t velocity, uint8_t when, uint8_t tag) {
   event_scheduler.Schedule(note, velocity, when, tag);
 }
 
+/* static */
 void App::SendScheduledNotes(uint8_t channel) {
   uint8_t current = event_scheduler.root();
   while (current) {
@@ -128,10 +196,19 @@ void App::SendScheduledNotes(uint8_t channel) {
   event_scheduler.Tick();
 }
 
+/* static */
 void App::FlushQueue(uint8_t channel) {
   while (event_scheduler.size()) {
     SendScheduledNotes(channel);
   }
 }
+
+/* static */
+uint8_t App::num_apps() {
+  return sizeof(registry) / sizeof(AppInfo*);
+}
+
+/* extern */
+App app;
 
 }  // namespace midipal

@@ -27,15 +27,88 @@
 
 namespace midipal { namespace apps {
 
-/* extern */
 const prog_uint8_t drum_pattern_generator_factory_data[10] PROGMEM = {
   0, 0, 120, 0, 0, 9, 36, 40, 42, 56
+};
+
+// <static>
+uint8_t DrumPatternGenerator::running_;
+ 
+uint8_t DrumPatternGenerator::mode_;
+uint8_t DrumPatternGenerator::clk_mode_;
+uint8_t DrumPatternGenerator::bpm_;
+uint8_t DrumPatternGenerator::groove_template_;
+uint8_t DrumPatternGenerator::groove_amount_;
+uint8_t DrumPatternGenerator::channel_;
+uint8_t DrumPatternGenerator::part_instrument_[kNumDrumParts];
+
+uint8_t DrumPatternGenerator::tick_;
+uint8_t DrumPatternGenerator::idle_ticks_;
+
+uint8_t DrumPatternGenerator::active_note_[kNumDrumParts];
+
+uint8_t DrumPatternGenerator::euclidian_num_notes_[kNumDrumParts];
+uint8_t DrumPatternGenerator::euclidian_num_steps_[kNumDrumParts];
+uint8_t DrumPatternGenerator::euclidian_step_count_[kNumDrumParts];
+uint16_t DrumPatternGenerator::euclidian_bitmask_[kNumDrumParts];
+
+uint8_t DrumPatternGenerator::active_pattern_[kNumDrumParts];
+uint8_t DrumPatternGenerator::step_count_;
+uint16_t DrumPatternGenerator::bitmask_;
+// </static>
+
+/* static */
+const prog_AppInfo DrumPatternGenerator::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  10, // settings_size
+  SETTINGS_DRUM_PATTERN_GENERATOR, // settings_offset
+  &mode_, // settings_data
+  drum_pattern_generator_factory_data, // factory_data
+  STR_RES_DRUMS, // app_name
 };
 
 static const prog_uint8_t sizes[12] PROGMEM = {
   0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16  
 };
 
+/* static */
 void DrumPatternGenerator::OnInit() {
   ui.AddPage(STR_RES_MOD, STR_RES_PTN, 0, 1);
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
@@ -58,12 +131,14 @@ void DrumPatternGenerator::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void DrumPatternGenerator::Reset() {
   step_count_ = 0;
   bitmask_ = 1;
   tick_ = 0;
 }
 
+/* static */
 void DrumPatternGenerator::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -72,16 +147,18 @@ void DrumPatternGenerator::OnRawMidiData(
   // Forward everything except note on for the selected channel.
   if (status != (0x80 | channel_) && 
       status != (0x90 | channel_)) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
@@ -89,6 +166,7 @@ void DrumPatternGenerator::OnStart() {
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 0;
@@ -96,19 +174,22 @@ void DrumPatternGenerator::OnStop() {
   AllNotesOff();
 }
 
+/* static */
 void DrumPatternGenerator::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     Tick();
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    SendNow(0xf8);
+    app.SendNow(0xf8);
     Tick();
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnNoteOn(
     uint8_t channel,
     uint8_t note,
@@ -122,7 +203,7 @@ void DrumPatternGenerator::OnNoteOn(
       clock.Start();
       Reset();
       running_ = 1;
-      SendNow(0xfa);
+      app.SendNow(0xfa);
     }
     idle_ticks_ = 0;
   }
@@ -152,6 +233,7 @@ void DrumPatternGenerator::OnNoteOn(
   }
 }
 
+/* static */
 void DrumPatternGenerator::OnNoteOff(
     uint8_t channel,
     uint8_t note,
@@ -162,6 +244,7 @@ void DrumPatternGenerator::OnNoteOff(
   note_stack.NoteOff(note);
 }
 
+/* static */
 void DrumPatternGenerator::Tick() {
   if (!running_) {
     return;
@@ -176,7 +259,7 @@ void DrumPatternGenerator::Tick() {
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
       AllNotesOff();
-      SendNow(0xfc);
+      app.SendNow(0xfc);
     }
   }
   if (tick_ == 6) {
@@ -230,29 +313,28 @@ void DrumPatternGenerator::Tick() {
   }
 }
 
+/* static */
 void DrumPatternGenerator::TriggerNote(uint8_t part) {
-  Send3(0x90 | channel_, part_instrument_[part], 0x64);
+  app.Send3(0x90 | channel_, part_instrument_[part], 0x64);
   active_note_[part] = part_instrument_[part];
 }
 
+/* static */
 void DrumPatternGenerator::AllNotesOff() {
   for (uint8_t part = 0; part < kNumDrumParts; ++part) {
     if (active_note_[part]) {
-      Send3(0x80 | channel_, part_instrument_[part], 0);
+      app.Send3(0x80 | channel_, part_instrument_[part], 0);
       active_note_[part] = 0;
     }
   }
 }
 
+/* static */
 void DrumPatternGenerator::SetParameter(uint8_t key, uint8_t value) {
   static_cast<uint8_t*>(&mode_)[key] = value;
   if (key < 5) {
     clock.Update(bpm_, groove_template_, groove_amount_);
   }
-}
-
-const prog_uint8_t* DrumPatternGenerator::factory_data() {
-  return drum_pattern_generator_factory_data;
 }
 
 } }  // namespace midipal::apps

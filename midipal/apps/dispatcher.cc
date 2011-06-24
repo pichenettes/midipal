@@ -31,11 +31,73 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t dispatcher_factory_data[4] PROGMEM = {
   0, 0, 0, 3
 };
 
+/* static */
+uint8_t Dispatcher::input_channel_;
+
+/* static */
+uint8_t Dispatcher::mode_;
+
+/* static */
+uint8_t Dispatcher::base_channel_;
+
+/* static */
+uint8_t Dispatcher::num_voices_;
+
+/* static */
+uint8_t Dispatcher::counter_;
+
+/* static */
+const prog_AppInfo Dispatcher::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  &OnNoteAftertouch, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  4, // settings_size
+  SETTINGS_DISPATCHER, // settings_offset
+  &input_channel_, // settings_data
+  dispatcher_factory_data, // factory_data
+  STR_RES_DISPATCH, // app_name
+};
+
+/* static */
 void Dispatcher::OnInit() {
   voice_allocator.Init();
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
@@ -45,6 +107,7 @@ void Dispatcher::OnInit() {
   counter_ = 0;
 }
 
+/* static */
 void Dispatcher::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -54,19 +117,20 @@ void Dispatcher::OnRawMidiData(
   uint8_t channel = status & 0x0f;
   // Pass-through real time messages and messages on other channels.
   if (type == 0xf0 || channel != input_channel_) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
     return;
   }
   
   // Forward the global messages to all channels.
   if (type != 0x80 && type != 0x90 && type != 0xa0) {
     for (uint8_t i = 0; i < num_voices_; ++i) {
-      Send(type | ((base_channel_ + i) & 0x0f), data, data_size);
+      app.Send(type | ((base_channel_ + i) & 0x0f), data, data_size);
     }
   }
   // That's it, the note specific messages have dedicated handlers.
 }
 
+/* static */
 void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   switch (mode_) {
     case DISPATCHER_CYCLIC:
@@ -93,15 +157,21 @@ void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   SendMessage(0x90, channel, note, velocity);
 }
 
+/* static */
 void Dispatcher::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   voice_allocator.NoteOff(note);
   SendMessage(0x80, channel, note, velocity);
 }
 
-void Dispatcher::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+/* static */
+void Dispatcher::OnNoteAftertouch(
+    uint8_t channel,
+    uint8_t note,
+    uint8_t velocity) {
   SendMessage(0xa0, channel, note, velocity);
 }
 
+/* static */
 void Dispatcher::SendMessage(
     uint8_t message,
     uint8_t channel,
@@ -111,19 +181,15 @@ void Dispatcher::SendMessage(
   if (entry) {
     if (entry-> value == 0xff) {
       for (uint8_t i = 0; i < num_voices_; ++i) {
-        Send3(message | ((base_channel_ + i) & 0x0f), note, velocity);
+        app.Send3(message | ((base_channel_ + i) & 0x0f), note, velocity);
       }
     } else {
-      Send3(message | (entry->value & 0x0f), note, velocity);
+      app.Send3(message | (entry->value & 0x0f), note, velocity);
     }
     if (message == 0x80) {
       entry->note = 0xff;
     }
   }
-}
-
-const prog_uint8_t* Dispatcher::factory_data() {
-  return dispatcher_factory_data;
 }
 
 } }  // namespace midipal::apps

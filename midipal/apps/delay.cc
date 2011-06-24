@@ -35,11 +35,73 @@ static const prog_uint8_t velocity_factor[16] PROGMEM = {
   31, 60, 87, 112, 134, 155, 174, 191, 206, 219, 230, 239, 246, 251, 253, 255
 };
 
-/* extern */
 const prog_uint8_t delay_factory_data[10] PROGMEM = {
   0, 120, 0, 0, 0, 8, 4, 10, 0, 0
 };
 
+/* <static> */
+uint8_t Delay::running_;
+uint8_t Delay::clk_mode_;
+uint8_t Delay::bpm_;
+uint8_t Delay::groove_template_;
+uint8_t Delay::groove_amount_;
+uint8_t Delay::channel_;
+uint8_t Delay::delay_;
+uint8_t Delay::num_taps_;
+uint8_t Delay::velocity_factor_;
+int8_t Delay::transposition_;
+int8_t Delay::doppler_;
+uint8_t Delay::velocity_factor_reverse_log_;
+/* </static> */
+
+/* static */
+const prog_AppInfo Delay::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  10, // settings_size
+  SETTINGS_DELAY, // settings_offset
+  &clk_mode_, // settings_data
+  delay_factory_data, // factory_data
+  STR_RES_DELAY, // app_name
+};
+
+/* static */
 void Delay::OnInit() {
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
@@ -58,46 +120,53 @@ void Delay::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void Delay::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
   // Forward everything.
-  Send(status, data, data_size);
+  app.Send(status, data, data_size);
 }
 
+/* static */
 void Delay::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void Delay::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void Delay::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 0;
   }
 }
 
+/* static */
 void Delay::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     SendEchoes();
   }
 }
 
+/* static */
 void Delay::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    SendNow(0xf8);
+    app.SendNow(0xf8);
     SendEchoes();
   }
 }
 
+/* static */
 void Delay::OnNoteOn(
     uint8_t channel,
     uint8_t note,
@@ -108,6 +177,7 @@ void Delay::OnNoteOn(
   ScheduleEchoes(note, velocity, num_taps_);
 }
 
+/* static */
 void Delay::OnNoteOff(
     uint8_t channel,
     uint8_t note,
@@ -118,6 +188,7 @@ void Delay::OnNoteOff(
   ScheduleEchoes(note, 0, num_taps_);
 }
 
+/* static */
 void Delay::SendEchoes() {
   uint8_t current = event_scheduler.root();
   while (current) {
@@ -127,9 +198,9 @@ void Delay::SendEchoes() {
     }
     if (entry.note != kZombieSlot) {
       if (entry.velocity == 0) {
-        Send3(0x80 | channel_, entry.note, 0);
+        app.Send3(0x80 | channel_, entry.note, 0);
       } else {
-        Send3(0x90 | channel_, entry.note, entry.velocity);
+        app.Send3(0x90 | channel_, entry.note, entry.velocity);
       }
       ScheduleEchoes(entry.note, entry.velocity, entry.tag);
     }
@@ -138,6 +209,7 @@ void Delay::SendEchoes() {
   event_scheduler.Tick();
 }
 
+/* static */
 void Delay::ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps) {
   if (num_taps == 0) {
     return;
@@ -158,12 +230,13 @@ void Delay::ScheduleEchoes(uint8_t note, uint8_t velocity, uint8_t num_taps) {
     velocity = min_velocity_value;
   }
   note = Transpose(note, transposition_);
-  SendLater(note, velocity, Clip(delay, 1, 255), num_taps - 1);
+  app.SendLater(note, velocity, Clip(delay, 1, 255), num_taps - 1);
   if (event_scheduler.overflow()) {
     display.set_status('!');
   }
 }
 
+/* static */
 void Delay::SetParameter(uint8_t key, uint8_t value) {
   static_cast<uint8_t*>(&clk_mode_)[key] = value;
   if (key < 4) {
@@ -171,10 +244,6 @@ void Delay::SetParameter(uint8_t key, uint8_t value) {
   }
   velocity_factor_reverse_log_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       velocity_factor, velocity_factor_);
-}
-
-const prog_uint8_t* Delay::factory_data() {
-  return delay_factory_data;
 }
 
 } }  // namespace midipal::apps

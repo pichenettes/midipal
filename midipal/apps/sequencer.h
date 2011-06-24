@@ -26,59 +26,55 @@ namespace midipal { namespace apps {
 
 static const uint8_t kNumBytesPerStep = 4;
 
-class Sequencer : public App {
+class Sequencer {
  public:
   Sequencer() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  void OnInternalClockTick();
-  void OnContinue();
-  void OnStart();
-  void OnStop();
-  void OnClock();
+  static void OnInternalClockTick();
+  static void OnContinue();
+  static void OnStart();
+  static void OnStop();
+  static void OnClock();
   
-  void SetParameter(uint8_t key, uint8_t value);
-  uint8_t CheckPageStatus(uint8_t index);
+  static void SetParameter(uint8_t key, uint8_t value);
+  static uint8_t CheckPageStatus(uint8_t index);
   
-  uint8_t settings_size() { return 13 + 32 * kNumBytesPerStep; }
-  uint16_t settings_offset() { return SETTINGS_SEQUENCER; }
-  uint8_t* settings_data() { return &running_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_SEQUENCR; }
-
+  static const prog_AppInfo app_info_;
+  
  private:
-  void Stop();
-  void Start();
-  void Tick();
+  static void Stop();
+  static void Start();
+  static void Tick();
   
-  uint8_t running_;
-  uint8_t clk_mode_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
-  uint8_t clock_division_;  
-  uint8_t channel_;
-  uint8_t cc_number_;
-  uint8_t note_track_;
-  uint8_t duration_track_;
-  uint8_t velocity_track_;
-  uint8_t cc_track_;
-  uint8_t num_steps_;
-  uint8_t sequence_data_[32 * kNumBytesPerStep];
+  static uint8_t running_;
+  static uint8_t clk_mode_;
+  static uint8_t bpm_;
+  static uint8_t groove_template_;
+  static uint8_t groove_amount_;
+  static uint8_t clock_division_;  
+  static uint8_t channel_;
+  static uint8_t cc_number_;
+  static uint8_t note_track_;
+  static uint8_t duration_track_;
+  static uint8_t velocity_track_;
+  static uint8_t cc_track_;
+  static uint8_t num_steps_;
+  static uint8_t sequence_data_[32 * kNumBytesPerStep];
   
-  uint8_t midi_clock_prescaler_;
-  uint8_t tick_;
-  uint8_t step_;
-  uint8_t root_note_;
-  uint8_t last_note_;
+  static uint8_t midi_clock_prescaler_;
+  static uint8_t tick_;
+  static uint8_t step_;
+  static uint8_t root_note_;
+  static uint8_t last_note_;
   
   DISALLOW_COPY_AND_ASSIGN(Sequencer);
 };

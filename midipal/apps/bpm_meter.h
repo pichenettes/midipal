@@ -24,33 +24,33 @@
 
 namespace midipal { namespace apps {
 
-class BpmMeter : public App {
+class BpmMeter {
  public:
   BpmMeter() { }
 
-  void OnInit();
+  static void OnInit();
 
-  void OnClock();
-  void OnStart();
-  void OnStop();
-  void OnContinue();
-  void OnReset();
-  void OnRawByte(uint8_t byte);
+  static void OnClock();
+  static void OnStart();
+  static void OnStop();
+  static void OnContinue();
+  static void OnReset();
+  static void OnRawByte(uint8_t byte);
 
-  uint8_t OnClick();
-  uint8_t OnIncrement(int8_t increment);
-  uint8_t OnRedraw();
+  static uint8_t OnClick();
+  static uint8_t OnIncrement(int8_t increment);
+  static uint8_t OnRedraw();
   
-  uint8_t app_name() { return STR_RES_BPM_CNTR; }
+  static const prog_AppInfo app_info_;
   
  private:
-  void PrintBpm();
-  void Reset();
+  static void PrintBpm();
+  static void Reset();
 
-  uint32_t num_ticks_;
-  uint32_t clock_;
-  uint8_t active_page_;
-  uint8_t refresh_bpm_;
+  static uint32_t num_ticks_;
+  static uint32_t clock_;
+  static uint8_t active_page_;
+  static uint8_t refresh_bpm_;
   
   DISALLOW_COPY_AND_ASSIGN(BpmMeter);
 };

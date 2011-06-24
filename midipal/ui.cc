@@ -20,8 +20,8 @@
 #include "avrlib/op.h"
 #include "avrlib/string.h"
 
+#include "midipal/app.h"
 #include "midipal/display.h"
-#include "midipal/app_manager.h"
 #include "midipal/resources.h"
 
 namespace midipal {
@@ -131,8 +131,6 @@ uint8_t Ui::page_index() {
 /* static */
 void Ui::DoEvents() {
   uint8_t redraw = 0;
-  App* app = app_manager.active_app();
-  
   while (queue_.available()) {
     uint8_t p = page_;
     while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
@@ -144,23 +142,23 @@ void Ui::DoEvents() {
     Event e = queue_.PullEvent();
     if (e.control_type == CONTROL_ENCODER) {
       // Internal handling of the encoder.
-      if (!app->OnIncrement(e.value)) {
+      if (!app.OnIncrement(e.value)) {
         if (editing_) {
           int16_t v;
           if (page_def.value_res_id == UNIT_SIGNED_INTEGER) {
-            int16_t v = static_cast<int8_t>(app->GetParameter(page_));
+            int16_t v = static_cast<int8_t>(app.GetParameter(page_));
             v = Clip(
                 v + static_cast<int8_t>(e.value),
                 static_cast<int8_t>(page_def.min),
                 static_cast<int8_t>(page_def.max));
-            app->SetParameter(page_, static_cast<int8_t>(v));
+            app.SetParameter(page_, static_cast<int8_t>(v));
           } else {
-            int16_t v = app->GetParameter(page_);
+            int16_t v = app.GetParameter(page_);
             v = Clip(
                 v + static_cast<int8_t>(e.value),
                 page_def.min,
                 page_def.max);
-            app->SetParameter(page_, v);
+            app.SetParameter(page_, v);
           }
         } else {
           uint8_t current_page = page_;
@@ -171,7 +169,7 @@ void Ui::DoEvents() {
             } else if (page_ >= num_pages_) {
               page_ = num_pages_ - 1;
             }
-            uint8_t page_status = app->CheckPageStatus(page_);
+            uint8_t page_status = app.CheckPageStatus(page_);
             if (page_status == PAGE_GOOD) {
               break;
             } else if (page_status == PAGE_LAST) {
@@ -183,28 +181,28 @@ void Ui::DoEvents() {
       }
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
       if (e.value == 1) {
-        if (!app_manager.active_app()->OnClick()) {
+        if (!app.OnClick()) {
           editing_ ^= 1;
           // Left the editing mode, save settings.
           if (!editing_) {
-            app_manager.active_app()->SaveSetting(page_);
+            app.SaveSetting(page_);
           }
         }
       } else {
-        app_manager.set_active_app(0);
+        app.Launch(0);
       }
     } else if (e.control_type == CONTROL_POT) {
-      app_manager.active_app()->OnPot(e.control_id, e.value);
+      app.OnPot(e.control_id, e.value);
     }
   }
   
   if (queue_.idle_time_ms() > 50) {
     redraw = 1;
     queue_.Touch();
-    app_manager.active_app()->OnIdle();
+    app.OnIdle();
   }
   
-  if (redraw && !app->OnRedraw()) {
+  if (redraw && !app.OnRedraw()) {
     uint8_t p = page_;
     uint8_t index = 0;
     while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
@@ -217,7 +215,7 @@ void Ui::DoEvents() {
         page_def.key_res_id,
         index,
         page_def.value_res_id,
-        app->GetParameter(page_),
+        app.GetParameter(page_),
         editing_);
   }
 }

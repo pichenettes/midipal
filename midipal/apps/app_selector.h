@@ -17,35 +17,33 @@
 //
 // This app is responsible for configuring which app is active.
 
-#ifndef MIDIPAL_APPS_SETUP_H_
-#define MIDIPAL_APPS_SETUP_H_
+#ifndef MIDIPAL_APPS_APP_SELECTOR_H_
+#define MIDIPAL_APPS_APP_SELECTOR_H_
 
 #include "midipal/app.h"
 
 namespace midipal { namespace apps {
 
-class AppSelector : public App {
+class AppSelector {
  public:
   AppSelector() { }
 
-  void OnInit();
-  void OnRawByte(uint8_t byte);
+  static void OnInit();
+  static void OnRawByte(uint8_t byte);
   
-  uint8_t OnClick();
-  uint8_t OnIncrement(int8_t increment);
-  uint8_t OnRedraw();
+  static uint8_t OnClick();
+  static uint8_t OnIncrement(int8_t increment);
+  static uint8_t OnRedraw();
+  
+  static const prog_AppInfo app_info_;
  
-  uint8_t settings_size() { return 1; }
-  uint16_t settings_offset() { return SETTINGS_SETUP; }
-  uint8_t* settings_data() { return &active_app_; }
-
  private:
-  uint8_t active_app_;
-  uint8_t selected_item_;
+  static uint8_t active_app_;
+  static uint8_t selected_item_;
   
   DISALLOW_COPY_AND_ASSIGN(AppSelector);
 };
 
 } }  // namespace midipal::apps
 
-#endif // MIDIPAL_APPS_SETUP_H_
+#endif // MIDIPAL_APPS_APP_SELECTOR_H_

@@ -31,7 +31,7 @@ using avrlib::Gpio;
 using avrlib::PARALLEL_NIBBLE_HIGH;
 using avrlib::ParallelPort;
 using avrlib::PortB;
-using avrlib::PortC;
+using avrlib::PortD;
 using avrlib::SerialPort0;
 
 static const uint8_t kLcdWidth = 8;
@@ -41,15 +41,17 @@ static const uint8_t kLcdHeight = 1;
 typedef SerialPort0 MidiPort;
 
 // LCD
-typedef Gpio<PortC, 2> LcdRsLine;
-typedef Gpio<PortC, 3> LcdEnableLine;
-typedef ParallelPort<PortC, PARALLEL_NIBBLE_HIGH> LcdDataBus;
+typedef Gpio<PortD, 2> LcdRsLine;
+typedef Gpio<PortD, 3> LcdEnableLine;
+typedef ParallelPort<PortD, PARALLEL_NIBBLE_HIGH> LcdDataBus;
 
 // Encoder
-typedef Gpio<PortB, 1> EncoderALine;
-typedef Gpio<PortB, 0> EncoderBLine;
-typedef Gpio<PortB, 2> EncoderClickLine;
+typedef Gpio<PortB, 2> EncoderALine;
+typedef Gpio<PortB, 1> EncoderBLine;
+typedef Gpio<PortB, 0> EncoderClickLine;
 
+typedef Gpio<PortB, 3> LedOut;
+typedef Gpio<PortB, 5> LedIn;
 
 }  // namespace midipal
 

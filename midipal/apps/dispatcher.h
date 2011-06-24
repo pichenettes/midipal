@@ -32,48 +32,44 @@ enum DispatcherMode {
   DISPATCHER_STACK
 };
 
-class Dispatcher : public App {
+class Dispatcher {
  public:
   Dispatcher() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(
+  static void OnNoteOn(
      uint8_t channel,
      uint8_t note,
      uint8_t velocity);
-  void OnNoteOff(
+  static void OnNoteOff(
      uint8_t channel,
      uint8_t note,
      uint8_t velocity);
-  void OnAftertouch(
+  static void OnNoteAftertouch(
      uint8_t channel,
      uint8_t note,
      uint8_t velocity);
  
-  uint8_t settings_size() { return 4; }
-  uint16_t settings_offset() { return SETTINGS_DISPATCHER; }
-  uint8_t* settings_data() { return &input_channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_DISPATCH; }
+  static const prog_AppInfo app_info_;
 
  private:
-  void SendMessage(
+  static void SendMessage(
       uint8_t message,
       uint8_t channel,
       uint8_t note,
       uint8_t velocity);
    
-  uint8_t input_channel_;
-  uint8_t mode_;
-  uint8_t base_channel_;
-  uint8_t num_voices_;
+  static uint8_t input_channel_;
+  static uint8_t mode_;
+  static uint8_t base_channel_;
+  static uint8_t num_voices_;
 
-  uint8_t counter_;
+  static uint8_t counter_;
   
   DISALLOW_COPY_AND_ASSIGN(Dispatcher);
 };

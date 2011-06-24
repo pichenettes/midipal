@@ -24,21 +24,18 @@
 
 namespace midipal { namespace apps {
 
-class ActiveSensingFilter : public App {
+class ActiveSensingFilter {
  public:
   ActiveSensingFilter() { }
 
-  void OnInit();
-  void OnRawByte(uint8_t byte);
+  static void OnInit();
+  static void OnRawByte(uint8_t byte);
   
-  uint8_t settings_size() { return 1; }
-  uint16_t settings_offset() { return SETTINGS_0XFE_FILTER; }
-  uint8_t* settings_data() { return &enabled_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_0XFE_FLT; }
+  static const prog_AppInfo app_info_;
   
  private:
-  uint8_t enabled_;
+  static uint8_t enabled_;
+  
   DISALLOW_COPY_AND_ASSIGN(ActiveSensingFilter);
 };
 

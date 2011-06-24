@@ -39,11 +39,82 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_RANDOM,
 };
 
-/* extern */
 const prog_uint8_t arpeggiator_factory_data[10] PROGMEM = {
   0, 120, 0, 0, 0, 0, 1, 0, 12, 14
 };
 
+/* <static> */
+uint8_t Arpeggiator::running_;
+ 
+uint8_t Arpeggiator::clk_mode_;
+uint8_t Arpeggiator::bpm_;
+uint8_t Arpeggiator::groove_template_;
+uint8_t Arpeggiator::groove_amount_;
+uint8_t Arpeggiator::channel_;
+uint8_t Arpeggiator::direction_;
+uint8_t Arpeggiator::num_octaves_;
+uint8_t Arpeggiator::pattern_;
+uint8_t Arpeggiator::clock_division_;
+uint8_t Arpeggiator::duration_;
+
+uint8_t Arpeggiator::midi_clock_prescaler_;
+
+uint8_t Arpeggiator::tick_;
+uint8_t Arpeggiator::idle_ticks_;
+uint16_t Arpeggiator::bitmask_;
+int8_t Arpeggiator::current_direction_;
+int8_t Arpeggiator::current_octave_;
+int8_t Arpeggiator::current_step_;
+/* </static> */
+
+/* static */
+const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  10, // settings_size
+  SETTINGS_ARPEGGIATOR, // settings_offset
+  &clk_mode_, // settings_data
+  arpeggiator_factory_data, // factory_data
+  STR_RES_ARPEGGIO, // app_name
+};
+
+/* static */
 void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
@@ -63,6 +134,7 @@ void Arpeggiator::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void Arpeggiator::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -71,42 +143,48 @@ void Arpeggiator::OnRawMidiData(
   // Forward everything except note on for the selected channel.
   if (status != (0x80 | channel_) && 
       status != (0x90 | channel_)) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 void Arpeggiator::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void Arpeggiator::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Start();
   }
 }
 
+/* static */
 void Arpeggiator::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 0;
-    FlushQueue(channel_);
+    app.FlushQueue(channel_);
   }
 }
 
+/* static */
 void Arpeggiator::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     Tick();
   }
 }
 
+/* static */
 void Arpeggiator::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    SendNow(0xf8);
+    app.SendNow(0xf8);
     Tick();
   }
 }
 
+/* static */
 void Arpeggiator::OnNoteOn(
     uint8_t channel,
     uint8_t note,
@@ -118,13 +196,14 @@ void Arpeggiator::OnNoteOn(
     if (idle_ticks_ >= 96) {
       clock.Start();
       Start();
-      SendNow(0xfa);
+      app.SendNow(0xfa);
     }
     idle_ticks_ = 0;
   }
   note_stack.NoteOn(note, velocity);
 }
 
+/* static */
 void Arpeggiator::OnNoteOff(
     uint8_t channel,
     uint8_t note,
@@ -135,6 +214,7 @@ void Arpeggiator::OnNoteOff(
   note_stack.NoteOff(note);
 }
 
+/* static */
 void Arpeggiator::Tick() {
   ++tick_;
   
@@ -146,12 +226,12 @@ void Arpeggiator::Tick() {
     idle_ticks_ = 96;
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
-      SendNow(0xfc);
-      FlushQueue(channel_);
+      app.SendNow(0xfc);
+      app.FlushQueue(channel_);
     }
   }
   
-  SendScheduledNotes(channel_);
+  app.SendScheduledNotes(channel_);
   
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
@@ -169,11 +249,11 @@ void Arpeggiator::Tick() {
       // If there are some Note Off messages for the note about to be triggeered
       // remove them from the queue and process them now.
       if (event_scheduler.Remove(note, 0)) {
-        Send3(0x80 | channel_, note, 0);
+        app.Send3(0x80 | channel_, note, 0);
       }
       // Send a note on and schedule a note off later.
-      Send3(0x90 | channel_, note, velocity);
-      SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
+      app.Send3(0x90 | channel_, note, velocity);
+      app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
           midi_clock_tick_per_step, duration_));
       StepArpeggio();
     }
@@ -184,6 +264,7 @@ void Arpeggiator::Tick() {
   }
 }
 
+/* static */
 void Arpeggiator::Start() {
   running_ = 1;
   bitmask_ = 1;
@@ -192,6 +273,7 @@ void Arpeggiator::Start() {
   StartArpeggio();
 }
 
+/* static */
 void Arpeggiator::StartArpeggio() {
   if (current_direction_ == 1) {
     current_octave_ = 0;
@@ -202,6 +284,7 @@ void Arpeggiator::StartArpeggio() {
   }
 }
 
+/* static */
 void Arpeggiator::StepArpeggio() {
   uint8_t num_notes = note_stack.size();
   if (direction_ == ARPEGGIO_DIRECTION_RANDOM) {
@@ -241,6 +324,7 @@ void Arpeggiator::StepArpeggio() {
   }
 }
 
+/* static */
 void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
   static_cast<uint8_t*>(&clk_mode_)[key] = value;
   if (key < 4) {
@@ -253,10 +337,6 @@ void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
     current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
     StartArpeggio();
   }
-}
-
-const prog_uint8_t* Arpeggiator::factory_data() {
-  return arpeggiator_factory_data;
 }
 
 } }  // namespace midipal::apps

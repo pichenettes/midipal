@@ -30,7 +30,6 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t sequencer_factory_data[141] PROGMEM = {
   0, 0, 120, 0, 0,
   12, 0, 74, 1, 1, 1, 1, 8,
@@ -68,6 +67,77 @@ const prog_uint8_t sequencer_factory_data[141] PROGMEM = {
   60, 12,  0, 112,
 };
 
+/* <static> */
+uint8_t Sequencer::running_;
+uint8_t Sequencer::clk_mode_;
+uint8_t Sequencer::bpm_;
+uint8_t Sequencer::groove_template_;
+uint8_t Sequencer::groove_amount_;
+uint8_t Sequencer::clock_division_;  
+uint8_t Sequencer::channel_;
+uint8_t Sequencer::cc_number_;
+uint8_t Sequencer::note_track_;
+uint8_t Sequencer::duration_track_;
+uint8_t Sequencer::velocity_track_;
+uint8_t Sequencer::cc_track_;
+uint8_t Sequencer::num_steps_;
+uint8_t Sequencer::sequence_data_[32 * kNumBytesPerStep];
+
+uint8_t Sequencer::midi_clock_prescaler_;
+uint8_t Sequencer::tick_;
+uint8_t Sequencer::step_;
+uint8_t Sequencer::root_note_;
+uint8_t Sequencer::last_note_;
+/* </static> */
+
+/* static */
+const prog_AppInfo Sequencer::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  &CheckPageStatus, // uint8_t (*CheckPageStatus)(uint8_t);
+  13 + 32 * kNumBytesPerStep, // settings_size
+  SETTINGS_SEQUENCER, // settings_offset
+  &running_, // settings_data
+  sequencer_factory_data, // factory_data
+  STR_RES_SEQUENCR, // app_name
+};
+
+/* static */
 void Sequencer::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_sequencer_icons, 4, 1);
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
@@ -93,6 +163,7 @@ void Sequencer::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void Sequencer::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -101,10 +172,11 @@ void Sequencer::OnRawMidiData(
   // Forward everything except note on for the selected channel.
   if (status != (0x80 | channel_) && 
       status != (0x90 | channel_)) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 void Sequencer::SetParameter(uint8_t key, uint8_t value) {
   if (key == 0) {
     if (value == 1) {
@@ -121,50 +193,56 @@ void Sequencer::SetParameter(uint8_t key, uint8_t value) {
       midi_clock_tick_per_step, clock_division_);
 }
 
+/* static */
 void Sequencer::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Start();
   }
 }
 
+/* static */
 void Sequencer::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Stop();
   }
 }
 
+/* static */
 void Sequencer::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void Sequencer::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     Tick();
   }
 }
 
+/* static */
 void Sequencer::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    SendNow(0xf8);
+    app.SendNow(0xf8);
     Tick();
   }
 }
 
+/* static */
 void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
   }
   
   if (!note_track_) {
-    Send3(0x90 | channel, note, velocity);
+    app.Send3(0x90 | channel, note, velocity);
   }
 
   // Step recording.
   if (ui.editing() && ui.page() >= 13) {
     if (!running_) {
-      Send3(0x90 | channel, note, velocity);
+      app.Send3(0x90 | channel, note, velocity);
     }
     uint8_t offset = U8U8Mul(ui.page_index(), kNumBytesPerStep);
     sequence_data_[offset] = note;
@@ -185,40 +263,42 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   last_note_ = note;
 }
 
+/* static */
 void Sequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
   }
   
   if (!note_track_ || !running_) {
-    Send3(0x80 | channel, note, velocity);
+    app.Send3(0x80 | channel, note, velocity);
   }
 }
 
-
+/* static */
 void Sequencer::Stop() {
   if (!running_) {
     return;
   }
   
   // Flush the note off messages in the queue.
-  FlushQueue(channel_);
+  app.FlushQueue(channel_);
   // To be on the safe side, send an all notes off message.
-  Send3(0xb0 | channel_, 123, 0);
+  app.Send3(0xb0 | channel_, 123, 0);
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    SendNow(0xfc);
+    app.SendNow(0xfc);
   }
   running_ = 0;
   root_note_ = 0;
   last_note_ = 0;
 }
 
+/* static */
 void Sequencer::Start() {
   if (running_) {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    SendNow(0xfa);
+    app.SendNow(0xfa);
   }
   if (root_note_ == 0 || last_note_ == 0) {
     root_note_ = 60;
@@ -229,10 +309,11 @@ void Sequencer::Start() {
   step_ = 0;
 }
 
+/* static */
 void Sequencer::Tick() {
   ++tick_;
   
-  SendScheduledNotes(channel_);
+  app.SendScheduledNotes(channel_);
   
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
@@ -245,7 +326,7 @@ void Sequencer::Tick() {
 
     // If a CC sequence is programmed, send a CC.
     if (cc_track_) {
-      Send3(0xb0 | channel_, cc_number_ & 0x7f, cc & 0x7f);
+      app.Send3(0xb0 | channel_, cc_number_ & 0x7f, cc & 0x7f);
     }
     // If no velocity track is programmed, use the default velocity.
     if (!velocity_track_) {
@@ -257,8 +338,8 @@ void Sequencer::Tick() {
     // If a note is programmed, send it.
     if (note_track_ && velocity) {
       note = Clip(static_cast<int16_t>(note) + last_note_ - root_note_, 0, 127);
-      Send3(0x90 | channel_, note, velocity);
-      SendLater(note, 0, duration - 1);
+      app.Send3(0x90 | channel_, note, velocity);
+      app.SendLater(note, 0, duration - 1);
     }
     ++step_;
     if (step_ >= num_steps_) {
@@ -267,6 +348,7 @@ void Sequencer::Tick() {
   }
 }
 
+/* static */
 uint8_t Sequencer::CheckPageStatus(uint8_t index) {
   if (index < 13) {
     return 1;
@@ -299,10 +381,6 @@ uint8_t Sequencer::CheckPageStatus(uint8_t index) {
   if (index == 3 && !cc_track_) {
     return PAGE_BAD;
   }
-}
-
-const prog_uint8_t* Sequencer::factory_data() {
-  return sequencer_factory_data;
 }
 
 } }  // namespace midipal::apps

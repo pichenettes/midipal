@@ -27,11 +27,70 @@
 
 namespace midipal { namespace apps {
 
-/* extern */
 const prog_uint8_t clock_source_factory_data[4] PROGMEM = {
   0, 120, 0, 0
 };
 
+/* static */
+uint8_t ClockSource::running_;
+
+/* static */
+uint8_t ClockSource::bpm_;
+
+/* static */
+uint8_t ClockSource::groove_template_;
+
+/* static */
+uint8_t ClockSource::groove_amount_;
+
+/* static */
+const prog_AppInfo ClockSource::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  NULL, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  &OnRawByte, // void (*OnRawByte)(uint8_t);
+  NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  4, // settings_size
+  SETTINGS_CLOCK_SOURCE, // settings_offset
+  &running_, // settings_data
+  clock_source_factory_data, // factory_data
+  STR_RES_CLOCK, // app_name
+};
+
+/* static */
 void ClockSource::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
@@ -41,14 +100,16 @@ void ClockSource::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void ClockSource::OnRawByte(uint8_t byte) {
   uint8_t is_realtime = (byte & 0xf0) == 0xf0;
   uint8_t is_sysex = (byte == 0xf7) || (byte == 0xf0);
   if (!is_realtime || is_sysex) {
-    SendNow(byte);
+    app.SendNow(byte);
   }
 }
 
+/* static */
 void ClockSource::SetParameter(uint8_t key, uint8_t value) {
   if (key == 0) {
     if (value == 1) {
@@ -61,40 +122,42 @@ void ClockSource::SetParameter(uint8_t key, uint8_t value) {
   clock.Update(bpm_, groove_template_, groove_amount_);
 }
 
+/* static */
 void ClockSource::OnStart() {
   Start();
 }
 
+/* static */
 void ClockSource::OnStop() {
   Stop();
 }
 
+/* static */
 void ClockSource::OnContinue() {
   Start();
 }
 
+/* static */
 void ClockSource::OnInternalClockTick() {
-  SendNow(0xf8);
+  app.SendNow(0xf8);
 }
 
+/* static */
 void ClockSource::Stop() {
   if (running_) {
     clock.Stop();
-    SendNow(0xfc);
+    app.SendNow(0xfc);
     running_ = 0;
   }
 }
 
+/* static */
 void ClockSource::Start() {
   if (!running_) {
     clock.Start();
-    SendNow(0xfa);
+    app.SendNow(0xfa);
     running_ = 1;
   }
-}
-
-const prog_uint8_t* ClockSource::factory_data() {
-  return clock_source_factory_data;
 }
 
 } }  // namespace midipal::apps

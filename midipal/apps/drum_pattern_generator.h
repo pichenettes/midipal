@@ -26,62 +26,58 @@ namespace midipal { namespace apps {
 
 const uint8_t kNumDrumParts = 4;
 
-class DrumPatternGenerator : public App {
+class DrumPatternGenerator {
  public:
   DrumPatternGenerator() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
 
-  void OnContinue();
-  void OnStart();
-  void OnStop();
-  void OnClock();
-  void OnInternalClockTick();
+  static void OnContinue();
+  static void OnStart();
+  static void OnStop();
+  static void OnClock();
+  static void OnInternalClockTick();
 
-  void SetParameter(uint8_t key, uint8_t value);
+  static void SetParameter(uint8_t key, uint8_t value);
   
-  uint8_t settings_size() { return 10; }
-  uint16_t settings_offset() { return SETTINGS_DRUM_PATTERN_GENERATOR; }
-  uint8_t* settings_data() { return &mode_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_DRUMS; }
-
+  static const prog_AppInfo app_info_;
+  
  private:
-  void Reset();
-  void Tick();
-  void AllNotesOff();
-  void TriggerNote(uint8_t part);
+  static void Reset();
+  static void Tick();
+  static void AllNotesOff();
+  static void TriggerNote(uint8_t part);
   
-  uint8_t running_;
+  static uint8_t running_;
    
-  uint8_t mode_;
-  uint8_t clk_mode_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
-  uint8_t channel_;
-  uint8_t part_instrument_[kNumDrumParts];
+  static uint8_t mode_;
+  static uint8_t clk_mode_;
+  static uint8_t bpm_;
+  static uint8_t groove_template_;
+  static uint8_t groove_amount_;
+  static uint8_t channel_;
+  static uint8_t part_instrument_[kNumDrumParts];
   
-  uint8_t tick_;
-  uint8_t idle_ticks_;
+  static uint8_t tick_;
+  static uint8_t idle_ticks_;
   
-  uint8_t active_note_[kNumDrumParts];
+  static uint8_t active_note_[kNumDrumParts];
   
-  uint8_t euclidian_num_notes_[kNumDrumParts];
-  uint8_t euclidian_num_steps_[kNumDrumParts];
-  uint8_t euclidian_step_count_[kNumDrumParts];
-  uint16_t euclidian_bitmask_[kNumDrumParts];
+  static uint8_t euclidian_num_notes_[kNumDrumParts];
+  static uint8_t euclidian_num_steps_[kNumDrumParts];
+  static uint8_t euclidian_step_count_[kNumDrumParts];
+  static uint16_t euclidian_bitmask_[kNumDrumParts];
   
-  uint8_t active_pattern_[kNumDrumParts];
-  uint8_t step_count_;
-  uint16_t bitmask_;
+  static uint8_t active_pattern_[kNumDrumParts];
+  static uint8_t step_count_;
+  static uint16_t bitmask_;
   
   DISALLOW_COPY_AND_ASSIGN(DrumPatternGenerator);
 };

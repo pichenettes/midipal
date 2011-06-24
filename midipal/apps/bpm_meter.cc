@@ -29,18 +29,80 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
+/* static */
+uint32_t BpmMeter::num_ticks_;
+
+/* static */
+uint32_t BpmMeter::clock_;
+
+/* static */
+uint8_t BpmMeter::active_page_;
+
+/* static */
+uint8_t BpmMeter::refresh_bpm_;
+
+/* static */
+const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  NULL, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  &OnReset, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  &OnRawByte, // void (*OnRawByte)(uint8_t);
+  NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  &OnRedraw, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  0, // settings_size
+  0, // settings_offset
+  NULL, // settings_data
+  0, // factory_data
+  STR_RES_BPM_CNTR, // app_name
+};
+
+/* static */
 void BpmMeter::OnInit() {
   active_page_ = 0;
   refresh_bpm_ = 1;
   ui.RefreshScreen();
 }
 
+/* static */
 void BpmMeter::Reset() {
   num_ticks_ = 0;
   clock_ = 0;
   clock.Reset();
 }
 
+/* static */
 void BpmMeter::OnClock() {
   if (num_ticks_ == 0) {
     clock.Reset();
@@ -49,26 +111,32 @@ void BpmMeter::OnClock() {
   ++num_ticks_;
 }
 
+/* static */
 void BpmMeter::OnStart() {
   Reset();
 }
 
+/* static */
 void BpmMeter::OnStop() {
   Reset();
 }
 
+/* static */
 void BpmMeter::OnContinue() {
   Reset();
 }
 
+/* static */
 void BpmMeter::OnReset() {
   Reset();
 }
 
+/* static */
 void BpmMeter::OnRawByte(uint8_t byte) {
-  SendNow(byte);
+  app.SendNow(byte);
 }
 
+/* static */
 void BpmMeter::PrintBpm() {
   line_buffer[0] = active_page_ == 1 ? 'B' : 'b';
   
@@ -93,6 +161,7 @@ void BpmMeter::PrintBpm() {
   line_buffer[6] = '.';
 }
 
+/* static */
 uint8_t BpmMeter::OnRedraw() {
   if (active_page_ < 2) {
     if (refresh_bpm_ || active_page_ == 1) {
@@ -113,6 +182,7 @@ uint8_t BpmMeter::OnRedraw() {
   return 1;
 }
 
+/* static */
 uint8_t BpmMeter::OnIncrement(int8_t increment) {
   if (increment) {
     active_page_ = active_page_ + increment;
@@ -123,11 +193,11 @@ uint8_t BpmMeter::OnIncrement(int8_t increment) {
     }
   }
   refresh_bpm_ = 1;
-  OnIdle();
   ui.RefreshScreen();
   return 1;
 }
 
+/* static */
 uint8_t BpmMeter::OnClick() {
   Reset();
   return 1;

@@ -30,7 +30,6 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t lfo_factory_data[31] PROGMEM = {
   0, 0, 120, 0, 0, 16, 0,
   
@@ -40,6 +39,72 @@ const prog_uint8_t lfo_factory_data[31] PROGMEM = {
   71, 0, 63, 0, 4, 0,
 };
 
+/* <static> */
+uint8_t Lfo::running_;
+uint8_t Lfo::clk_mode_;
+uint8_t Lfo::bpm_;
+uint8_t Lfo::groove_template_;
+uint8_t Lfo::groove_amount_;
+uint8_t Lfo::clock_division_;  
+uint8_t Lfo::channel_;
+
+LfoData Lfo::lfo_data_[kNumLfos];
+
+uint16_t Lfo::phase_[kNumLfos];
+uint16_t Lfo::phase_increment_[kNumLfos];
+
+uint8_t Lfo::tick_;
+uint8_t Lfo::midi_clock_prescaler_;
+/* </static> */
+
+/* static */
+const prog_AppInfo Lfo::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  &OnClock, // void (*OnClock)();
+  &OnStart, // void (*OnStart)();
+  &OnContinue, // void (*OnContinue)();
+  &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  &OnInternalClockTick, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  7 + sizeof(LfoData) * kNumLfos, // settings_size
+  SETTINGS_LFO, // settings_offset
+  &running_, // settings_data
+  lfo_factory_data, // factory_data
+  STR_RES_CC_LFO, // app_name
+};
+
+/* static */
 void Lfo::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
@@ -64,14 +129,16 @@ void Lfo::OnInit() {
   running_ = 0;
 }
 
+/* static */
 void Lfo::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  Send(status, data, data_size);
+  app.Send(status, data, data_size);
 }
 
+/* static */
 void Lfo::SetParameter(uint8_t key, uint8_t value) {
   if (key == 0) {
     if (value == 1) {
@@ -93,37 +160,43 @@ void Lfo::SetParameter(uint8_t key, uint8_t value) {
   }
 }
 
+/* static */
 void Lfo::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Start();
   }
 }
 
+/* static */
 void Lfo::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Stop();
   }
 }
 
+/* static */
 void Lfo::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
+/* static */
 void Lfo::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     Tick();
   }
 }
 
+/* static */
 void Lfo::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    SendNow(0xf8);
+    app.SendNow(0xf8);
     Tick();
   }
 }
 
+/* static */
 void Lfo::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
@@ -137,6 +210,7 @@ void Lfo::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   note_stack.NoteOn(note, velocity);
 }
 
+/* static */
 void Lfo::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
@@ -144,23 +218,24 @@ void Lfo::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   note_stack.NoteOff(note);
 }
 
-
+/* static */
 void Lfo::Stop() {
   if (!running_) {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    SendNow(0xfc);
+    app.SendNow(0xfc);
   }
   running_ = 0;
 }
 
+/* static */
 void Lfo::Start() {
   if (running_) {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    SendNow(0xfa);
+    app.SendNow(0xfa);
   }
   tick_ = midi_clock_prescaler_ - 1;
   running_ = 1;
@@ -169,6 +244,7 @@ void Lfo::Start() {
   }
 }
 
+/* static */
 void Lfo::Tick() {
   ++tick_;
   if (tick_ >= midi_clock_prescaler_) {
@@ -193,17 +269,13 @@ void Lfo::Tick() {
         int16_t scaled_value = static_cast<int16_t>(lfo_data_[i].center_value) + 
             S8S8MulShift8(lfo_data_[i].amount << 1, value - 128);
         scaled_value = Clip(scaled_value, 0, 127);
-        Send3(
+        app.Send3(
             0xb0 | channel_,
             lfo_data_[i].cc_number & 0x7f,
             scaled_value & 0x7f);
       }
     }
   }
-}
-
-const prog_uint8_t* Lfo::factory_data() {
-  return lfo_factory_data;
 }
 
 } }  // namespace midipal::apps

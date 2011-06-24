@@ -26,6 +26,10 @@
 #include "midipal/display.h"
 #include "midipal/ui.h"
 
+namespace midipal { namespace apps {
+
+using namespace avrlib;
+
 static const prog_uint8_t random_octave[8 * 5] PROGMEM = {
   48, 48, 48, 48, 48, 48, 48, 48,
   48, 48, 48, 48, 48, 48, 60, 60,
@@ -54,15 +58,78 @@ static const prog_uint8_t rank[16] PROGMEM = {
   0, 1, 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, -6, -6, 195
 };
 
-namespace midipal { namespace apps {
-
-using namespace avrlib;
-
-/* extern */
 const prog_uint8_t ear_training_game_factory_data[7] PROGMEM = {
   0, 2, 0, 0, 0, 0, 0
 };
 
+/* <static> */
+uint8_t EarTrainingGame::level_;
+uint8_t EarTrainingGame::num_notes_;
+uint8_t EarTrainingGame::confirm_reset_;
+uint16_t EarTrainingGame::num_games_;
+uint16_t EarTrainingGame::num_attempts_;
+
+uint8_t EarTrainingGame::step_counter_;
+uint8_t EarTrainingGame::played_notes_[kMaxNotes];
+uint8_t EarTrainingGame::recorded_notes_[kMaxNotes];
+uint8_t EarTrainingGame::record_ptr_;
+uint8_t EarTrainingGame::play_ptr_;
+uint8_t EarTrainingGame::wait_;
+uint8_t EarTrainingGame::attempts_;
+uint8_t EarTrainingGame::new_challenge_;
+uint8_t EarTrainingGame::show_score_;
+
+uint8_t EarTrainingGame::seeded_;
+/* </static> */
+
+/* static */
+const prog_AppInfo EarTrainingGame::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  &OnInternalClockStep, // void (*OnInternalClockStep)();
+  &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  &OnRedraw, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  7, // settings_size
+  SETTINGS_EAR_TRAINING, // settings_offset
+  &level_, // settings_data
+  ear_training_game_factory_data, // factory_data
+  STR_RES_EAR_GAME, // app_name
+};
+
+/* static */
 void EarTrainingGame::OnInit() {
   ui.AddPage(STR_RES_LVL, UNIT_INDEX, 0, 4);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 2, kMaxNotes);
@@ -75,18 +142,20 @@ void EarTrainingGame::OnInit() {
   confirm_reset_ = 0;
 }
 
+/* static */
 void EarTrainingGame::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  Send(status, data, data_size);
+  app.Send(status, data, data_size);
   if (!seeded_) {
     Random::Seed(clock.value());
     seeded_ = 1;
   }
 }
 
+/* static */
 void EarTrainingGame::GenerateChallenge() {
   uint8_t root = Random::GetByte() & 0xf;
   root += ResourcesManager::Lookup<uint8_t, uint8_t>(
@@ -103,11 +172,12 @@ void EarTrainingGame::GenerateChallenge() {
   if (attempts_) {
     ++num_games_;
     num_attempts_ += attempts_;
-    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, num_games_);
-    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, num_attempts_);
+    app.SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, num_games_);
+    app.SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, num_attempts_);
   }
 }
 
+/* static */
 void EarTrainingGame::StartChallenge() {
   play_ptr_ = 0;
   record_ptr_ = 0;
@@ -118,13 +188,14 @@ void EarTrainingGame::StartChallenge() {
   new_challenge_ = 0;
 }
 
+/* static */
 void EarTrainingGame::OnInternalClockStep() {
   if (play_ptr_ < num_notes_) {
     step_counter_ = (step_counter_ + 1) & 0x3;
     if (step_counter_ == 0) {
-      Send3(0x90, played_notes_[play_ptr_], 100);
+      app.Send3(0x90, played_notes_[play_ptr_], 100);
     } else if (step_counter_ == 2) {
-      Send3(0x80, played_notes_[play_ptr_], 0);
+      app.Send3(0x80, played_notes_[play_ptr_], 0);
       ++play_ptr_;
     }
   } else {
@@ -137,6 +208,7 @@ void EarTrainingGame::OnInternalClockStep() {
   }
 }
 
+/* static */
 void EarTrainingGame::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (record_ptr_ < num_notes_) {
     recorded_notes_[record_ptr_] = note;
@@ -159,25 +231,28 @@ void EarTrainingGame::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) 
   }
 }
 
+/* static */
 uint8_t EarTrainingGame::OnClick() {
   if (confirm_reset_ == 1) {
     confirm_reset_ = 0;
     show_score_ = 1;
     num_games_ = 0;
     num_attempts_ = 0;
-    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, 0);
-    SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, 0);
+    app.SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_GAMES, 0);
+    app.SaveSettingWord(SETTINGS_EAR_TRAINING_NUM_ATTEMPTS, 0);
   } else {
     show_score_ = 0;
   }
   return 0;
 }
 
+/* static */
 uint8_t EarTrainingGame::OnIncrement(int8_t value) {
   show_score_ = 0;
   return 0;
 }
 
+/* static */
 uint8_t EarTrainingGame::OnRedraw() {
   if (show_score_) {
     ui.Clear();
@@ -219,10 +294,6 @@ uint8_t EarTrainingGame::OnRedraw() {
   } else {
     return 0;
   }
-}
-
-const prog_uint8_t* EarTrainingGame::factory_data() {
-  return ear_training_game_factory_data;
 }
 
 } }  // namespace midipal::apps

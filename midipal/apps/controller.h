@@ -24,28 +24,24 @@
 
 namespace midipal { namespace apps {
 
-class Controller : public App {
+class Controller {
  public:
   Controller() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
 
-  uint8_t OnPot(uint8_t pot, uint8_t value);
+  static uint8_t OnPot(uint8_t pot, uint8_t value);
   
-  uint8_t settings_size() { return 9; }
-  uint16_t settings_offset() { return SETTINGS_CONTROLLER; }
-  uint8_t* settings_data() { return &channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_CONTRLLR; }
+  static const prog_AppInfo app_info_;
   
  private:
-  uint8_t channel_;
-  uint8_t cc_[8];
+  static uint8_t channel_;
+  static uint8_t cc_[8];
   
   DISALLOW_COPY_AND_ASSIGN(Controller);
 };

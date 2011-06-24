@@ -24,35 +24,35 @@
 
 namespace midipal { namespace apps {
 
-class ChordMemory : public App {
+class ChordMemory {
  public:
   ChordMemory() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
-  uint8_t OnClick();
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteAftertouch(uint8_t channel, uint8_t note, uint8_t velocity);
+  static uint8_t OnClick();
   
-  uint8_t settings_size() { return 17; }
-  uint16_t settings_offset() { return SETTINGS_CHORD_MEMORY; }
-  uint8_t* settings_data() { return &channel_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_CHORDMEM; }
+  static const prog_AppInfo app_info_;
   
  private:
-  void PlayChord(uint8_t type, uint8_t channel, uint8_t note, uint8_t velocity);
+  static void PlayChord(
+      uint8_t type,
+      uint8_t channel,
+      uint8_t note,
+      uint8_t velocity);
   
-  uint8_t channel_;
-  uint8_t num_notes_;
-  uint8_t chord_[15];
+  static uint8_t channel_;
+  static uint8_t num_notes_;
+  static uint8_t chord_[15];
   
-  uint8_t root_;
+  static uint8_t root_;
   
   DISALLOW_COPY_AND_ASSIGN(ChordMemory);
 };

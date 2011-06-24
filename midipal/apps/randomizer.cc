@@ -30,11 +30,76 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t randomizer_factory_data[8] PROGMEM = {
   0, 127, 12, 32, 0, 0, 7, 10
 };
 
+/* static */
+uint8_t Randomizer::channel_;
+
+/* static */
+uint8_t Randomizer::global_amount_;
+
+/* static */
+uint8_t Randomizer::note_amount_;
+
+/* static */
+uint8_t Randomizer::velocity_amount_;
+
+/* static */
+uint8_t Randomizer::cc_amount_[2];
+
+/* static */
+uint8_t Randomizer::cc_[2];
+
+/* static */
+const prog_AppInfo Randomizer::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  &OnNoteAftertouch, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  8, // settings_size
+  SETTINGS_RANDOMIZER, // settings_offset
+  &channel_, // settings_data
+  randomizer_factory_data, // factory_data
+  STR_RES_RANDOMIZ, // app_name
+};
+
+/* static */
 void Randomizer::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
@@ -46,6 +111,7 @@ void Randomizer::OnInit() {
   ui.AddPage(STR_RES__C2, UNIT_INTEGER, 0, 127);
 }
 
+/* static */
 void Randomizer::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -53,10 +119,11 @@ void Randomizer::OnRawMidiData(
    uint8_t accepted_channel) {
   uint8_t type = status & 0xf0;
   if (type != 0x80 && type != 0x90 && type != 0xa0) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 uint8_t Randomizer::ScaleModulationAmount(uint8_t amount) {
   if (Random::GetByte() < (global_amount_ << 1)) {
     return amount << 1;
@@ -65,10 +132,10 @@ uint8_t Randomizer::ScaleModulationAmount(uint8_t amount) {
   }
 }
 
-
+/* static */
 void Randomizer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel_ && channel_ != (channel + 1)) {
-    Send3(0x90 | channel, note, velocity);
+    app.Send3(0x90 | channel, note, velocity);
   } else {
     // Send random CCs before the note
     for (uint8_t i = 0; i < 2; ++i) {
@@ -77,7 +144,7 @@ void Randomizer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
             63,
             Random::GetByte() & 0x7f,
             ScaleModulationAmount(cc_amount_[i]));
-        Send3(0xb0 | channel, cc_[i], value);
+        app.Send3(0xb0 | channel, cc_[i], value);
       }
     }
     if (velocity_amount_) {
@@ -96,38 +163,40 @@ void Randomizer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
     note_map.Put(note, new_note);
 
-    Send3(0x90 | channel, new_note, velocity);
+    app.Send3(0x90 | channel, new_note, velocity);
   }
 }
 
+/* static */
 void Randomizer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   SendMessage(0x80, channel, note, velocity);
 }
 
-void Randomizer::OnAftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
+/* static */
+void Randomizer::OnNoteAftertouch(
+    uint8_t channel,
+    uint8_t note,
+    uint8_t velocity) {
   SendMessage(0xa0, channel, note, velocity);
 }
 
+/* static */
 void Randomizer::SendMessage(
     uint8_t message,
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
   if (channel_ && channel_ != (channel + 1)) {
-    Send3(message | channel, note, velocity);
+    app.Send3(message | channel, note, velocity);
   } else {
     NoteMapEntry* entry = note_map.Find(note);
     if (entry) {
-      Send3(message | channel, entry->value, velocity);
+      app.Send3(message | channel, entry->value, velocity);
       if (message == 0x80) {
         entry->note = 0xff;
       }
     }
   }  
-}
-
-const prog_uint8_t* Randomizer::factory_data() {
-  return randomizer_factory_data;
 }
 
 } }  // namespace midipal::apps

@@ -41,11 +41,72 @@ enum VoiceMode {
   
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t scale_processor_factory_data[6] PROGMEM = {
   0, 0, 1, 0, -12, 0
 };
 
+/* <static> */
+uint8_t ScaleProcessor::channel_;
+uint8_t ScaleProcessor::root_;
+uint8_t ScaleProcessor::scale_;
+uint8_t ScaleProcessor::original_;
+uint8_t ScaleProcessor::voice_1_;
+uint8_t ScaleProcessor::voice_2_;
+
+uint8_t ScaleProcessor::lowest_note_;
+uint8_t ScaleProcessor::previous_note_;
+uint8_t ScaleProcessor::voice_2_note_;
+uint8_t ScaleProcessor::flip_;
+/* </static> */
+
+/* static */
+const prog_AppInfo ScaleProcessor::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  &OnNoteAftertouch, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  NULL, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  6, // settings_size
+  SETTINGS_SCALE_PROCESSOR, // settings_offset
+  &channel_, // settings_data
+  scale_processor_factory_data, // factory_data
+  STR_RES_SCALE, // app_name
+};
+
+/* static */
 void ScaleProcessor::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 24);
@@ -57,6 +118,7 @@ void ScaleProcessor::OnInit() {
   flip_ = 0;
 }
 
+/* static */
 void ScaleProcessor::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -66,10 +128,11 @@ void ScaleProcessor::OnRawMidiData(
   if (status != (0x80 | channel_) && 
       status != (0x90 | channel_) &&
       status != (0xa0 | channel_)) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 void ScaleProcessor::OnNoteOn(
     uint8_t channel,
     uint8_t note,
@@ -82,6 +145,7 @@ void ScaleProcessor::OnNoteOn(
   ProcessNoteMessage(0x90, note, velocity);
 }
 
+/* static */
 void ScaleProcessor::OnNoteOff(
     uint8_t channel,
     uint8_t note,
@@ -93,7 +157,8 @@ void ScaleProcessor::OnNoteOff(
   ProcessNoteMessage(0x80, note, velocity);
 }
 
-void ScaleProcessor::OnAftertouch(
+/* static */
+void ScaleProcessor::OnNoteAftertouch(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
@@ -103,7 +168,7 @@ void ScaleProcessor::OnAftertouch(
   ProcessNoteMessage(0xa0, note, velocity);
 }
 
-
+/* static */
 void ScaleProcessor::ProcessNoteMessage(
     uint8_t message,
     uint8_t note,
@@ -117,9 +182,9 @@ void ScaleProcessor::ProcessNoteMessage(
     }
     NoteMapEntry* entry = note_map.Find(note);
     if (entry) {
-      Send3(message | channel_, entry->value, velocity);
+      app.Send3(message | channel_, entry->value, velocity);
       if (voice_1_) {
-        Send3(
+        app.Send3(
             message | channel_,
             Transpose(entry->value, voice_1_),
             velocity);
@@ -129,13 +194,13 @@ void ScaleProcessor::ProcessNoteMessage(
   }
   
   // Static root.
-  Send3(
+  app.Send3(
       message | channel_,
       Constraint(note, root_, scale_),
       velocity);
   
   if (voice_1_) {
-    Send3(
+    app.Send3(
         message | channel_,
         Constraint(Transpose(note, voice_1_), root_, scale_),
         velocity);
@@ -178,16 +243,12 @@ void ScaleProcessor::ProcessNoteMessage(
     
     NoteMapEntry* entry = note_map.Find(note);
     if (entry) {
-      Send3(message | channel_, entry->value, velocity);
+      app.Send3(message | channel_, entry->value, velocity);
       if (message == 0x80) {
         entry->note = 0xff;
       }
     }
   }
-}
-
-const prog_uint8_t* ScaleProcessor::factory_data() {
-  return scale_processor_factory_data;
 }
 
 } }  // namespace midipal::apps

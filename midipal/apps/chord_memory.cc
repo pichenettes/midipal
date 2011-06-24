@@ -27,15 +27,75 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-/* extern */
 const prog_uint8_t chord_memory_factory_data[17] PROGMEM = {
   0, 4, 60, 63, 67, 70, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48
 };
 
+/* static */
+uint8_t ChordMemory::channel_;
+
+/* static */
+uint8_t ChordMemory::num_notes_;
+
+/* static */
+uint8_t ChordMemory::chord_[15];
+
+/* static */
+uint8_t ChordMemory::root_;
+
+/* static */
+const prog_AppInfo ChordMemory::app_info_ PROGMEM = {
+  &OnInit, // void (*OnInit)();
+  &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
+  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  &OnNoteAftertouch, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
+  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
+  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
+  NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
+  NULL, // void (*OnClock)();
+  NULL, // void (*OnStart)();
+  NULL, // void (*OnContinue)();
+  NULL, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  NULL, // void (*OnReset)();
+  NULL, // uint8_t (*CheckChannel)(uint8_t);
+  NULL, // void (*OnRawByte)(uint8_t);
+  &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
+  NULL, // void (*OnInternalClockTick)();
+  NULL, // void (*OnInternalClockStep)();
+  NULL, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
+  NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+  NULL, // uint8_t (*OnRedraw)();
+  NULL, // void (*OnIdle)();
+  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  NULL, // uint8_t (*GetParameter)(uint8_t);
+  NULL, // uint8_t (*CheckPageStatus)(uint8_t);
+  17, // settings_size
+  SETTINGS_CHORD_MEMORY, // settings_offset
+  &channel_, // settings_data
+  chord_memory_factory_data, // factory_data
+  STR_RES_CHORDMEM, // app_name
+};
+
+/* static */
 void ChordMemory::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INTEGER_ALL, 0, 16);
 }
 
+/* static */
 void ChordMemory::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
@@ -43,26 +103,28 @@ void ChordMemory::OnRawMidiData(
    uint8_t accepted_channel) {
   uint8_t type = status & 0xf0;
   if (type != 0x80 && type != 0x90 && type != 0xa0) {
-    Send(status, data, data_size);
+    app.Send(status, data, data_size);
   }
 }
 
+/* static */
 uint8_t ChordMemory::OnClick() {
   if (!ui.editing()) {
     num_notes_ = 0;
   } else {
-    SaveSettings();
+    app.SaveSettings();
   }
   return 0;
 }
 
+/* static */
 void ChordMemory::PlayChord(
     uint8_t type,
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
   if (num_notes_ == 0) {
-    Send3(type | channel, note, velocity);
+    app.Send3(type | channel, note, velocity);
   } else {
     for (uint8_t i = 0; i < num_notes_; ++i) {
       int16_t n = note;
@@ -73,14 +135,15 @@ void ChordMemory::PlayChord(
       while (n > 127) {
         n -= 12;
       }
-      Send3(type | channel, static_cast<uint8_t>(n), velocity);
+      app.Send3(type | channel, static_cast<uint8_t>(n), velocity);
     }
   }
 }
 
+/* static */
 void ChordMemory::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel_ && channel_ != (channel + 1)) {
-    Send3(0x90 | channel, note, velocity);
+    app.Send3(0x90 | channel, note, velocity);
   } else {
     // Record mode.
     if (ui.editing()) {
@@ -93,34 +156,32 @@ void ChordMemory::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
         }
         num_notes_ = 14;
       }
-      Send3(0x90 | channel, note, velocity);
+      app.Send3(0x90 | channel, note, velocity);
     } else {
       PlayChord(0x90, channel, note, velocity);
     }
   }
 }
 
+/* static */
 void ChordMemory::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   if ((channel_ && channel_ != (channel + 1)) || ui.editing()) {
-    Send3(0x80 | channel, note, velocity);
+    app.Send3(0x80 | channel, note, velocity);
   } else {
     PlayChord(0x80, channel, note, velocity);
   }
 }
 
-void ChordMemory::OnAftertouch(
+/* static */
+void ChordMemory::OnNoteAftertouch(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
   if ((channel_ && channel_ != (channel + 1)) || ui.editing()) {
-    Send3(0xa0 | channel, note, velocity);
+    app.Send3(0xa0 | channel, note, velocity);
   } else {
     PlayChord(0xa0, channel, note, velocity);
   }
-}
-
-const prog_uint8_t* ChordMemory::factory_data() {
-  return chord_memory_factory_data;
 }
 
 } }  // namespace midipal::apps

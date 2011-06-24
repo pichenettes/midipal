@@ -41,53 +41,49 @@ struct LfoData {
 
 const uint8_t kNumLfos = 4;
 
-class Lfo : public App {
+class Lfo {
  public:
   Lfo() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
-  void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-  void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  void OnInternalClockTick();
-  void OnContinue();
-  void OnStart();
-  void OnStop();
-  void OnClock();
+  static void OnInternalClockTick();
+  static void OnContinue();
+  static void OnStart();
+  static void OnStop();
+  static void OnClock();
   
-  void SetParameter(uint8_t key, uint8_t value);
+  static void SetParameter(uint8_t key, uint8_t value);
   
-  uint8_t settings_size() { return 7 + sizeof(LfoData) * kNumLfos; }
-  uint16_t settings_offset() { return SETTINGS_LFO; }
-  uint8_t* settings_data() { return &running_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_CC_LFO; }
+  static const prog_AppInfo app_info_;
 
  private:
-  void Stop();
-  void Start();
-  void Tick();
+  static void Stop();
+  static void Start();
+  static void Tick();
   
-  uint8_t running_;
-  uint8_t clk_mode_;
-  uint8_t bpm_;
-  uint8_t groove_template_;
-  uint8_t groove_amount_;
-  uint8_t clock_division_;  
-  uint8_t channel_;
+  static uint8_t running_;
+  static uint8_t clk_mode_;
+  static uint8_t bpm_;
+  static uint8_t groove_template_;
+  static uint8_t groove_amount_;
+  static uint8_t clock_division_;  
+  static uint8_t channel_;
   
-  LfoData lfo_data_[kNumLfos];
+  static LfoData lfo_data_[kNumLfos];
 
-  uint16_t phase_[kNumLfos];
-  uint16_t phase_increment_[kNumLfos];
+  static uint16_t phase_[kNumLfos];
+  static uint16_t phase_increment_[kNumLfos];
   
-  uint8_t tick_;
-  uint8_t midi_clock_prescaler_;
+  static uint8_t tick_;
+  static uint8_t midi_clock_prescaler_;
   
   DISALLOW_COPY_AND_ASSIGN(Lfo);
 };

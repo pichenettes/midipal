@@ -21,7 +21,7 @@
 #define MIDIPAL_MIDI_HANDLER_H_
 
 #include "midi/midi.h"
-#include "midipal/app_manager.h"
+#include "midipal/app.h"
 
 namespace midipal {
 
@@ -35,112 +35,110 @@ struct MidiHandler : public midi::MidiDevice {
   typedef avrlib::DataTypeForSize<data_size>::Type Value;
   
   static void NoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-    app_manager.active_app()->OnNoteOn(channel, note, velocity);
+    app.OnNoteOn(channel, note, velocity);
   }
   
   static void NoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-    app_manager.active_app()->OnNoteOff(channel, note, velocity);
+    app.OnNoteOff(channel, note, velocity);
   }
   
   static void Aftertouch(uint8_t channel, uint8_t note, uint8_t velocity) {
-    app_manager.active_app()->OnAftertouch(channel, note, velocity);
+    app.OnAftertouch(channel, note, velocity);
   }
   
   static void Aftertouch(uint8_t channel, uint8_t velocity) {
-    app_manager.active_app()->OnAftertouch(channel, velocity);
+    app.OnAftertouch(channel, velocity);
   }
   
   static void ControlChange(uint8_t channel, uint8_t controller,
                              uint8_t value) {
-    app_manager.active_app()->OnControlChange(channel, controller, value);
+    app.OnControlChange(channel, controller, value);
   }
   
   static void ProgramChange(uint8_t channel, uint8_t program) {
-    app_manager.active_app()->OnProgramChange(channel, program);
+    app.OnProgramChange(channel, program);
   }
   
   static void PitchBend(uint8_t channel, uint16_t pitch_bend) {
-    app_manager.active_app()->OnPitchBend(channel, pitch_bend);
+    app.OnPitchBend(channel, pitch_bend);
   }
 
   static void AllSoundOff(uint8_t channel) {
-    app_manager.active_app()->OnAllSoundOff(channel);
+    app.OnAllSoundOff(channel);
   }
   
   static void ResetAllControllers(uint8_t channel) {
-    app_manager.active_app()->OnResetAllControllers(channel);
+    app.OnResetAllControllers(channel);
   }
   
   static void LocalControl(uint8_t channel, uint8_t state) {
-    app_manager.active_app()->OnLocalControl(channel, state);
+    app.OnLocalControl(channel, state);
   }
   
   static void AllNotesOff(uint8_t channel) {
-    app_manager.active_app()->OnAllNotesOff(channel);
+    app.OnAllNotesOff(channel);
   }
   
   static void OmniModeOff(uint8_t channel) {
-    app_manager.active_app()->OnOmniModeOff(channel);
+    app.OnOmniModeOff(channel);
   }
   
   static void OmniModeOn(uint8_t channel) {
-    app_manager.active_app()->OnOmniModeOn(channel);
+    app.OnOmniModeOn(channel);
   }
   
   static void MonoModeOn(uint8_t channel, uint8_t num_channels) {
-    app_manager.active_app()->OnMonoModeOn(channel, num_channels);
+    app.OnMonoModeOn(channel, num_channels);
   }
   
   static void PolyModeOn(uint8_t channel) {
-    app_manager.active_app()->OnPolyModeOn(channel);
+    app.OnPolyModeOn(channel);
   }
   
   static void SysExStart() {
-    app_manager.active_app()->OnSysExStart();
+    app.OnSysExStart();
   }
   
   static void SysExByte(uint8_t sysex_byte) {
-    app_manager.active_app()->OnSysExByte(sysex_byte);
+    app.OnSysExByte(sysex_byte);
   }
   
   static void SysExEnd() {
-    app_manager.active_app()->OnSysExEnd();
+    app.OnSysExEnd();
   }
   
-  static void BozoByte(uint8_t bozo_byte) {
-    app_manager.active_app()->OnBozoByte(bozo_byte);
-  }
+  static void BozoByte(uint8_t bozo_byte) { }
 
   static void Clock() {
-    app_manager.active_app()->OnClock();
+    app.OnClock();
   }
   
   static void Start() {
-    app_manager.active_app()->OnStart();
+    app.OnStart();
   }
   
   static void Continue() {
-    app_manager.active_app()->OnContinue();
+    app.OnContinue();
   }
   
   static void Stop() {
-    app_manager.active_app()->OnStop();
+    app.OnStop();
   }
   
   static void ActiveSensing() {
-    app_manager.active_app()->OnActiveSensing();
+    app.OnActiveSensing();
   }
   
   static void Reset() {
-    app_manager.active_app()->OnReset();
+    app.OnReset();
   }
 
   static uint8_t CheckChannel(uint8_t channel) {
-    return app_manager.active_app()->CheckChannel(channel);
+    return app.CheckChannel(channel);
   }
   
   static void RawByte(uint8_t byte) {
-    app_manager.active_app()->OnRawByte(byte);
+    app.OnRawByte(byte);
   }
   
   static void RawMidiData(
@@ -148,7 +146,7 @@ struct MidiHandler : public midi::MidiDevice {
       uint8_t* data,
       uint8_t data_size,
       uint8_t accepted_channel) {
-    app_manager.active_app()->OnRawMidiData(
+    app.OnRawMidiData(
         status,
         data,
         data_size,

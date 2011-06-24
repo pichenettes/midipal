@@ -24,33 +24,29 @@
 
 namespace midipal { namespace apps {
 
-class CcKnob : public App {
+class CcKnob {
  public:
   CcKnob() { }
 
-  void OnInit();
-  void OnRawMidiData(
+  static void OnInit();
+  static void OnRawMidiData(
      uint8_t status,
      uint8_t* data,
      uint8_t data_size,
      uint8_t accepted_channel);
   
-  void SetParameter(uint8_t key, uint8_t value);
-  uint8_t GetParameter(uint8_t key);
+  static void SetParameter(uint8_t key, uint8_t value);
+  static uint8_t GetParameter(uint8_t key);
   
-  uint8_t settings_size() { return 6; }
-  uint16_t settings_offset() { return SETTINGS_CC_KNOB; }
-  uint8_t* settings_data() { return &value_; }
-  const prog_uint8_t* factory_data();
-  uint8_t app_name() { return STR_RES_CC_KNOB; }
+  static const prog_AppInfo app_info_;
   
  private:
-  uint8_t value_;
-  uint8_t channel_;
-  uint8_t type_;
-  uint8_t number_;
-  uint8_t min_;
-  uint8_t max_;
+  static uint8_t value_;
+  static uint8_t channel_;
+  static uint8_t type_;
+  static uint8_t number_;
+  static uint8_t min_;
+  static uint8_t max_;
   
   DISALLOW_COPY_AND_ASSIGN(CcKnob);
 };
