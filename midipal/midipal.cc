@@ -80,6 +80,9 @@ void Init() {
   LedOut::set_mode(DIGITAL_OUTPUT);
   LedIn::set_mode(DIGITAL_OUTPUT);
   
+  note_stack.Init();
+  event_scheduler.Init();
+  
   // Boot the app selector app.
   app.Launch(0);
   app.Init();
@@ -88,9 +91,6 @@ void Init() {
   // app to launch.
   uint8_t launch_app = app.GetParameter(0);
   app.Launch(launch_app);
-  
-  note_stack.Init();
-  event_scheduler.Init();
   
   display.Init();
   ui.Init();
@@ -103,7 +103,6 @@ void Init() {
   lcd.Init();
   
   app.Init();
-
   midi_io.Init();
 }
 
@@ -111,7 +110,6 @@ int main(void) {
   ResetWatchdog();
   Init();
   while (1) {
-    display.Tick();
     ui.DoEvents();
   }
 }

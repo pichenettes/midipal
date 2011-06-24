@@ -279,24 +279,16 @@ class App {
   
   // Event handlers for UI.
   static uint8_t OnIncrement(int8_t increment) { 
-    if (app_info_.OnIncrement) {
-      return (*app_info_.OnIncrement)(increment);
-    }
+    return app_info_.OnIncrement ? (*app_info_.OnIncrement)(increment) : 0;
   }
   static uint8_t OnClick() {
-    if (app_info_.OnClick) {
-      return (*app_info_.OnClick)();
-    }
+    return app_info_.OnClick ? (*app_info_.OnClick)() : 0;
   }
   static uint8_t OnPot(uint8_t pot, uint8_t value) {
-    if (app_info_.OnPot) {
-      return (*app_info_.OnPot)(pot, value);
-    }
+    return app_info_.OnPot ? (*app_info_.OnPot)(pot, value) : 0;
   }
-  static uint8_t OnRedraw() { 
-    if (app_info_.OnRedraw) {
-      return (*app_info_.OnRedraw)();
-    }
+  static uint8_t OnRedraw() {
+    return app_info_.OnRedraw ? (*app_info_.OnRedraw)() : 0;
   }
   static void OnIdle() {
     if (app_info_.OnIdle) {
@@ -320,11 +312,7 @@ class App {
     }
   }
   static uint8_t CheckPageStatus(uint8_t index) { 
-    if (app_info_.CheckPageStatus) {
-      return (*app_info_.CheckPageStatus)(index);
-    } else {
-      return 1;
-    }
+    return app_info_.CheckPageStatus ? (*app_info_.CheckPageStatus)(index) : 1;
   }
   
   // Access to settings data structure

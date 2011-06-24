@@ -130,6 +130,8 @@ uint8_t Ui::page_index() {
 
 /* static */
 void Ui::DoEvents() {
+  display.Tick();
+  
   uint8_t redraw = 0;
   while (queue_.available()) {
     uint8_t p = page_;
