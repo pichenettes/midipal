@@ -43,6 +43,7 @@ static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
+static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
@@ -277,6 +278,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_scale,
   str_res_sequencr,
   str_res_cc_lfo,
+  str_res_notenuke,
   str_res__reset_,
   str_res_sndoff,
   str_res_rstctr,

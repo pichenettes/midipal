@@ -38,6 +38,7 @@ delay
 scale
 sequencr
 cc lfo
+notenuke
 !reset!
 
 sndOff

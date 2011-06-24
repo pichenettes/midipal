@@ -100,6 +100,15 @@ void AppSelector::OnRawByte(uint8_t byte) {
 /* static */
 uint8_t AppSelector::OnClick() {
   if (selected_item_ == app.num_apps()) {
+    // Note nuke.
+    for (uint8_t i = 0; i < 16; ++i) {
+      for (uint8_t j = 0; j < 128; ++j) {
+        app.Send3(0x80 | i, j, 0);
+      }
+    }
+    return 1;
+  } else if (selected_item_ == app.num_apps() + 1) {
+    // Factory reset.
     for (uint8_t i = 1; i < app.num_apps(); ++i) {
       app.Launch(i);
       app.ResetToFactorySettings();
@@ -107,7 +116,7 @@ uint8_t AppSelector::OnClick() {
     app.Launch(0);
     active_app_ = 0;
   } else {
-    active_app_ = selected_item_;
+    active_app_ = selected_item_;    
   }
   app.SaveSettings();
   SystemReset(100);
@@ -119,8 +128,8 @@ uint8_t AppSelector::OnIncrement(int8_t increment) {
   selected_item_ += increment;
   if (selected_item_ < 1) {
     selected_item_ = 1;
-  } else if (selected_item_ > app.num_apps()) {
-    selected_item_ = app.num_apps();
+  } else if (selected_item_ > app.num_apps() + 1) {
+    selected_item_ = app.num_apps() + 1;
   }
   return 1;
 }
@@ -128,9 +137,9 @@ uint8_t AppSelector::OnIncrement(int8_t increment) {
 /* static */
 uint8_t AppSelector::OnRedraw() {
   ui.Clear();
-  if (selected_item_ == app.num_apps()) {
+  if (selected_item_ >= app.num_apps()) {
     ResourcesManager::LoadStringResource(
-        STR_RES__RESET_,
+        STR_RES_NOTENUKE + selected_item_ - app.num_apps(),
         &line_buffer[0], 8);
   } else {
     app.Launch(selected_item_);
