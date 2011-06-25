@@ -26,7 +26,8 @@ bpm cntr
 cc knob
 chordmem
 clock
-mergechn
+chnfiltr
+chnmergr
 dispatch
 drums
 ear game

@@ -233,11 +233,17 @@ void Ui::PrintKeyValuePair(
     uint8_t value,
     uint8_t selected) {
   memset(line_buffer, ' ', kLcdWidth);
-  ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
+  if (key_res_id == UNIT_CHANNEL) {
+    line_buffer[0] = 'c';
+    line_buffer[1] = 'h';
+    PrintChannel(&line_buffer[2], index);
+  } else {
+    ResourcesManager::LoadStringResource(key_res_id, &line_buffer[0], 3);
+  }
   AlignRight(&line_buffer[0], 3);
   
   // This is a hack to add the index id on the step sequencer pages.
-  if (line_buffer[2] < 0x20) {
+  if (line_buffer[2] < 0x20 && line_buffer[1] == ' ') {
     UnsafeItoa(index + 1, 2, &line_buffer[0]);
     AlignRight(&line_buffer[0], 2);
     if (line_buffer[0] == ' ') {

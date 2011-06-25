@@ -41,6 +41,7 @@
 #include "midipal/apps/dispatcher.h"
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/apps/ear_training_game.h"
+#include "midipal/apps/filter.h"
 #include "midipal/apps/lfo.h"
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/randomizer.h"
@@ -69,6 +70,7 @@ const AppInfo* registry[] = {
   &apps::BpmMeter::app_info_,
   
   &apps::ActiveSensingFilter::app_info_,
+  &apps::Filter::app_info_,
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
