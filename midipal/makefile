@@ -17,9 +17,10 @@ TARGET         = midipal
 PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/apps
 RESOURCES      = midipal/resources
 EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR
+SYSEX_FLAGS    = --page_size=64 --device_id=3
 
 LFUSE          = ff
-HFUSE          = d6
+HFUSE          = d4
 EFUSE          = fd
 LOCK           = 2f
 
