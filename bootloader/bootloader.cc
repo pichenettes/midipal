@@ -1,9 +1,4 @@
-// Copyright 2010 Olivier Gillet.
-//
-// Adapted by Olivier Gillet (ol.gillet@gmail.com) from the original Arduino
-// bootloader contributed by: D. Mellis, D. Cuartielles, Dr. Erik Lins,
-// Karl Pitrich, Jason P. Kyle. Some of the makefile settings used here
-// are from D. Brink's 1k bootloader.
+// Copyright 2011 Olivier Gillet.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
