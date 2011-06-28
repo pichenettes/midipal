@@ -48,6 +48,7 @@ static uint8_t sub_clock_2;
 static volatile uint16_t clock_counter;
 
 TIMER_2_TICK {
+  // 78kHz
   ++clock_counter;
   uint8_t events = clock.Tick();
   if (events & 1) {
@@ -99,7 +100,7 @@ void Init() {
   display.Init();
   ui.Init();
   
-  // Initialize all the PWM outputs to 39kHz, phase correct mode.
+  // Initialize all the PWM outputs to 39kHz, fast mode.
   Timer<2>::set_prescaler(1);
   Timer<2>::set_mode(TIMER_FAST_PWM);
   Timer<2>::Start();

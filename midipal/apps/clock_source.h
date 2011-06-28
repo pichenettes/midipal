@@ -35,6 +35,9 @@ class ClockSource {
   static void OnRawByte(uint8_t byte);
   
   static void SetParameter(uint8_t key, uint8_t value);
+  static uint8_t GetParameter(uint8_t key);
+  static uint8_t OnClick();
+  static uint8_t OnIncrement(int8_t increment);
   
   static void OnInternalClockTick();
   
@@ -49,6 +52,9 @@ class ClockSource {
   static uint8_t bpm_;
   static uint8_t groove_template_;
   static uint8_t groove_amount_;
+  
+  static uint8_t num_taps_;
+  static uint32_t elapsed_time_;
   
   DISALLOW_COPY_AND_ASSIGN(ClockSource);
 };

@@ -31,6 +31,7 @@ class Clock {
  public:
   static inline void Reset() {
     clock_ = 0;
+    periodic_clock_ = 0;
   }
   
   static inline void Start() {
@@ -47,9 +48,10 @@ class Clock {
 
   static inline uint8_t Tick() {
     ++clock_;
+    ++periodic_clock_;
     uint8_t result = 0;
-    if (running_ && static_cast<uint16_t>(clock_) == tick_duration_) {
-      clock_ = 0;
+    if (running_ && periodic_clock_ == tick_duration_) {
+      periodic_clock_ = 0;
       ++tick_count_;
       result |= 1;
       if (tick_count_ == kNumTicksPerStep) {
@@ -85,7 +87,8 @@ class Clock {
 
  private:
   static uint8_t running_;
-  static uint32_t clock_;
+  static uint32_t clock_;  // Counts forever
+  static uint16_t periodic_clock_;  // Is reset to 0 at each 24ppqn tick
   static uint16_t tick_duration_table_[kNumStepsInGroovePattern];
   static uint16_t tick_duration_;
   static uint8_t tick_count_;

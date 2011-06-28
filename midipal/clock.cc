@@ -27,6 +27,7 @@ Clock clock;
 
 /* <static> */
 uint32_t Clock::clock_;
+uint16_t Clock::periodic_clock_;
 uint16_t Clock::tick_duration_table_[kNumStepsInGroovePattern];
 uint8_t Clock::running_;
 uint8_t Clock::tick_count_;

@@ -69,6 +69,7 @@ run
 bpm
 grv
 amt
+tap
 
 swg
 shf

@@ -71,6 +71,7 @@ static const prog_char str_res_run[] PROGMEM = "run";
 static const prog_char str_res_bpm[] PROGMEM = "bpm";
 static const prog_char str_res_grv[] PROGMEM = "grv";
 static const prog_char str_res_amt[] PROGMEM = "amt";
+static const prog_char str_res_tap[] PROGMEM = "tap";
 static const prog_char str_res_swg[] PROGMEM = "swg";
 static const prog_char str_res_shf[] PROGMEM = "shf";
 static const prog_char str_res_psh[] PROGMEM = "psh";
@@ -307,6 +308,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_bpm,
   str_res_grv,
   str_res_amt,
+  str_res_tap,
   str_res_swg,
   str_res_shf,
   str_res_psh,

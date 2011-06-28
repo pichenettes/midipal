@@ -19,6 +19,7 @@
 
 #include "midipal/apps/clock_source.h"
 
+#include "avrlib/op.h"
 #include "avrlib/string.h"
 
 #include "midipal/clock.h"
@@ -42,6 +43,12 @@ uint8_t ClockSource::groove_template_;
 
 /* static */
 uint8_t ClockSource::groove_amount_;
+
+/* static */
+uint8_t ClockSource::num_taps_;
+
+/* static */
+uint32_t ClockSource::elapsed_time_;
 
 /* static */
 const prog_AppInfo ClockSource::app_info_ PROGMEM = {
@@ -75,13 +82,13 @@ const prog_AppInfo ClockSource::app_info_ PROGMEM = {
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
   &OnInternalClockTick, // void (*OnInternalClockTick)();
   NULL, // void (*OnInternalClockStep)();
-  NULL, // uint8_t (*OnIncrement)(int8_t);
-  NULL, // uint8_t (*OnClick)();
+  &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
+  &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
   NULL, // uint8_t (*OnRedraw)();
   NULL, // void (*OnIdle)();
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
-  NULL, // uint8_t (*GetParameter)(uint8_t);
+  &GetParameter, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
   4, // settings_size
   SETTINGS_CLOCK_SOURCE, // settings_offset
@@ -96,8 +103,10 @@ void ClockSource::OnInit() {
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+  ui.AddPage(STR_RES_TAP, UNIT_INTEGER, 40, 240);
   clock.Update(bpm_, groove_template_, groove_amount_);
   running_ = 0;
+  num_taps_ = 0;
 }
 
 /* static */
@@ -118,8 +127,46 @@ void ClockSource::SetParameter(uint8_t key, uint8_t value) {
       Stop();
     }
   }
+  if (key == 4) {
+    key = 1;
+  }
   static_cast<uint8_t*>(&running_)[key] = value;
   clock.Update(bpm_, groove_template_, groove_amount_);
+}
+
+/* static */
+uint8_t ClockSource::GetParameter(uint8_t key) {
+  if (key == 4) {
+    key = 1;
+  }
+  return static_cast<uint8_t*>(&running_)[key];
+}
+
+/* static */
+uint8_t ClockSource::OnClick() {
+  if (ui.page() == 4) {
+    uint32_t t = clock.value();
+    clock.Reset();
+    if (num_taps_ > 0 && t < 100000L) {
+      elapsed_time_ += t;
+      SetParameter(
+          1,
+          avrlib::Clip(60 * 78125L * num_taps_ / elapsed_time_, 40, 240));
+    } else {
+      num_taps_ = 0;
+      elapsed_time_ = 0;
+    }
+    ++num_taps_;
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/* static */
+uint8_t ClockSource::OnIncrement(int8_t increment) {
+  num_taps_ = 0;
+  return 0;
 }
 
 /* static */
