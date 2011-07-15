@@ -23,7 +23,6 @@
 #include "midi/midi.h"
 #include "midipal/app.h"
 #include "midipal/clock.h"
-#include "midipal/display.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 #include "midipal/note_stack.h"
@@ -38,39 +37,51 @@ using namespace midipal;
 Serial<MidiPort, 31250, BUFFERED, POLLED> midi_io;
 MidiStreamParser<MidiHandler> midi_parser;
 
-ISR(USART_RX_vect) {
-  LedIn::High();
-  midi_parser.PushByte(SerialInput<MidiPort>::ImmediateRead());
-}
+volatile uint8_t num_clock_ticks = 0;
+volatile uint8_t num_clock_steps = 0;
 
-static uint8_t sub_clock;
-static uint8_t sub_clock_2;
-static volatile uint16_t clock_counter;
-
-TIMER_2_TICK {
-  // 78kHz
-  ++clock_counter;
-  uint8_t events = clock.Tick();
-  if (events & 1) {
-    app.OnInternalClockTick();
-  }
-  if (events & 2) {
-    app.OnInternalClockStep();
-  }
+ISR(TIMER1_OVF_vect, ISR_NOBLOCK) {
+  static uint8_t sub_clock;
+  
+  // 4kHz
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
     LedOut::High();
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
   }
-  sub_clock = (sub_clock + 1) & 31;
-  if (sub_clock == 0) {  // 2kHz
-    lcd.Tick();
+  if (midi_io.readable()) {
+    midi_parser.PushByte(midi_io.ImmediateRead());
+  }
+  
+  while (num_clock_ticks) {
+    --num_clock_ticks;
+    app.OnInternalClockTick();
+  }
+  
+  while (num_clock_steps) {
+    --num_clock_steps;
+    app.OnInternalClockStep();
+  }
+  
+  sub_clock = (sub_clock + 1) & 3;
+  if ((sub_clock & 1) == 0) {
+    // 2kHz
     ui.Poll();
-    sub_clock_2 = ~sub_clock_2;
-    if (sub_clock_2) {  // 1kHz
+    if ((sub_clock & 3) == 0) {
       TickSystemClock();
       LedOut::Low();
       LedIn::Low();
     }
+  }
+}
+
+ISR(TIMER2_OVF_vect) {
+  // 78kHz
+  uint8_t events = clock.Tick();
+  if (events & 1) {
+    ++num_clock_ticks;
+  }
+  if (events & 2) {
+    ++num_clock_steps;
   }
 }
 
@@ -97,16 +108,15 @@ void Init() {
   }
   app.Launch(launch_app);
   
-  display.Init();
   ui.Init();
   
-  // Initialize all the PWM outputs to 39kHz, fast mode.
+  // Configure the timers.
   Timer<2>::set_prescaler(1);
   Timer<2>::set_mode(TIMER_FAST_PWM);
   Timer<2>::Start();
-
-  lcd.Init();
-  
+  Timer<1>::set_prescaler(2);
+  Timer<1>::set_mode(TIMER_PWM_PHASE_CORRECT);
+  Timer<1>::Start();
   app.Init();
   midi_io.Init();
 }

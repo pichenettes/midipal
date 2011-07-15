@@ -51,6 +51,8 @@ Ui ui;
 void Ui::Init() {
   encoder_.Init();
   pots_.Init();
+  lcd.Init();
+  display.Init();
   read_pots_ = 0;
   num_declared_pages_ = 0;
   num_pages_ = 0;
@@ -115,6 +117,8 @@ void Ui::Poll() {
       queue_.AddEvent(CONTROL_POT, index, value);
     }
   }
+  display.Tick();
+  lcd.Tick();
 }
 
 /* static */
@@ -130,8 +134,6 @@ uint8_t Ui::page_index() {
 
 /* static */
 void Ui::DoEvents() {
-  display.Tick();
-  
   uint8_t redraw = 0;
   while (queue_.available()) {
     uint8_t p = page_;
