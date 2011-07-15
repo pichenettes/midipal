@@ -116,7 +116,6 @@ inline void MidiLoop() {
   uint8_t checksum;
   uint8_t sysex_commands[2];
   uint8_t status = 0;
-  uint8_t progress_counter = 0;
 
   midi.Init();
   page = 0;
