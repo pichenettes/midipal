@@ -117,7 +117,6 @@ void Ui::Poll() {
       queue_.AddEvent(CONTROL_POT, index, value);
     }
   }
-  display.Tick();
   lcd.Tick();
 }
 
@@ -222,6 +221,7 @@ void Ui::DoEvents() {
         app.GetParameter(page_),
         editing_);
   }
+  display.Tick();
 }
 
 static const prog_char note_names[] PROGMEM = " CC# DD# E FF# GG# AA# B";

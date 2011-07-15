@@ -40,6 +40,11 @@ MidiStreamParser<MidiHandler> midi_parser;
 volatile uint8_t num_clock_ticks = 0;
 volatile uint8_t num_clock_steps = 0;
 
+ISR(USART_RX_vect) {
+  LedIn::High();
+  SerialInput<SerialPort0>::Received();
+}
+
 ISR(TIMER1_OVF_vect, ISR_NOBLOCK) {
   static uint8_t sub_clock;
   
