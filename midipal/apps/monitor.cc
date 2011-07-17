@@ -34,6 +34,9 @@ const prog_uint8_t monitor_factory_data[1] PROGMEM = { 0 };
 uint8_t Monitor::monitored_channel_;
 
 /* static */
+uint8_t Monitor::idle_counter_;
+
+/* static */
 const prog_AppInfo Monitor::app_info_ PROGMEM = {
   &OnInit, // void (*OnInit)();
   &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
@@ -69,7 +72,7 @@ const prog_AppInfo Monitor::app_info_ PROGMEM = {
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)();
   &OnRedraw, // uint8_t (*OnRedraw)();
-  NULL, // void (*OnIdle)();
+  &OnIdle, // void (*OnIdle)();
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)();
@@ -289,6 +292,9 @@ uint8_t Monitor::CheckChannel(uint8_t channel) {
 
 /* static */
 void Monitor::OnRawByte(uint8_t byte) {
+  if (byte != 0xfe && byte != 0xf8) {
+    idle_counter_ = 0;
+  }
   app.SendNow(byte);
 }
 
@@ -305,6 +311,17 @@ uint8_t Monitor::OnRedraw() {
     return 1;  // Prevent the default screen redraw handler to be called.
   } else {
     return 0;
+  }
+}
+
+/* static */
+void Monitor::OnIdle() {
+  if (idle_counter_ < 60) {
+    ++idle_counter_;
+    if (idle_counter_ == 60) {
+      ui.Clear();
+      ui.RefreshScreen();
+    }
   }
 }
 

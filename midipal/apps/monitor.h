@@ -64,12 +64,15 @@ class Monitor {
   static uint8_t OnRedraw();
   static uint8_t OnClick();
   
+  static void OnIdle();
+  
   static const prog_AppInfo app_info_;
   
  private:
   static void PrintString(uint8_t channel, uint8_t res_id);
   
   static uint8_t monitored_channel_;
+  static uint8_t idle_counter_;
   
   DISALLOW_COPY_AND_ASSIGN(Monitor);
 };
