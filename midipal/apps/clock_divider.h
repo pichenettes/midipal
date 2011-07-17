@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter app.
+// Clock divider app.
 
 #ifndef MIDIPAL_APPS_CLOCK_DIVIDER_H_
 #define MIDIPAL_APPS_CLOCK_DIVIDER_H_

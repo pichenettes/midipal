@@ -15,7 +15,7 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter app.
+// Clock divider app.
 
 #include "midipal/apps/clock_divider.h"
 
