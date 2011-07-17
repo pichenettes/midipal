@@ -26,6 +26,7 @@ bpm cntr
 cc knob
 chordmem
 clock
+divider
 chnfiltr
 chnmergr
 dispatch

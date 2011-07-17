@@ -34,6 +34,7 @@
 #include "midipal/apps/bpm_meter.h"
 #include "midipal/apps/cc_knob.h"
 #include "midipal/apps/chord_memory.h"
+#include "midipal/apps/clock_divider.h"
 #include "midipal/apps/clock_source.h"
 #include "midipal/apps/combiner.h"
 #include "midipal/apps/controller.h"
@@ -74,6 +75,7 @@ const AppInfo* registry[] = {
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
+  &apps::ClockDivider::app_info_,
 
   &apps::ClockSource::app_info_,
   &apps::CcKnob::app_info_,

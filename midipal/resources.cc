@@ -31,6 +31,7 @@ static const prog_char str_res_bpm_cntr[] PROGMEM = "bpm cntr";
 static const prog_char str_res_cc_knob[] PROGMEM = "cc knob";
 static const prog_char str_res_chordmem[] PROGMEM = "chordmem";
 static const prog_char str_res_clock[] PROGMEM = "clock";
+static const prog_char str_res_divider[] PROGMEM = "divider";
 static const prog_char str_res_chnfiltr[] PROGMEM = "chnfiltr";
 static const prog_char str_res_chnmergr[] PROGMEM = "chnmergr";
 static const prog_char str_res_dispatch[] PROGMEM = "dispatch";
@@ -268,6 +269,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cc_knob,
   str_res_chordmem,
   str_res_clock,
+  str_res_divider,
   str_res_chnfiltr,
   str_res_chnmergr,
   str_res_dispatch,
