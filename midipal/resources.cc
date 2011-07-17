@@ -122,7 +122,8 @@ static const prog_char str_res__c2[] PROGMEM = "#c2";
 static const prog_char str_res_cyc[] PROGMEM = "cyc";
 static const prog_char str_res_pol[] PROGMEM = "pol";
 static const prog_char str_res_rnd[] PROGMEM = "rnd";
-static const prog_char str_res_sta[] PROGMEM = "sta";
+static const prog_char str_res_stk[] PROGMEM = "stk";
+static const prog_char str_res__vel[] PROGMEM = "vel";
 static const prog_char str_res_dir[] PROGMEM = "dir";
 static const prog_char str_res_up[] PROGMEM = "up";
 static const prog_char str_res_dwn[] PROGMEM = "dwn";
@@ -360,7 +361,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cyc,
   str_res_pol,
   str_res_rnd,
-  str_res_sta,
+  str_res_stk,
+  str_res__vel,
   str_res_dir,
   str_res_up,
   str_res_dwn,

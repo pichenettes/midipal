@@ -1,6 +1,6 @@
 Midipal, the MIDI swiss army knife.
 
-A midi in, a midi out, a small display, an encoder ; 19 awesome features:
+A midi in, a midi out, a small display, an encoder ; 20 awesome features:
 
 * Active Sensing filter
 * MIDI monitor
@@ -9,6 +9,7 @@ A midi in, a midi out, a small display, an encoder ; 19 awesome features:
 * Note dispatcher / voice stealing / polyphonic driver
 * Channels merger
 * Channel filter
+* Clock divider
 * Clock source, with swing
 * CC and NRPN knob
 * 8 pots/sensors voltage reader/controller

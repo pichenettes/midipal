@@ -128,7 +128,8 @@ vel
 cyc
 pol
 rnd
-sta
+stk
+ vel
 
 dir
 up

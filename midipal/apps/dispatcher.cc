@@ -101,7 +101,7 @@ const prog_AppInfo Dispatcher::app_info_ PROGMEM = {
 void Dispatcher::OnInit() {
   voice_allocator.Init();
   ui.AddPage(STR_RES_INP, UNIT_INDEX, 0, 15);
-  ui.AddPage(STR_RES_MOD, STR_RES_CYC, 0, 3);
+  ui.AddPage(STR_RES_MOD, STR_RES_CYC, 0, 4);
   ui.AddPage(STR_RES_OUT, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 1, 16);
   counter_ = 0;
@@ -138,7 +138,7 @@ void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       if (counter_ >= num_voices_) {
         counter_ = 0;
       }
-      note_map.Put(note, (counter_ + base_channel_) & 0xf);
+      note_map.Put(note, counter_);
       break;
 
     case DISPATCHER_POLYPHONIC_ALLOCATOR:
@@ -152,6 +152,10 @@ void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     
     case DISPATCHER_STACK:
       note_map.Put(note, 0xff);
+      break;
+      
+    case DISPATCHER_VELOCITY:
+      note_map.Put(note, U8U8MulShift8(velocity << 1, num_voices_));
       break;
   }
   SendMessage(0x90, channel, note, velocity);
@@ -184,7 +188,7 @@ void Dispatcher::SendMessage(
         app.Send3(message | ((base_channel_ + i) & 0x0f), note, velocity);
       }
     } else {
-      app.Send3(message | (entry->value & 0x0f), note, velocity);
+      app.Send3(message | ((base_channel_ + entry->value) & 0x0f), note, velocity);
     }
     if (message == 0x80) {
       entry->note = 0xff;
