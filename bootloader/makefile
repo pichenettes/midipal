@@ -15,7 +15,7 @@ VERSION        = 0.1
 MCU_NAME       = 328
 TARGET         = muboot
 PACKAGES       = avrlib bootloader
-EXTRA_DEFINES  = -funsigned-char -fno-inline-small-functions
+EXTRA_DEFINES  = -funsigned-char -fno-inline-small-functions -DDISABLE_DEFAULT_UART_RX_ISR
 EXTRA_LD_FLAGS = ,--section-start=.text=0x7c00,--relax
 
 LFUSE          = ff

@@ -34,27 +34,24 @@ using namespace midi;
 using namespace midipal;
 
 // Midi input.
-Serial<MidiPort, 31250, BUFFERED, POLLED> midi_io;
+Serial<MidiPort, 31250, POLLED, POLLED> midi_io;
 MidiStreamParser<MidiHandler> midi_parser;
 
 volatile uint8_t num_clock_ticks = 0;
 volatile uint8_t num_clock_steps = 0;
 
-ISR(USART_RX_vect) {
-  LedIn::High();
-  SerialInput<SerialPort0>::Received();
-}
-
 ISR(TIMER1_OVF_vect, ISR_NOBLOCK) {
   static uint8_t sub_clock;
+
+  if (midi_io.readable()) {
+    LedIn::High();
+    midi_parser.PushByte(midi_io.ImmediateRead());
+  }
   
   // 4kHz
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
     LedOut::High();
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
-  }
-  if (midi_io.readable()) {
-    midi_parser.PushByte(midi_io.ImmediateRead());
   }
   
   while (num_clock_ticks) {
