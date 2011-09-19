@@ -77,7 +77,6 @@ void SysExHandler::ParseCommand() {
       break;
     
     case 0x02:
-    case 0x03:
       expected_size_ = 0;
       break;
 
@@ -110,8 +109,6 @@ void SysExHandler::AcceptCommand() {
       SystemReset(100);
       while (1);
       break;
-    case 0x03:
-      app.SetParameter(0, command_[1]);
     case 0x11:
       SendBlock((void*)(address.value), command_[1]);
       break;

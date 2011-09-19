@@ -12,3 +12,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 include midipal/makefile
+
+bake_all:	$(FIRMWARE)
+		echo "sck 10\nquit\n" | $(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e -tuF
+		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e -u \
+			-U efuse:w:0x$(EFUSE):m \
+			-U hfuse:w:0x$(HFUSE):m \
+			-U lfuse:w:0x$(LFUSE):m \
+			-U lock:w:0x$(LOCK):m
+		echo "sck 1\nquit\n" | $(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -e -tuF
+		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) \
+			-U flash:w:build/midipal/midipal.hex:i \
+			-U flash:w:build/muboot/muboot.hex:i \
+			-U eeprom:w:midipal/data/midipal_eeprom_golden.hex:i \
+			-U lock:w:0x$(LOCK):m
