@@ -22,6 +22,7 @@
 
 #include "midi/midi.h"
 #include "midipal/app.h"
+#include "midipal/sysex_handler.h"
 
 namespace midipal {
 
@@ -97,14 +98,17 @@ struct MidiHandler : public midi::MidiDevice {
   
   static void SysExStart() {
     app.OnSysExStart();
+    sysex_handler.Receive(0xf0);
   }
   
   static void SysExByte(uint8_t sysex_byte) {
     app.OnSysExByte(sysex_byte);
+    sysex_handler.Receive(sysex_byte);
   }
   
   static void SysExEnd() {
     app.OnSysExEnd();
+    sysex_handler.Receive(0xf7);
   }
   
   static void BozoByte(uint8_t bozo_byte) { }

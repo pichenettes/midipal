@@ -95,7 +95,6 @@ void FlashLedsError() {
   }
 }
 
-
 static const uint8_t sysex_header[] = {
   0xf0,  // <SysEx>
   0x00, 0x21, 0x02,  // Mutable instruments manufacturer id.

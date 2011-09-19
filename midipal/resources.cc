@@ -21,7 +21,7 @@
 // make resources
 
 
-#include "resources.h"
+#include "midipal/resources.h"
 
 namespace midipal {
 
@@ -46,6 +46,7 @@ static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
+static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
@@ -114,7 +115,6 @@ static const prog_char str_res_out[] PROGMEM = "out";
 static const prog_char str_res_spl[] PROGMEM = "spl";
 static const prog_char str_res_low[] PROGMEM = "low";
 static const prog_char str_res_upp[] PROGMEM = "upp";
-static const prog_char str_res__amt[] PROGMEM = "amt";
 static const prog_char str_res_not[] PROGMEM = "not";
 static const prog_char str_res_vel[] PROGMEM = "vel";
 static const prog_char str_res__c1[] PROGMEM = "#c1";
@@ -123,12 +123,10 @@ static const prog_char str_res_cyc[] PROGMEM = "cyc";
 static const prog_char str_res_pol[] PROGMEM = "pol";
 static const prog_char str_res_rnd[] PROGMEM = "rnd";
 static const prog_char str_res_stk[] PROGMEM = "stk";
-static const prog_char str_res__vel[] PROGMEM = "vel";
 static const prog_char str_res_dir[] PROGMEM = "dir";
 static const prog_char str_res_up[] PROGMEM = "up";
 static const prog_char str_res_dwn[] PROGMEM = "dwn";
 static const prog_char str_res_u_d[] PROGMEM = "u&d";
-static const prog_char str_res__rnd[] PROGMEM = "rnd";
 static const prog_char str_res_oct[] PROGMEM = "oct";
 static const prog_char str_res_dur[] PROGMEM = "dur";
 static const prog_char str_res_div[] PROGMEM = "div";
@@ -154,11 +152,10 @@ static const prog_char str_res__96[] PROGMEM = "/96";
 static const prog_char str_res_rep[] PROGMEM = "rep";
 static const prog_char str_res_trs[] PROGMEM = "trs";
 static const prog_char str_res_dpl[] PROGMEM = "dpl";
-static const prog_char str_res_off_[] PROGMEM = "off ";
+static const prog_char str_res_off_[] PROGMEM = "off_";
 static const prog_char str_res_mir[] PROGMEM = "mir";
 static const prog_char str_res_alt[] PROGMEM = "alt";
 static const prog_char str_res_trk[] PROGMEM = "trk";
-static const prog_char str_res___rnd[] PROGMEM = "rnd";
 static const prog_char str_res_roo[] PROGMEM = "roo";
 static const prog_char str_res_scl[] PROGMEM = "scl";
 static const prog_char str_res_voi[] PROGMEM = "voi";
@@ -200,18 +197,11 @@ static const prog_char str_res_g_[] PROGMEM = "G#";
 static const prog_char str_res_a[] PROGMEM = "A";
 static const prog_char str_res_a_[] PROGMEM = "A#";
 static const prog_char str_res_b[] PROGMEM = "B";
-static const prog_char str_res__c[] PROGMEM = "C";
 static const prog_char str_res_db[] PROGMEM = "Db";
-static const prog_char str_res__d[] PROGMEM = "D";
 static const prog_char str_res_eb[] PROGMEM = "Eb";
-static const prog_char str_res__e[] PROGMEM = "E";
-static const prog_char str_res__f[] PROGMEM = "F";
 static const prog_char str_res_gb[] PROGMEM = "Gb";
-static const prog_char str_res__g[] PROGMEM = "G";
 static const prog_char str_res_ab[] PROGMEM = "Ab";
-static const prog_char str_res__a[] PROGMEM = "A";
 static const prog_char str_res_bb[] PROGMEM = "Bb";
-static const prog_char str_res__b[] PROGMEM = "B";
 static const prog_char str_res_key[] PROGMEM = "key";
 static const prog_char str_res__[] PROGMEM = "";
 static const prog_char str_res_stp[] PROGMEM = "stp";
@@ -259,7 +249,6 @@ static const prog_char str_res_rs2[] PROGMEM = "rs2";
 static const prog_char str_res_s_h[] PROGMEM = "s&h";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
-static const prog_char str_res__not[] PROGMEM = "not";
 static const prog_char str_res_chd[] PROGMEM = "chd";
 
 
@@ -285,6 +274,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sequencr,
   str_res_cc_lfo,
   str_res_notenuke,
+  str_res_sysxdump,
   str_res__reset_,
   str_res_sndoff,
   str_res_rstctr,
@@ -353,7 +343,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_spl,
   str_res_low,
   str_res_upp,
-  str_res__amt,
+  str_res_amt,
   str_res_not,
   str_res_vel,
   str_res__c1,
@@ -362,12 +352,12 @@ PROGMEM const prog_char* string_table[] = {
   str_res_pol,
   str_res_rnd,
   str_res_stk,
-  str_res__vel,
+  str_res_vel,
   str_res_dir,
   str_res_up,
   str_res_dwn,
   str_res_u_d,
-  str_res__rnd,
+  str_res_rnd,
   str_res_oct,
   str_res_dur,
   str_res_div,
@@ -397,7 +387,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_mir,
   str_res_alt,
   str_res_trk,
-  str_res___rnd,
+  str_res_rnd,
   str_res_roo,
   str_res_scl,
   str_res_voi,
@@ -439,18 +429,18 @@ PROGMEM const prog_char* string_table[] = {
   str_res_a,
   str_res_a_,
   str_res_b,
-  str_res__c,
+  str_res_c,
   str_res_db,
-  str_res__d,
+  str_res_d,
   str_res_eb,
-  str_res__e,
-  str_res__f,
+  str_res_e,
+  str_res_f,
   str_res_gb,
-  str_res__g,
+  str_res_g,
   str_res_ab,
-  str_res__a,
+  str_res_a,
   str_res_bb,
-  str_res__b,
+  str_res_b,
   str_res_key,
   str_res__,
   str_res_stp,
@@ -498,7 +488,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_s_h,
   str_res_res,
   str_res_fre,
-  str_res__not,
+  str_res_not,
   str_res_chd,
 };
 

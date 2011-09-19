@@ -41,6 +41,7 @@ scale
 sequencr
 cc lfo
 notenuke
+sysxdump
 !reset!
 
 sndOff

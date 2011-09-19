@@ -97,10 +97,7 @@ const AppInfo* registry[] = {
 /* static */
 void App::Init() {
   // Load settings.
-  eeprom_read_block(
-      settings_data(),
-      (void*)(settings_offset()),
-      settings_size());
+  LoadSettings();
   OnIncrement(0);
   OnInit();
 }
@@ -108,6 +105,14 @@ void App::Init() {
 /* static */
 void App::SaveSettings() {
   eeprom_write_block(
+      settings_data(),
+      (void*)(settings_offset()),
+      settings_size());
+}
+
+/* static */
+void App::LoadSettings() {
+  eeprom_read_block(
       settings_data(),
       (void*)(settings_offset()),
       settings_size());

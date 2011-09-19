@@ -25,6 +25,7 @@
 #include "midi/midi.h"
 
 #include "midipal/display.h"
+#include "midipal/sysex_handler.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
@@ -108,6 +109,9 @@ uint8_t AppSelector::OnClick() {
     }
     return 1;
   } else if (selected_item_ == app.num_apps() + 1) {
+    // Backup
+    sysex_handler.SendBlock(0, 0);
+  } else if (selected_item_ == app.num_apps() + 2) {
     // Factory reset.
     for (uint8_t i = 1; i < app.num_apps(); ++i) {
       app.Launch(i);
@@ -128,8 +132,8 @@ uint8_t AppSelector::OnIncrement(int8_t increment) {
   selected_item_ += increment;
   if (selected_item_ < 1) {
     selected_item_ = 1;
-  } else if (selected_item_ > app.num_apps() + 1) {
-    selected_item_ = app.num_apps() + 1;
+  } else if (selected_item_ > app.num_apps() + 2) {
+    selected_item_ = app.num_apps() + 2;
   }
   return 1;
 }

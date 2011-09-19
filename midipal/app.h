@@ -113,6 +113,7 @@ class App {
   static void SaveSetting(uint8_t index);
   static void SaveSettingWord(uint16_t setting_id, uint16_t value);
   static void SaveSettings();
+  static void LoadSettings();
   static void ResetToFactorySettings();
   static void Launch(uint8_t app_index);
   
