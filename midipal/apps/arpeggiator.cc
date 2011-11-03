@@ -20,6 +20,7 @@
 #include "midipal/apps/arpeggiator.h"
 
 #include "avrlib/random.h"
+#include "midi/midi.h"
 
 #include "midipal/display.h"
 
@@ -31,6 +32,7 @@
 namespace midipal { namespace apps {
 
 using namespace avrlib;
+using namespace midi;
 
 enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_UP = 0,
@@ -65,6 +67,7 @@ uint16_t Arpeggiator::bitmask_;
 int8_t Arpeggiator::current_direction_;
 int8_t Arpeggiator::current_octave_;
 int8_t Arpeggiator::current_step_;
+uint8_t Arpeggiator::ignore_note_off_messages_;
 /* </static> */
 
 /* static */
@@ -74,7 +77,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
-  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  &OnControlChange, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
   NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
   NULL, // void (*OnAllSoundOff)(uint8_t);
@@ -132,6 +135,7 @@ void Arpeggiator::OnInit() {
   clock.Start();
   idle_ticks_ = 96;
   running_ = 0;
+  ignore_note_off_messages_ = 0;
 }
 
 /* static */
@@ -142,7 +146,8 @@ void Arpeggiator::OnRawMidiData(
    uint8_t accepted_channel) {
   // Forward everything except note on for the selected channel.
   if (status != (0x80 | channel_) && 
-      status != (0x90 | channel_)) {
+      status != (0x90 | channel_) &&
+      (status != (0xb0 | channel_) || data[0] != kHoldPedal)) {
     app.Send(status, data, data_size);
   }
 }
@@ -208,7 +213,7 @@ void Arpeggiator::OnNoteOff(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_) {
+  if (channel != channel_ || ignore_note_off_messages_) {
     return;
   }
   note_stack.NoteOff(note);
@@ -282,6 +287,18 @@ void Arpeggiator::StartArpeggio() {
     current_step_ = note_stack.size() - 1;
     current_octave_ = num_octaves_ - 1;
   }
+}
+
+/* static */
+void Arpeggiator::OnControlChange(uint8_t channel, uint8_t cc, uint8_t value) {
+  if (channel != channel_ || cc != kHoldPedal) {
+    return;
+  }
+  if (ignore_note_off_messages_ && !value) {
+    // Pedal was released, kill all pending arpeggios.
+    note_stack.Clear();
+  }
+  ignore_note_off_messages_ = value;
 }
 
 /* static */

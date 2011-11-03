@@ -36,6 +36,7 @@ class Arpeggiator {
      uint8_t accepted_channel);
   static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+  static void OnControlChange(uint8_t, uint8_t, uint8_t);
 
   static void OnContinue();
   static void OnStart();
@@ -74,6 +75,8 @@ class Arpeggiator {
   static int8_t current_direction_;
   static int8_t current_octave_;
   static int8_t current_step_;
+  
+  static uint8_t ignore_note_off_messages_;
   
   DISALLOW_COPY_AND_ASSIGN(Arpeggiator);
 };
