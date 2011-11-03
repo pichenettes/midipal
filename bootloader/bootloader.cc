@@ -41,9 +41,6 @@ Led<LedIn, LED_SOURCE_CURRENT> red_led;
 uint16_t page = 0;
 uint8_t rx_buffer[2 * (SPM_PAGESIZE + 1)];
 
-Word address;
-Word length;
-
 void (*main_entry_point)(void) = 0x0000;
 
 inline void Init() {
