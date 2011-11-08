@@ -55,7 +55,7 @@ struct ValueTransformation {
   }
   
   inline uint8_t swap_source() const {
-    return operation & 0x40;
+    return operation & 0x20;
   }
 };
 
