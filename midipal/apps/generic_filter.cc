@@ -78,7 +78,7 @@ const prog_AppInfo GenericFilter::app_info_ PROGMEM = {
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
   NULL, // uint8_t (*OnRedraw)();
   NULL, // void (*OnIdle)();
-  NULL, // void (*SetParameter)(uint8_t, uint8_t);
+  &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
   1, // settings_size
@@ -92,33 +92,6 @@ const prog_AppInfo GenericFilter::app_info_ PROGMEM = {
 void GenericFilter::OnInit() {
   ui.AddPage(STR_RES_PRG, UNIT_INDEX, 0, 3);
   memset(modifiers_, 0, sizeof(modifiers_));
-  /*modifiers_[0].channel_bitmask = 1;
-  modifiers_[0].message_type_bitmask = 0x03;
-  modifiers_[0].value[0].min = 0;
-  modifiers_[0].value[0].max = 127;
-  modifiers_[0].value[1].min = 0;
-  modifiers_[0].value[1].max = 127;
-  modifiers_[0].action = 0x13;
-  modifiers_[0].value_transformation[0].operation = 0;
-  modifiers_[0].value_transformation[0].argument[0] = 12;
-  modifiers_[0].value_transformation[0].argument[1] = 0;
-  modifiers_[0].value_transformation[1].operation = 5 | 0x80;
-  modifiers_[0].value_transformation[1].argument[0] = 1;
-  modifiers_[0].value_transformation[1].argument[1] = 127;
-  
-  modifiers_[1].channel_bitmask = 1;
-  modifiers_[1].message_type_bitmask = 0x40;
-  modifiers_[1].value[0].min = 0;
-  modifiers_[1].value[0].max = 127;
-  modifiers_[1].value[1].min = 0;
-  modifiers_[1].value[1].max = 127;
-  modifiers_[1].action = 0x00;
-  modifiers_[1].value_transformation[0].operation = 3;
-  modifiers_[1].value_transformation[0].argument[0] = 0;
-  modifiers_[1].value_transformation[0].argument[1] = 0;
-  modifiers_[1].value_transformation[1].operation = 6;
-  modifiers_[1].value_transformation[1].argument[0] = -12;
-  modifiers_[1].value_transformation[1].argument[1] = 12;*/
 }
 
 /* static */
@@ -173,6 +146,7 @@ void GenericFilter::OnRawMidiData(
         status = (status & 0xf0) | (channel & 0x0f);
       }
       
+      uint8_t new_data[2];
       // Apply a transformation on the values
       for (uint8_t j = 0; j < 2; ++j) {
         ValueTransformation t = modifier.value_transformation[j];
@@ -220,11 +194,13 @@ void GenericFilter::OnRawMidiData(
           value = 0;
         }
         if (t.wrap()) {
-          data[j] = value & 0x7f;
+          new_data[j] = value & 0x7f;
         } else {
-          data[j] = Clip(value, 0x00, 0x7f);
+          new_data[j] = Clip(value, 0x00, 0x7f);
         }
       }
+      data[0] = new_data[0];
+      data[1] = new_data[1];
     }
   }
   
