@@ -1,0 +1,91 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9em;
+  background-color: #ddd;
+}
+ 
+#page {
+  font-size: .875em;
+  line-height: 1.286em;
+  background-color: #fff;
+  padding: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+}
+
+#footer {
+  margin-top: 50px;
+  padding: 0px;
+  border-width: 1px 0px 0px 0px;
+  border-color: #ccc;
+  border-style: dotted;
+}
+
+h1 {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.9em;
+  line-height: 1.3em;
+  margin-bottom: 1em;
+  margin-top: 0;
+}
+ 
+h2 {
+  font-size: 1.6em;
+  font-weight: 400;
+  margin-bottom: 1em;
+  margin-top: 1.3em;
+}
+ 
+h3 {
+  font-size: 1.3em;
+  line-height: 1.3em;
+  margin-bottom: .769em;
+  margin-top: 1.3em;
+  color: #698;
+}
+ 
+a {
+  text-decoration: none;
+}
+ 
+a {
+  color: #698;
+  text-decoration: none;
+}
+ 
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  border: 0;
+}
+
+#logo-image {
+  margin-bottom: 20px;
+}
+
+.fixed_width {
+  font-family: monospace, Courier;
+}
+
+table {
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: #fff;
+  width: 75%;
+  border-collapse: collapse;
+  font-size: 1em;
+}
+
+table td {
+  padding: 3px;
+  border-width: 1px 0px;
+  border-color: #ccc;
+  border-style: dotted;
+}
+
+label {
+  font-weight: bold;
+}

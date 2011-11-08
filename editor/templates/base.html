@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>{{ title }}</title>
+<link type="text/css" rel="stylesheet" href="/static/main.css" />
+</head>
+<body>
+  <div id='page'>
+    <img src="static/shruti_logo.png" alt="Home" id="logo-image" />
+    {% block content %}
+    {% endblock %}
+    <div id='footer'>
+      <p>Mutable Instruments, 2011. <a href="http://github.com/pichenettes/midipal/editor">Source code</a>. This app has a high <a href="http://itec.uka.de/~buchty/sq80/customize.html">Rainer Buchty</a> <a href="http://variogram.com/latest/?p=12">Ratio</a>.</p>
+    </div>
+  </div>
+</body>
+</html>
