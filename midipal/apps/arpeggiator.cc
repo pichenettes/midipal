@@ -126,7 +126,7 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
-  ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 14);
+  ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 21);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_DUR, STR_RES_2_1, 0, 16);
   
