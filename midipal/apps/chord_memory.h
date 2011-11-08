@@ -24,6 +24,8 @@
 
 namespace midipal { namespace apps {
 
+static const uint8_t kMaxChordNotes = 10;
+
 class ChordMemory {
  public:
   ChordMemory() { }
@@ -50,8 +52,7 @@ class ChordMemory {
   
   static uint8_t channel_;
   static uint8_t num_notes_;
-  static uint8_t chord_[15];
-  
+  static uint8_t chord_[kMaxChordNotes];
   static uint8_t root_;
   
   DISALLOW_COPY_AND_ASSIGN(ChordMemory);

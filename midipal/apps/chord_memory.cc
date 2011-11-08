@@ -27,8 +27,8 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-const prog_uint8_t chord_memory_factory_data[17] PROGMEM = {
-  0, 4, 60, 63, 67, 70, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48
+const prog_uint8_t chord_memory_factory_data[kMaxChordNotes + 2] PROGMEM = {
+  0, 4, 60, 63, 67, 70, 48, 48, 48, 48, 48, 48,
 };
 
 /* static */
@@ -38,7 +38,7 @@ uint8_t ChordMemory::channel_;
 uint8_t ChordMemory::num_notes_;
 
 /* static */
-uint8_t ChordMemory::chord_[15];
+uint8_t ChordMemory::chord_[kMaxChordNotes];
 
 /* static */
 uint8_t ChordMemory::root_;
@@ -83,7 +83,7 @@ const prog_AppInfo ChordMemory::app_info_ PROGMEM = {
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  17, // settings_size
+  kMaxChordNotes + 2, // settings_size
   SETTINGS_CHORD_MEMORY, // settings_offset
   &channel_, // settings_data
   chord_memory_factory_data, // factory_data
@@ -150,11 +150,11 @@ void ChordMemory::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       chord_[num_notes_++] = note;
       // Rotate buffer of recorded notes to avoid overflow ; but do not
       // touch the first note.
-      if (num_notes_ == 15) {
-        for (uint8_t i = 1; i < 14; ++i) {
+      if (num_notes_ == kMaxChordNotes) {
+        for (uint8_t i = 1; i < kMaxChordNotes - 1; ++i) {
           chord_[i] = chord_[i + 1];
         }
-        num_notes_ = 14;
+        num_notes_ = kMaxChordNotes - 1;
       }
       app.Send3(0x90 | channel, note, velocity);
     } else {
