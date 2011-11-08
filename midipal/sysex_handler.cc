@@ -28,6 +28,7 @@
 #include "avrlib/watchdog_timer.h"
 
 #include "midipal/app.h"
+#include "midipal/apps/generic_filter.h"
 #include "midipal/hardware_config.h"
 #include "midipal/ui.h"
 
@@ -100,13 +101,13 @@ void SysExHandler::CopyScratchArea() {
       (uint8_t*)(SETTINGS_GENERIC_FILTER_PROGRAM));
   uint8_t* dst = (uint8_t*)(SETTINGS_GENERIC_FILTER_SETTINGS);
   uint8_t* src = (uint8_t*)(SETTINGS_GENERIC_FILTER_SETTINGS_DUMP_AREA);
-
   dst += active_program * 64;
 
   eeprom_read_block(&buffer_[0], src, 32);
   eeprom_write_block(&buffer_[0], dst, 32);
   eeprom_read_block(&buffer_[0], src + 32, 32);
   eeprom_write_block(&buffer_[0], dst + 32, 32);
+  apps::GenericFilter::SetParameter(0, active_program);
 }
 
 /* static */
