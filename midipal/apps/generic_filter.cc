@@ -167,12 +167,17 @@ void GenericFilter::OnRawMidiData(
       } else {
         channel += modifier.action;
       }
-      status = (status & 0xf0) | (channel & 0x0f);
+      if (modifier.promotes_to_cc()) {
+        status = 0xb0 | (channel & 0x0f);
+      } else {
+        status = (status & 0xf0) | (channel & 0x0f);
+      }
       
       // Apply a transformation on the values
       for (uint8_t j = 0; j < 2; ++j) {
         ValueTransformation t = modifier.value_transformation[j];
-        int16_t value = data[j];
+        uint8_t original_value = data[t.swap_source() ? (1 - j) : j];
+        int16_t value = original_value;
         switch (t.operation & 0x0f) {
           case VALUE_OEPRATION_ADD:
             value += t.argument[0];
@@ -211,7 +216,7 @@ void GenericFilter::OnRawMidiData(
             value += t.argument[0];
             break;
         }
-        if (t.preserves_zero() && data[j] == 0) {
+        if (t.preserves_zero() && original_value == 0) {
           value = 0;
         }
         if (t.wrap()) {

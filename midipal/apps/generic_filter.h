@@ -27,6 +27,7 @@ namespace midipal { namespace apps {
 static const uint8_t kNumModifiers = 4;
 
 enum ValueOperation {
+  VALUE_OEPRATION_NOP,
   VALUE_OEPRATION_ADD,
   VALUE_OPERATION_SUBTRACT,
   VALUE_OPERATION_INVERT,
@@ -50,6 +51,10 @@ struct ValueTransformation {
   }
   
   inline uint8_t wrap() const {
+    return operation & 0x40;
+  }
+  
+  inline uint8_t swap_source() const {
     return operation & 0x40;
   }
 };
@@ -96,6 +101,10 @@ struct Modifier {
   
   inline uint8_t forwards() const {
     return action & 0x40;
+  }
+  
+  inline uint8_t promotes_to_cc() const {
+    return action & 0x20;
   }
   
   inline uint8_t remaps_channel() const {
