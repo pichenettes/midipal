@@ -34,6 +34,7 @@ static const prog_char str_res_clock[] PROGMEM = "clock";
 static const prog_char str_res_divider[] PROGMEM = "divider";
 static const prog_char str_res_chnfiltr[] PROGMEM = "chnfiltr";
 static const prog_char str_res_chnmergr[] PROGMEM = "chnmergr";
+static const prog_char str_res_user_prg[] PROGMEM = "user prg";
 static const prog_char str_res_dispatch[] PROGMEM = "dispatch";
 static const prog_char str_res_drums[] PROGMEM = "drums";
 static const prog_char str_res_ear_game[] PROGMEM = "ear game";
@@ -250,6 +251,7 @@ static const prog_char str_res_s_h[] PROGMEM = "s&h";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
 static const prog_char str_res_chd[] PROGMEM = "chd";
+static const prog_char str_res_prg[] PROGMEM = "prg";
 
 
 PROGMEM const prog_char* string_table[] = {
@@ -262,6 +264,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_divider,
   str_res_chnfiltr,
   str_res_chnmergr,
+  str_res_user_prg,
   str_res_dispatch,
   str_res_drums,
   str_res_ear_game,
@@ -490,11 +493,13 @@ PROGMEM const prog_char* string_table[] = {
   str_res_fre,
   str_res_not,
   str_res_chd,
+  str_res_prg,
 };
 
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
-   21845,  30583,  62965,  46517,  28527,   2313,  18761,  21065,
-   18725,  56283,  30431,  43281,  54553,  28609,  53505,
+   21845,  62965,  46517,  54741,  43861,  22869,  38293,   2313,
+   37449,  21065,  18761,  54553,  27499,  23387,  30583,  28087,
+   22359,  28527,  30431,  43281,  28609,  53505,
 };
 const prog_uint16_t lut_res_drum_patterns[] PROGMEM = {
        0,  18705,   4369,  18761,   1281,    257,  21065,    261,

@@ -43,6 +43,7 @@
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/apps/ear_training_game.h"
 #include "midipal/apps/filter.h"
+#include "midipal/apps/generic_filter.h"
 #include "midipal/apps/lfo.h"
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/randomizer.h"
@@ -90,7 +91,9 @@ const AppInfo* registry[] = {
   &apps::Sequencer::app_info_,
   &apps::Lfo::app_info_,
 
-  &apps::EarTrainingGame::app_info_
+  &apps::EarTrainingGame::app_info_,
+  
+  &apps::GenericFilter::app_info_
 };
 
 

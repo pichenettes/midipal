@@ -29,6 +29,7 @@ clock
 divider
 chnfiltr
 chnmergr
+user prg
 dispatch
 drums
 ear game
@@ -278,4 +279,6 @@ res
 fre
  not
 chd
+
+prg
 """
