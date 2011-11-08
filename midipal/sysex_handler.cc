@@ -84,10 +84,29 @@ void SysExHandler::ParseCommand() {
       expected_size_ = 2;
       break;
       
+    case 0x73:
+      expected_size_ = 0;
+      break;
+      
     default:
       state_ = RECEIVING_FOOTER;
       break;
   }
+}
+
+/* static */
+void SysExHandler::CopyScratchArea() {
+  uint8_t active_program = eeprom_read_byte(
+      (uint8_t*)(SETTINGS_GENERIC_FILTER_PROGRAM));
+  uint8_t* dst = (uint8_t*)(SETTINGS_GENERIC_FILTER_SETTINGS);
+  uint8_t* src = (uint8_t*)(SETTINGS_GENERIC_FILTER_SETTINGS_DUMP_AREA);
+
+  dst += active_program * 64;
+
+  eeprom_read_block(&buffer_[0], src, 32);
+  eeprom_write_block(&buffer_[0], dst, 32);
+  eeprom_read_block(&buffer_[0], src + 32, 32);
+  eeprom_write_block(&buffer_[0], dst + 32, 32);
 }
 
 /* static */
@@ -108,6 +127,9 @@ void SysExHandler::AcceptCommand() {
       app.SaveSettings();
       SystemReset(100);
       while (1);
+      break;
+    case 0x73:
+      CopyScratchArea();
       break;
     case 0x11:
       SendBlock((void*)(address.value), command_[1]);

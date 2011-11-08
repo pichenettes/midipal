@@ -45,6 +45,8 @@ class SysExHandler {
   static void ParseCommand();
   static void AcceptCommand();
 
+  static void CopyScratchArea();
+
   static uint8_t buffer_[kSysExTransferBlockSize + 4];
   static uint16_t bytes_received_;
   static uint16_t expected_size_;
