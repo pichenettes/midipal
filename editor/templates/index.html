@@ -2,11 +2,155 @@
 
 {% block content %}
 
-<h1>MIDIpal custom filters programmer</h1>
-<h2>Filter 1</h2>
+<script language="javascript">
 
-<form action="/" method="get">
-  <input type="submit" value="Ok" />
+kNumArgumentsForOperator = [
+  0,  1,  1,  0,  1,  2,  2,  2
+];
+
+function hideControls() {
+  var i, j;
+  for (i = 0; i < 4; ++i) {
+    // Hide controls when the "Filter out" action is selected.
+    var hidden = document.getElementById('filter_' + i + '_action').value == 4;
+    var nodes = [
+        'filter_' + i + '_channel_remap_cell',
+        'filter_' + i + '_value_transformation_0_cell',
+        'filter_' + i + '_value_transformation_1_cell',
+        'filter_' + i + '_value_transformation_0_cell2',
+        'filter_' + i + '_value_transformation_1_cell2'
+    ];
+    for (j = 0; j < nodes.length; ++j) {
+      var node = document.getElementById(nodes[j]);
+      node.style.display = hidden ? 'none' : '';
+    }
+    
+    // Hide the arguments.
+    for (j = 0; j < 2; ++j) {
+      //filter_{{ filter.index }}_value_transformation_{{ vt.index }}
+      var operator = document.getElementById('filter_' + i + '_value_transformation_' + j).value;
+      var num_args = kNumArgumentsForOperator[operator];
+      document.getElementById('filter_' + i + '_value_transformation_' + j + '_argument_1').style.display = num_args >= 1 ? '' : 'none';
+      document.getElementById('filter_' + i + '_value_transformation_' + j + '_argument_2').style.display = num_args >= 2 ? '' : 'none';
+    }
+    
+    // Hide the whole filter section if it is not active.
+    var enabled = document.getElementById('filter_' + i + '_enabled').checked;
+    document.getElementById('filter_' + i).style.display = enabled ? '' : 'none';
+  }
+}
+
+function toggleChannel(index) {
+  for (i = 0; i < 16; ++i) {
+    var node = document.getElementById('filter_' + index + '_channel_' + i);
+    node.checked = !node.checked;
+  }
+}
+
+function toggleMessage(index) {
+  for (i = 0; i < 8; ++i) {
+    var node = document.getElementById('filter_' + index + '_message_' + i);
+    node.checked = !node.checked;
+  }
+}
+
+</script>
+
+<div ondisplay="hideControls();">&nbsp;</div>
+
+<h1>MIDIpal custom filters programmer</h1>
+
+<form action="/" method="post">
+
+  {% for filter in filters %}
+
+  <h2><input name="filter_{{ filter.index }}_enabled" id="filter_{{ filter.index }}_enabled" type="checkbox" onchange="hideControls();" {{ filter.checked }} /> Filter {{ filter.index_base_one }}</h2>
+  <div id="filter_{{ filter.index }}">
+  <table>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Channel</th>
+      <th>Event type</th>
+      <th>Data A (note, CC number, LSB)</th>
+      <th>Data B (velocity, CC value, MSB)</th>
+    <tr>
+    <tr>
+      <td><label>Match</label></td>
+      <td width="200px">
+        {% for channel in filter.channels %}
+        <div class="channel_block"><input name="filter_{{ filter.index }}_channel_{{ channel.index }}" id="filter_{{ filter.index }}_channel_{{ channel.index }}" type="checkbox" {{ channel.checked }} />{{ channel.text }}</div>
+        {% endfor %}
+        <input type="button" onclick="toggleChannel({{ filter.index }});" value="toggle">
+      </td>
+      <td>
+        {% for message in filter.messages %}
+        <input name="filter_{{ filter.index }}_message_{{ message.index }}" id="filter_{{ filter.index }}_message_{{ message.index }}" type="checkbox" {{ message.checked }} />{{ message.text }}<br/>
+        {% endfor %}
+        <input type="button" onclick="toggleMessage({{ filter.index }});" value="toggle">
+      </td>
+      <td>
+        <label>min</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_min" value="{{ filter.ranges.value_a_min }}" />
+        <label>max</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_max" value="{{ filter.ranges.value_a_max }}" />
+      </td>
+      <td>
+        <label>min</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_min" value="{{ filter.ranges.value_b_min }}" />
+        <label>max</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_max" value="{{ filter.ranges.value_b_max }}" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select name="filter_{{ filter.index }}_action" id="filter_{{ filter.index }}_action" onchange="hideControls();">
+          {% for action in filter.actions %}
+          <option value="{{ action.index }}" {{ action.selected}}>{{ action.text }}</option>
+          {% endfor %}
+        </select>
+      </td>
+      <td>
+        <div id="filter_{{ filter.index }}_channel_remap_cell">
+        <select name="filter_{{ filter.index }}_channel_action">
+          <option value="0" {{ filter.shift_channel}} >Shift by</option>
+          <option value="1" {{ filter.remap_channel}} >Reassign to</option>
+        </select>
+        <input type="text" class="fixed_width" size="2" name="filter_{{ filter.index }}_channel_shift" value="{{ filter.channel_shift }}" />
+        </div>
+      </td>
+      <td>&nbsp;</td>
+      {% for vt in filter.value_transformations %}
+      <td>
+        <div id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_cell">
+        <select name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}" id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}" onchange="hideControls();">
+          {% for op in vt.ops %}
+          <option value="{{ op.index }}" {{ op.selected }}>{{ op.text }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_argument_1" id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_argument_1" value="{{ vt.argument_1 }}" />
+        <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_argument_2" id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_argument_2" value="{{ vt.argument_2 }}" /><br/>
+        </div>
+      </td>
+      {% endfor %}
+      </div>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      {% for vt in filter.value_transformations %}
+      <td>
+        <div id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_cell2">
+        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_preserve_zero" type="checkbox" value="1" {{ vt.preserve_zero }} />Preserve zero</input><br/>
+        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_wrap" type="checkbox" value="1" {{ vt.wrap }} />Binary wrapping</input><br/>
+        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_swap" type="checkbox" value="1" {{ vt.wrap }} />Swap source</input>
+        </div>
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+  </div>
+  {% endfor %}
+
+<input type="submit" value="Download .syx" />
+
 </form>
+
 
 {% endblock %}

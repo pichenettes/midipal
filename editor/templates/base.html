@@ -3,13 +3,13 @@
 <title>{{ title }}</title>
 <link type="text/css" rel="stylesheet" href="/static/main.css" />
 </head>
-<body>
+<body {{ extra_body_tags }} >
   <div id='page'>
     <img src="static/shruti_logo.png" alt="Home" id="logo-image" />
     {% block content %}
     {% endblock %}
     <div id='footer'>
-      <p>Mutable Instruments, 2011. <a href="https://github.com/pichenettes/midipal/tree/master/editor">Source code</a>. This app has a high <a href="http://itec.uka.de/~buchty/sq80/customize.html">Rainer Buchty</a> <a href="http://variogram.com/latest/?p=12">Ratio</a>.</p>
+      <p>Mutable Instruments, 2011. <a href="https://github.com/pichenettes/midipal/tree/master/editor">Source code</a>.</p>
     </div>
   </div>
 </body>

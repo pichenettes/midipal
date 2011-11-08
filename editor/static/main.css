@@ -11,7 +11,7 @@ body {
   padding: 16px;
   margin-left: auto;
   margin-right: auto;
-  width: 960px;
+  width: 1024px;
 }
 
 #footer {
@@ -28,6 +28,13 @@ h1 {
   line-height: 1.3em;
   margin-bottom: 1em;
   margin-top: 0;
+}
+
+.channel_block {
+  width: 50px;
+  display: list-item;
+  float: left;
+  list-style-type: none;
 }
  
 h2 {
@@ -74,9 +81,13 @@ table {
   margin-left: 10px;
   margin-top: 10px;
   background-color: #fff;
-  width: 75%;
+  width: 95%;
   border-collapse: collapse;
   font-size: 1em;
+}
+
+table th {
+  text-align: left;
 }
 
 table td {
@@ -84,6 +95,9 @@ table td {
   border-width: 1px 0px;
   border-color: #ccc;
   border-style: dotted;
+  vertical-align: top;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 label {
