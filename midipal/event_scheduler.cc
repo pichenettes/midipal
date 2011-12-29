@@ -99,7 +99,7 @@ void EventScheduler::Schedule(
   } else {
     uint8_t insert_position = root_ptr_;
     while (entries_[insert_position].next &&
-           when > entries_[entries_[insert_position].next].when) {
+           when >= entries_[entries_[insert_position].next].when) {
       insert_position = entries_[insert_position].next;
     }
     entries_[free_slot].next = entries_[insert_position].next;
