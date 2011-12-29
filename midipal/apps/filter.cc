@@ -99,7 +99,7 @@ void Filter::OnRawMidiData(
   if (type == 0xf0) {
     app.Send(status, data, data_size);
   } else {
-    uint8_t channel = type & 0x0f;
+    uint8_t channel = status & 0x0f;
     if (channel_enabled_[channel]) {
       app.Send(status, data, data_size);
     }
