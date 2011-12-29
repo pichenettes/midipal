@@ -259,7 +259,7 @@ void Arpeggiator::Tick() {
       // Send a note on and schedule a note off later.
       app.Send3(0x90 | channel_, note, velocity);
       app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
-          midi_clock_tick_per_step, duration_));
+          midi_clock_tick_per_step, duration_) - 1);
       StepArpeggio();
     }
     bitmask_ <<= 1;
