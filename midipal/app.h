@@ -27,6 +27,7 @@ enum EepromSetting {
   // to allow for future improvements of apps.
   SETTINGS_MONITOR = 0,
   SETTINGS_0XFE_FILTER = 8,
+  SETTINGS_SYNC_LATCH = 10,
   SETTINGS_CLOCK_SOURCE = 16,
   SETTINGS_CC_KNOB = 24,
   SETTINGS_EAR_TRAINING = 32,

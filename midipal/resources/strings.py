@@ -43,6 +43,7 @@ sequencr
 cc lfo
 notenuke
 sysxdump
+syncltch
 !reset!
 
 sndOff
@@ -141,6 +142,7 @@ u&d
 oct
 dur
 div
+den
 
 4/1
 3/1

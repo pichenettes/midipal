@@ -48,6 +48,7 @@
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/randomizer.h"
 #include "midipal/apps/scale_processor.h"
+#include "midipal/apps/sync_latch.h"
 #include "midipal/apps/sequencer.h"
 #include "midipal/apps/splitter.h"
 
@@ -76,9 +77,11 @@ const AppInfo* registry[] = {
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
-  &apps::ClockDivider::app_info_,
 
+  &apps::ClockDivider::app_info_,
+  &apps::SyncLatch::app_info_,
   &apps::ClockSource::app_info_,
+
   &apps::CcKnob::app_info_,
   &apps::Controller::app_info_,
 
