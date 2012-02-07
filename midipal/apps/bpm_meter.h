@@ -34,7 +34,6 @@ class BpmMeter {
   static void OnStart();
   static void OnStop();
   static void OnContinue();
-  static void OnReset();
   static void OnRawByte(uint8_t byte);
 
   static uint8_t OnClick();

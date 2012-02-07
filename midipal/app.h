@@ -67,23 +67,11 @@ struct AppInfo {
   void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   void (*OnProgramChange)(uint8_t, uint8_t);
   void (*OnPitchBend)(uint8_t, uint16_t);
-  void (*OnAllSoundOff)(uint8_t);
-  void (*OnResetAllControllers)(uint8_t);
-  void (*OnLocalControl)(uint8_t, uint8_t);
-  void (*OnAllNotesOff)(uint8_t);
-  void (*OnOmniModeOff)(uint8_t);
-  void (*OnOmniModeOn)(uint8_t);
-  void (*OnMonoModeOn)(uint8_t, uint8_t);
-  void (*OnPolyModeOn)(uint8_t);
-  void (*OnSysExStart)();
   void (*OnSysExByte)(uint8_t);
-  void (*OnSysExEnd)();
   void (*OnClock)();
   void (*OnStart)();
   void (*OnContinue)();
   void (*OnStop)();
-  void (*OnActiveSensing)();
-  void (*OnReset)();
   uint8_t (*CheckChannel)(uint8_t);
   void (*OnRawByte)(uint8_t);
   void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -162,59 +150,9 @@ class App {
       (*app_info_.OnPitchBend)(channel, pitch_bend);
     }
   }
-  static void OnAllSoundOff(uint8_t channel) {
-    if (app_info_.OnAllSoundOff) {
-      (*app_info_.OnAllSoundOff)(channel);
-    }
-  }
-  static void OnResetAllControllers(uint8_t channel) {
-    if (app_info_.OnResetAllControllers) {
-      (*app_info_.OnResetAllControllers)(channel);
-    }
-  }
-  static void OnLocalControl(uint8_t channel, uint8_t state) {
-    if (app_info_.OnLocalControl) {
-      (*app_info_.OnLocalControl)(channel, state);
-    }
-  }
-  static void OnAllNotesOff(uint8_t channel) {
-    if (app_info_.OnAllNotesOff) {
-      (*app_info_.OnAllNotesOff)(channel);
-    }
-  }
-  static void OnOmniModeOff(uint8_t channel) {
-    if (app_info_.OnOmniModeOff) {
-      (*app_info_.OnOmniModeOff)(channel);
-    }
-  }
-  static void OnOmniModeOn(uint8_t channel) {
-    if (app_info_.OnOmniModeOn) {
-      (*app_info_.OnOmniModeOn)(channel);
-    }
-  }
-  static void OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
-    if (app_info_.OnMonoModeOn) {
-      (*app_info_.OnMonoModeOn)(channel, num_channels);
-    }
-  }
-  static void OnPolyModeOn(uint8_t channel) {
-    if (app_info_.OnPolyModeOn) {
-      (*app_info_.OnPolyModeOn)(channel);
-    }
-  }
-  static void OnSysExStart() {
-    if (app_info_.OnSysExStart) {
-      (*app_info_.OnSysExStart)();
-    }
-  }
   static void OnSysExByte(uint8_t sysex_byte) {
     if (app_info_.OnSysExByte) {
       (*app_info_.OnSysExByte)(sysex_byte);
-    }
-  }
-  static void OnSysExEnd() {
-    if (app_info_.OnSysExEnd) {
-      (*app_info_.OnSysExEnd)();
     }
   }
 
@@ -236,16 +174,6 @@ class App {
   static void OnStop() {
     if (app_info_.OnStop) {
       (*app_info_.OnStop)();
-    }
-  }
-  static void OnActiveSensing() {
-    if (app_info_.OnActiveSensing) {
-      (*app_info_.OnActiveSensing)();
-    }
-  }
-  static void OnReset() {
-    if (app_info_.OnReset) {
-      (*app_info_.OnReset)();
     }
   }
 

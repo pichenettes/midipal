@@ -198,35 +198,7 @@ void MidiStreamParser<Device>::MessageReceived(uint8_t status) {
       break;
 
     case 0xb0:
-      switch (data_[0]) {
-        case 0x78:
-          Device::AllSoundOff(lo);
-          break;
-        case 0x79:
-          Device::ResetAllControllers(lo);
-          break;
-        case 0x7a:
-          Device::LocalControl(lo, data_[1]);
-          break;
-        case 0x7b:
-          Device::AllNotesOff(lo);
-          break;
-        case 0x7c:
-          Device::OmniModeOff(lo);
-          break;
-        case 0x7d:
-          Device::OmniModeOn(lo);
-          break;
-        case 0x7e:
-          Device::MonoModeOn(lo, data_[1]);
-          break;
-        case 0x7f:
-          Device::PolyModeOn(lo);
-          break;
-        default:
-          Device::ControlChange(lo, data_[0], data_[1]);
-          break;
-      }
+      Device::ControlChange(lo, data_[0], data_[1]);
       break;
 
     case 0xc0:
