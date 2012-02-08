@@ -47,13 +47,16 @@ class Monitor {
   static void OnOmniModeOn(uint8_t channel);
   static void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
   static void OnPolyModeOn(uint8_t channel);
+  static void OnSysExStart();
   static void OnSysExByte(uint8_t sysex_byte);
+  static void OnSysExEnd();
 
   static void OnClock();
   static void OnStart();
   static void OnContinue();
   static void OnStop();
   static void OnActiveSensing();
+  static void OnReset();
   static void OnRawByte(uint8_t byte);
 
   static uint8_t CheckChannel(uint8_t channel);

@@ -76,6 +76,6 @@ uint8_t Constraint(uint8_t note, uint8_t root, uint8_t scale) {
 }
 
 /* extern */
-NoteMap<kNoteMapSize> note_map;
+NoteMap<32> note_map;
 
 }  // namespace midipal

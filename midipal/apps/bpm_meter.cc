@@ -51,11 +51,23 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
   NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
   NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  NULL, // void (*OnAllSoundOff)(uint8_t);
+  NULL, // void (*OnResetAllControllers)(uint8_t);
+  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
+  NULL, // void (*OnAllNotesOff)(uint8_t);
+  NULL, // void (*OnOmniModeOff)(uint8_t);
+  NULL, // void (*OnOmniModeOn)(uint8_t);
+  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
+  NULL, // void (*OnPolyModeOn)(uint8_t);
+  NULL, // void (*OnSysExStart)();
   NULL, // void (*OnSysExByte)(uint8_t);
+  NULL, // void (*OnSysExEnd)();
   &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
   &OnContinue, // void (*OnContinue)();
   &OnStop, // void (*OnStop)();
+  NULL, // void (*OnActiveSensing)();
+  &OnReset, // void (*OnReset)();
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -115,11 +127,13 @@ void BpmMeter::OnContinue() {
 }
 
 /* static */
+void BpmMeter::OnReset() {
+  Reset();
+}
+
+/* static */
 void BpmMeter::OnRawByte(uint8_t byte) {
   app.SendNow(byte);
-  if (byte == 0xff) {
-    Reset();
-  }
 }
 
 /* static */

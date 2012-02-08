@@ -31,20 +31,13 @@ struct Note {
   uint8_t note;
 };
 
-#ifdef POLY_SEQUENCER_FIRMWARE
-static const uint8_t kNoteMapSize = 2;
-#else
-static const uint8_t kNoteMapSize = 32;
-#endif  // POLY_SEQUENCER_FIRMWARE
-
-
 Note FactorizeMidiNote(uint8_t note);
 
 uint8_t Transpose(uint8_t note, int8_t by);
 
 uint8_t Constraint(uint8_t note, uint8_t root, uint8_t scale);
 
-extern NoteMap<kNoteMapSize> note_map;
+extern NoteMap<32> note_map;
 
 }  // namespace midipal
 

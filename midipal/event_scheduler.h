@@ -25,11 +25,7 @@
 
 namespace midipal {
 
-#ifdef POLY_SEQUENCER_FIRMWARE
-static const uint8_t kEventSchedulerSize = 4;
-#else
 static const uint8_t kEventSchedulerSize = 90;
-#endif  // POLY_SEQUENCER_FIRMWARE
 
 static const uint8_t kFreeSlot = 0xff;
 static const uint8_t kZombieSlot = 0xfe;
