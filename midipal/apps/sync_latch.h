@@ -24,6 +24,11 @@
 
 namespace midipal { namespace apps {
 
+enum SyncState {
+  STATE_RUNNING = 1,
+  STATE_ARMED = 2
+};
+
 class SyncLatch {
  public:
   SyncLatch() { }
@@ -32,6 +37,7 @@ class SyncLatch {
   static void OnRawByte(uint8_t byte);
 
   static void OnStart();
+  static void OnStop();
   static void OnClock();
 
   static uint8_t OnClick();
@@ -44,7 +50,7 @@ class SyncLatch {
   static uint8_t beat_division_;
   static uint8_t beat_counter_;
   static uint8_t step_counter_;
-  static uint8_t armed_;
+  static uint8_t state_;
   
   DISALLOW_COPY_AND_ASSIGN(SyncLatch);
 };

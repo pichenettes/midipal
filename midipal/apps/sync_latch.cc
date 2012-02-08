@@ -47,7 +47,7 @@ uint8_t SyncLatch::step_counter_;
 uint8_t SyncLatch::beat_counter_;
 
 /* static */
-uint8_t SyncLatch::armed_;
+uint8_t SyncLatch::state_;
 
 /* static */
 const prog_AppInfo SyncLatch::app_info_ PROGMEM = {
@@ -63,7 +63,7 @@ const prog_AppInfo SyncLatch::app_info_ PROGMEM = {
   &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
   NULL, // void (*OnContinue)();
-  &OnStart, // void (*OnStop)();
+  &OnStop, // void (*OnStop)();
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -92,7 +92,7 @@ void SyncLatch::OnInit() {
   // overridden, but this allows the default navigation handling to be used.
   ui.AddPage(0, UNIT_INTEGER, 1, 1);
   ui.AddPage(0, UNIT_INTEGER, 1, 1);
-  armed_ = 0;
+  state_ = 0;
 }
 
 /* static */
@@ -104,7 +104,12 @@ void SyncLatch::OnRawByte(uint8_t byte) {
 void SyncLatch::OnStart() {
   beat_counter_ = 0;
   step_counter_ = 0;
-  armed_ = 0;
+  state_ = STATE_RUNNING;
+}
+
+/* static */
+void SyncLatch::OnStop() {
+  state_ = 0;
 }
 
 /* static */
@@ -119,10 +124,14 @@ void SyncLatch::OnClock() {
   if (beat_counter_ >= num_beats_) {
     beat_counter_ = 0;
   }
-  if (armed_ && step_counter_ == 0 && beat_counter_ == 0) {
-    app.SendNow(0xfa);
-    armed_ = 0;
-    display.set_status('!');
+  if ((state_ & STATE_ARMED) && step_counter_ == 0 && beat_counter_ == 0) {
+    if (state_ & STATE_RUNNING) {
+      app.SendNow(0xfc);
+      state_ = 0;
+    } else {
+      app.SendNow(0xfa);
+      state_ = STATE_RUNNING;
+    }
   }
 }
 
@@ -132,7 +141,7 @@ uint8_t SyncLatch::OnClick() {
     beat_counter_ = 0;
     step_counter_ = 0;
   } else if (ui.page() == 2) {
-    armed_ = 1;
+    state_ |= STATE_ARMED;
   } else {
     return 0;
   }
@@ -148,10 +157,11 @@ uint8_t SyncLatch::OnRedraw() {
     UnsafeItoa(step_counter_, 2, &line_buffer[4]);
     PadRight(&line_buffer[4], 2, '0');
     line_buffer[3] = ':';
-    if (armed_) {
+    if (state_ & STATE_ARMED) {
       line_buffer[0] = '[';
       line_buffer[6] = ']';
     }
+    line_buffer[7] = (state_ & STATE_RUNNING) ? '>' : 0xa5;
     display.Print(0, line_buffer);
   } else if (ui.page() == 3) {
     ui.PrintString(STR_RES_RESET);
