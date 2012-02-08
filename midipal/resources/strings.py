@@ -42,6 +42,8 @@ scale
 sequencr
 cc lfo
 notenuke
+syncltch
+polyseq
 sysxdump
 !reset!
 
@@ -68,6 +70,9 @@ on
 no
 yes
 
+rec
+dub
+tie
 run
 bpm
 grv
@@ -141,6 +146,7 @@ u&d
 oct
 dur
 div
+den
 
 4/1
 3/1

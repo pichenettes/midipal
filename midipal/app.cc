@@ -46,8 +46,10 @@
 #include "midipal/apps/generic_filter.h"
 #include "midipal/apps/lfo.h"
 #include "midipal/apps/monitor.h"
+#include "midipal/apps/poly_sequencer.h"
 #include "midipal/apps/randomizer.h"
 #include "midipal/apps/scale_processor.h"
+#include "midipal/apps/sync_latch.h"
 #include "midipal/apps/sequencer.h"
 #include "midipal/apps/splitter.h"
 
@@ -65,6 +67,18 @@ Serial<MidiPort, 31250, DISABLED, POLLED> midi_out;
 /* static */
 AppInfo App::app_info_;
 
+#ifdef POLY_SEQUENCER_FIRMWARE
+
+const AppInfo* registry[] = {
+  &apps::AppSelector::app_info_,
+  &apps::Monitor::app_info_,
+  &apps::PolySequencer::app_info_,
+  &apps::SyncLatch::app_info_,
+  &apps::ClockSource::app_info_,
+};
+
+#else
+
 const AppInfo* registry[] = {
   &apps::AppSelector::app_info_,
   
@@ -76,9 +90,11 @@ const AppInfo* registry[] = {
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
-  &apps::ClockDivider::app_info_,
 
+  &apps::ClockDivider::app_info_,
+  &apps::SyncLatch::app_info_,
   &apps::ClockSource::app_info_,
+
   &apps::CcKnob::app_info_,
   &apps::Controller::app_info_,
 
@@ -95,6 +111,8 @@ const AppInfo* registry[] = {
   
   &apps::GenericFilter::app_info_
 };
+
+#endif  // POLY_SEQUENCER_FIRMWARE
 
 
 /* static */

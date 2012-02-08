@@ -247,10 +247,7 @@ void Ui::PrintKeyValuePair(
   // This is a hack to add the index id on the step sequencer pages.
   if (line_buffer[2] < 0x20 && line_buffer[1] == ' ') {
     UnsafeItoa(index + 1, 2, &line_buffer[0]);
-    AlignRight(&line_buffer[0], 2);
-    if (line_buffer[0] == ' ') {
-      line_buffer[0] = '0';
-    }
+    PadRight(&line_buffer[0], 2, '0');
   }
   
   switch (value_res_id) {

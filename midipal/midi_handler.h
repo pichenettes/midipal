@@ -64,40 +64,8 @@ struct MidiHandler : public midi::MidiDevice {
     app.OnPitchBend(channel, pitch_bend);
   }
 
-  static void AllSoundOff(uint8_t channel) {
-    app.OnAllSoundOff(channel);
-  }
-  
-  static void ResetAllControllers(uint8_t channel) {
-    app.OnResetAllControllers(channel);
-  }
-  
-  static void LocalControl(uint8_t channel, uint8_t state) {
-    app.OnLocalControl(channel, state);
-  }
-  
-  static void AllNotesOff(uint8_t channel) {
-    app.OnAllNotesOff(channel);
-  }
-  
-  static void OmniModeOff(uint8_t channel) {
-    app.OnOmniModeOff(channel);
-  }
-  
-  static void OmniModeOn(uint8_t channel) {
-    app.OnOmniModeOn(channel);
-  }
-  
-  static void MonoModeOn(uint8_t channel, uint8_t num_channels) {
-    app.OnMonoModeOn(channel, num_channels);
-  }
-  
-  static void PolyModeOn(uint8_t channel) {
-    app.OnPolyModeOn(channel);
-  }
-  
   static void SysExStart() {
-    app.OnSysExStart();
+    app.OnSysExByte(0xf0);
     sysex_handler.Receive(0xf0);
   }
   
@@ -107,7 +75,7 @@ struct MidiHandler : public midi::MidiDevice {
   }
   
   static void SysExEnd() {
-    app.OnSysExEnd();
+    app.OnSysExByte(0xf7);
     sysex_handler.Receive(0xf7);
   }
   
@@ -129,14 +97,6 @@ struct MidiHandler : public midi::MidiDevice {
     app.OnStop();
   }
   
-  static void ActiveSensing() {
-    app.OnActiveSensing();
-  }
-  
-  static void Reset() {
-    app.OnReset();
-  }
-
   static uint8_t CheckChannel(uint8_t channel) {
     return app.CheckChannel(channel);
   }
