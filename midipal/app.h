@@ -25,7 +25,7 @@ namespace midipal {
 enum EepromSetting {
   // Settings must be defined here. Please leave some space between them
   // to allow for future improvements of apps.
-  SETTINGS_POLY_SEQUENCER = 0,
+  SETTINGS_POLY_SEQUENCER = 24,
   SETTINGS_MONITOR = 0,
   SETTINGS_0XFE_FILTER = 8,
   SETTINGS_SYNC_LATCH = 10,
@@ -87,7 +87,7 @@ struct AppInfo {
   uint8_t (*GetParameter)(uint8_t);
   uint8_t (*CheckPageStatus)(uint8_t);
 
-  uint8_t settings_size;
+  uint16_t settings_size;
   uint16_t settings_offset;
   uint8_t* settings_data;
   const prog_uint8_t* factory_data;
@@ -103,7 +103,7 @@ class App {
   static void Init();
   
   // Can be used to save/load settings in EEPROM.
-  static void SaveSetting(uint8_t index);
+  static void SaveSetting(uint16_t index);
   static void SaveSettingWord(uint16_t setting_id, uint16_t value);
   static void SaveSettings();
   static void LoadSettings();
@@ -252,7 +252,7 @@ class App {
   }
   
   // Access to settings data structure
-  static uint8_t settings_size() { return app_info_.settings_size; }
+  static uint16_t settings_size() { return app_info_.settings_size; }
   static uint16_t settings_offset() { return app_info_.settings_offset; }
   static uint8_t* settings_data() { return app_info_.settings_data; }
   static const prog_uint8_t* factory_data() { return app_info_.factory_data; }

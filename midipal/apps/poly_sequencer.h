@@ -46,7 +46,8 @@ class PolySequencer {
   static void OnStart();
   static void OnStop();
   static void OnClock();
-  
+
+  static uint8_t OnRedraw();
   static void SetParameter(uint8_t key, uint8_t value);
   
   static const prog_AppInfo app_info_;
@@ -65,19 +66,20 @@ class PolySequencer {
   static uint8_t groove_amount_;
   static uint8_t clock_division_;  
   static uint8_t channel_;
-  static uint8_t tie_note_;
   static uint8_t rest_note_;
-  static uint8_t sequence_data_[kPSNumSteps * kPSNumTracks];
+  static uint8_t tie_note_;
   static uint8_t num_steps_;
+  static uint8_t sequence_data_[kPSNumSteps * kPSNumTracks];
   
   static uint8_t midi_clock_prescaler_;
   static uint8_t tick_;
   static uint8_t step_;
   static uint8_t edit_step_;
-  static uint8_t current_track_;
   static uint8_t root_note_;
   static uint8_t last_note_;
+  static uint8_t previous_rec_note_;
   static uint8_t pending_notes_[kPSNumTracks];
+  static uint8_t pending_notes_transposed_[kPSNumTracks];
   
   DISALLOW_COPY_AND_ASSIGN(PolySequencer);
 };

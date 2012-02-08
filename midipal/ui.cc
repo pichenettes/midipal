@@ -185,10 +185,14 @@ void Ui::DoEvents() {
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
       if (e.value == 1) {
         if (!app.OnClick()) {
-          editing_ ^= 1;
-          // Left the editing mode, save settings.
-          if (!editing_) {
-            app.SaveSetting(page_);
+          if (page_def.value_res_id == STR_RES_OFF) {
+            app.SetParameter(page_, app.GetParameter(page_) ? 0 : 1);
+          } else {
+            editing_ ^= 1;
+            // Left the editing mode, save settings.
+            if (!editing_) {
+              app.SaveSetting(page_);
+            }
           }
         }
       } else {

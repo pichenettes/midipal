@@ -25,6 +25,8 @@
 
 namespace midipal {
 
+static const prog_char str_res_syncltch[] PROGMEM = "syncltch";
+static const prog_char str_res_polyseq[] PROGMEM = "polyseq";
 static const prog_char str_res_0xfe_flt[] PROGMEM = "0xfe flt";
 static const prog_char str_res_arpeggio[] PROGMEM = "arpeggio";
 static const prog_char str_res_bpm_cntr[] PROGMEM = "bpm cntr";
@@ -47,8 +49,6 @@ static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
-static const prog_char str_res_syncltch[] PROGMEM = "syncltch";
-static const prog_char str_res_polyseq[] PROGMEM = "polyseq";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
@@ -261,6 +261,8 @@ static const prog_char str_res_prg[] PROGMEM = "prg";
 
 
 PROGMEM const prog_char* string_table[] = {
+  str_res_syncltch,
+  str_res_polyseq,
   str_res_0xfe_flt,
   str_res_arpeggio,
   str_res_bpm_cntr,
@@ -283,8 +285,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sequencr,
   str_res_cc_lfo,
   str_res_notenuke,
-  str_res_syncltch,
-  str_res_polyseq,
   str_res_sysxdump,
   str_res__reset_,
   str_res_sndoff,

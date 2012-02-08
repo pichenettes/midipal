@@ -81,30 +81,30 @@ extern const prog_uint16_t lut_res_increments[] PROGMEM;
 extern const prog_uint8_t chr_res_digits_10[] PROGMEM;
 extern const prog_uint8_t chr_res_sequencer_icons[] PROGMEM;
 extern const prog_uint8_t wav_res_lfo_waveforms[] PROGMEM;
-#define STR_RES_0XFE_FLT 0  // 0xfe flt
-#define STR_RES_ARPEGGIO 1  // arpeggio
-#define STR_RES_BPM_CNTR 2  // bpm cntr
-#define STR_RES_CC_KNOB 3  // cc knob
-#define STR_RES_CHORDMEM 4  // chordmem
-#define STR_RES_CLOCK 5  // clock
-#define STR_RES_DIVIDER 6  // divider
-#define STR_RES_CHNFILTR 7  // chnfiltr
-#define STR_RES_CHNMERGR 8  // chnmergr
-#define STR_RES_USER_PRG 9  // user prg
-#define STR_RES_DISPATCH 10  // dispatch
-#define STR_RES_DRUMS 11  // drums
-#define STR_RES_EAR_GAME 12  // ear game
-#define STR_RES_MONITOR 13  // monitor
-#define STR_RES_RANDOMIZ 14  // randomiz
-#define STR_RES_CONTRLLR 15  // contrllr
-#define STR_RES_SPLITTER 16  // splitter
-#define STR_RES_DELAY 17  // delay
-#define STR_RES_SCALE 18  // scale
-#define STR_RES_SEQUENCR 19  // sequencr
-#define STR_RES_CC_LFO 20  // cc lfo
-#define STR_RES_NOTENUKE 21  // notenuke
-#define STR_RES_SYNCLTCH 22  // syncltch
-#define STR_RES_POLYSEQ 23  // polyseq
+#define STR_RES_SYNCLTCH 0  // syncltch
+#define STR_RES_POLYSEQ 1  // polyseq
+#define STR_RES_0XFE_FLT 2  // 0xfe flt
+#define STR_RES_ARPEGGIO 3  // arpeggio
+#define STR_RES_BPM_CNTR 4  // bpm cntr
+#define STR_RES_CC_KNOB 5  // cc knob
+#define STR_RES_CHORDMEM 6  // chordmem
+#define STR_RES_CLOCK 7  // clock
+#define STR_RES_DIVIDER 8  // divider
+#define STR_RES_CHNFILTR 9  // chnfiltr
+#define STR_RES_CHNMERGR 10  // chnmergr
+#define STR_RES_USER_PRG 11  // user prg
+#define STR_RES_DISPATCH 12  // dispatch
+#define STR_RES_DRUMS 13  // drums
+#define STR_RES_EAR_GAME 14  // ear game
+#define STR_RES_MONITOR 15  // monitor
+#define STR_RES_RANDOMIZ 16  // randomiz
+#define STR_RES_CONTRLLR 17  // contrllr
+#define STR_RES_SPLITTER 18  // splitter
+#define STR_RES_DELAY 19  // delay
+#define STR_RES_SCALE 20  // scale
+#define STR_RES_SEQUENCR 21  // sequencr
+#define STR_RES_CC_LFO 22  // cc lfo
+#define STR_RES_NOTENUKE 23  // notenuke
 #define STR_RES_SYSXDUMP 24  // sysxdump
 #define STR_RES__RESET_ 25  // !reset!
 #define STR_RES_SNDOFF 26  // sndOff

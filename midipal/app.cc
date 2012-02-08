@@ -73,8 +73,8 @@ const AppInfo* registry[] = {
   &apps::AppSelector::app_info_,
   &apps::Monitor::app_info_,
   &apps::PolySequencer::app_info_,
-  &apps::SyncLatch::app_info_,
   &apps::ClockSource::app_info_,
+  &apps::SyncLatch::app_info_,
 };
 
 #else
@@ -140,7 +140,7 @@ void App::LoadSettings() {
 }
 
 /* static */
-void App::SaveSetting(uint8_t index) {
+void App::SaveSetting(uint16_t index) {
   eeprom_write_byte(
       (uint8_t*)(settings_offset()) + index,
       settings_data()[index]);

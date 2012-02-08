@@ -44,19 +44,20 @@ uint8_t PolySequencer::groove_template_;
 uint8_t PolySequencer::groove_amount_;
 uint8_t PolySequencer::clock_division_;  
 uint8_t PolySequencer::channel_;
-uint8_t PolySequencer::tie_note_;
 uint8_t PolySequencer::rest_note_;
-uint8_t PolySequencer::sequence_data_[kPSNumTracks * kPSNumSteps];
+uint8_t PolySequencer::tie_note_;
 uint8_t PolySequencer::num_steps_;
+uint8_t PolySequencer::sequence_data_[kPSNumTracks * kPSNumSteps];
 
 uint8_t PolySequencer::midi_clock_prescaler_;
 uint8_t PolySequencer::tick_;
 uint8_t PolySequencer::step_;
 uint8_t PolySequencer::edit_step_;
-uint8_t PolySequencer::current_track_;
 uint8_t PolySequencer::root_note_;
 uint8_t PolySequencer::last_note_;
+uint8_t PolySequencer::previous_rec_note_;
 uint8_t PolySequencer::pending_notes_[kPSNumTracks];
+uint8_t PolySequencer::pending_notes_transposed_[kPSNumTracks];
 /* </static> */
 
 /* static */
@@ -82,12 +83,12 @@ const prog_AppInfo PolySequencer::app_info_ PROGMEM = {
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
-  NULL, // uint8_t (*OnRedraw)();
+  &OnRedraw, // uint8_t (*OnRedraw)();
   NULL, // void (*OnIdle)();
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  1, // settings_size
+  12 + kPSNumTracks * kPSNumSteps, // settings_size
   SETTINGS_POLY_SEQUENCER, // settings_offset
   &running_, // settings_data
   sequencer_factory_data, // factory_data
@@ -105,12 +106,14 @@ void PolySequencer::OnInit() {
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
+  ui.AddPage(STR_RES_RST, UNIT_NOTE, 0, 127);
   ui.AddPage(STR_RES_TIE, UNIT_NOTE, 0, 127);
-  ui.AddPage(STR_RES_RST, UNIT_NOTE, 0, 1);
   clock.Update(bpm_, groove_template_, groove_amount_);
   SetParameter(4, bpm_);
   clock.Start();
   running_ = 0;
+  recording_ = 0;
+  overdubbing_ = 0;
 }
 
 /* static */
@@ -137,12 +140,11 @@ void PolySequencer::SetParameter(uint8_t key, uint8_t value) {
   }
   if (key == 1) {
     if (value == 1) {
-      overdubbing_ = 0;
-      recording_ = 1;
       edit_step_ = 0;
+      recording_ = 1;
+      overdubbing_ = 0;
       num_steps_ = 0;
-      memset(sequence_data_, 0x00, sizeof(sequence_data_));
-      current_track_ = 0;
+      previous_rec_note_ = 0xff;
     } else {
       recording_ = 0;
     }
@@ -152,20 +154,34 @@ void PolySequencer::SetParameter(uint8_t key, uint8_t value) {
       edit_step_ = 0;
       recording_ = 0;
       overdubbing_ = 1;
-      ++current_track_;
-      if (current_track_ >= kPSNumTracks) {
-        current_track_ = 0;
-      }
+      previous_rec_note_ = 0xff;
     } else {
       overdubbing_ = 0;
     }
   }
   static_cast<uint8_t*>(&running_)[key] = value;
-  if (key < 5) {
+  if (key < 7) {
     clock.Update(bpm_, groove_template_, groove_amount_);
   }
   midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, clock_division_);
+}
+
+/* static */
+uint8_t PolySequencer::OnRedraw() {
+  if ((ui.page() == 2 || ui.page() == 1) && (recording_ | overdubbing_)) {
+    memset(line_buffer, 0, kLcdWidth);
+    line_buffer[0] = 0xa5;
+    UnsafeItoa(edit_step_, 3, &line_buffer[1]);
+    PadRight(&line_buffer[1], 3, ' ');
+    UnsafeItoa(num_steps_, 2, &line_buffer[5]);
+    PadRight(&line_buffer[5], 3, ' ');
+    line_buffer[4] = '/';
+    display.Print(0, line_buffer);
+  } else {
+    return 0;
+  }
+  return 1;
 }
 
 /* static */
@@ -184,10 +200,8 @@ void PolySequencer::OnStop() {
 
 /* static */
 void PolySequencer::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
-    recording_ = 0;
-    overdubbing_ = 0;
-    running_ = 1;
+  if (!running_) {
+    Start();
   }
 }
 
@@ -213,20 +227,48 @@ void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   }
   
   if (recording_ || overdubbing_) {
-    if (note == tie_note_) {
-      note = 0xfe;
+    uint8_t step_data = note;
+    if (note == tie_note_ && previous_rec_note_ != 0xff) {
+      step_data = 0x80 | previous_rec_note_;
     } else if (note == rest_note_) {
-      note = 0xff;
+      step_data = 0xff;
+    } else {
+      previous_rec_note_ = note;
     }
-    sequence_data_[current_track_ * kPSNumSteps + edit_step_] = note;
-
-    // Auto-overdub if max number of steps is reached.
+    if (recording_) {
+      for (uint8_t i = 0; i < kPSNumTracks; ++i) {
+        sequence_data_[i * kPSNumSteps + edit_step_] = 0xff;
+        app.SaveSetting(i * kPSNumSteps + edit_step_ + 12);
+      }
+    }
+    if (step_data != 0xff) {
+      // Find a free slot to record the note.
+      uint8_t slot_found = 0;
+      for (uint8_t i = 0; i < kPSNumTracks; ++i) {
+        if (sequence_data_[i * kPSNumSteps + edit_step_] == 0xff) {
+          sequence_data_[i * kPSNumSteps + edit_step_] = step_data;
+          app.SaveSetting(i * kPSNumSteps + edit_step_ + 12);
+          slot_found = 1;
+          break;
+        }
+      }
+      if (!slot_found) {
+        sequence_data_[edit_step_] = step_data;
+        app.SaveSetting(edit_step_ + 12);
+      }
+    }
+    
     edit_step_ = edit_step_ + 1;
     if (edit_step_ >= kPSNumSteps) {
+      // Auto-overdub if max number of steps is reached.
+      edit_step_ = 0;
+    }
+    if (overdubbing_ && edit_step_ >= num_steps_) {
       edit_step_ = 0;
     }
     if (recording_) {
       num_steps_ = edit_step_;
+      app.SaveSetting(11);
     }
   } else if (running_) {
     if (clk_mode_ == CLOCK_MODE_INTERNAL && note == last_note_) {
@@ -239,10 +281,12 @@ void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     }
   }
   
-  if (!running_) {
+  if (!running_ && note != rest_note_ && note != tie_note_) {
     app.Send3(0x90 | channel, note, velocity);
   }
-  last_note_ = note;
+  if (running_ && !recording_ && !overdubbing_) {
+    last_note_ = note;
+  }
 }
 
 /* static */
@@ -251,7 +295,7 @@ void PolySequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
     return;
   }
   
-  if (!running_) {
+  if (!running_ && note != rest_note_ && note != tie_note_) {
     app.Send3(0x80 | channel, note, velocity);
   }
 }
@@ -265,12 +309,10 @@ void PolySequencer::Stop() {
     app.SendNow(0xfc);
   }
   running_ = 0;
-  root_note_ = 0;
-  last_note_ = 0;
   // Stop pending notes.
   for (uint8_t i = 0; i < kPSNumTracks; ++i) {
     if (pending_notes_[i] != 0xff) {
-      app.Send3(0x80 | channel_, pending_notes_[i], 0);
+      app.Send3(0x80 | channel_, pending_notes_transposed_[i], 0);
     }
   }
 }
@@ -283,11 +325,9 @@ void PolySequencer::Start() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
     app.SendNow(0xfa);
   }
-  if (root_note_ == 0 || last_note_ == 0) {
-    root_note_ = 60;
-    last_note_ = 60;
-  } 
   tick_ = midi_clock_prescaler_ - 1;
+  root_note_ = 60;
+  last_note_ = 60;
   running_ = 1;
   step_ = 0;
   memset(pending_notes_, 0xff, kPSNumTracks);
@@ -301,10 +341,19 @@ void PolySequencer::Tick() {
     
     // Send note off.
     for (uint8_t i = 0; i < kPSNumTracks; ++i) {
-      if (pending_notes_[i] != 0xff &&
-          sequence_data_[i * kPSNumSteps + step_] != 0xfe) {
-        app.Send3(0x80 | channel_, pending_notes_[i], 0);
-        pending_notes_[i] = 0xff;
+      if (pending_notes_[i] != 0xff) {
+        uint8_t is_tied = 0;
+        for (uint8_t j = 0; j < kPSNumTracks; ++j) {
+          if (sequence_data_[j * kPSNumSteps + step_] == \
+              (pending_notes_[i] | 0x80)) {
+            is_tied = 1;
+            break;
+          }
+        }
+        if (!is_tied) {
+          app.Send3(0x80 | channel_, pending_notes_transposed_[i], 0);
+          pending_notes_[i] = 0xff;
+        }
       }
     }
     
@@ -312,10 +361,11 @@ void PolySequencer::Tick() {
     for (uint8_t i = 0; i < kPSNumTracks; ++i) {
       uint8_t note = sequence_data_[i * kPSNumSteps + step_];
       if (note < 0x80) {
-        note = note + last_note_ - root_note_;
+        pending_notes_[i] = note;
+        note += last_note_ - root_note_;
+        pending_notes_transposed_[i] = note;
         app.Send3(0x90 | channel_, note, 100);
       }
-      pending_notes_[i] = note;
     }
     ++step_;
     if (step_ >= num_steps_) {

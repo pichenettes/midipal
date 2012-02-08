@@ -20,6 +20,8 @@
 # Resource strings for the midipal.
 
 strings = """
+syncltch
+polyseq
 0xfe flt
 arpeggio
 bpm cntr
@@ -42,8 +44,6 @@ scale
 sequencr
 cc lfo
 notenuke
-syncltch
-polyseq
 sysxdump
 !reset!
 
