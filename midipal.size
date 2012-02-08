@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  30744	     50	   1904	  32698	   7fba	build/midipal/midipal.elf
+  16690	     12	   1755	  18457	   4819	build/midipal/midipal.elf

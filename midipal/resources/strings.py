@@ -42,8 +42,9 @@ scale
 sequencr
 cc lfo
 notenuke
-sysxdump
 syncltch
+polyseq
+sysxdump
 !reset!
 
 sndOff
@@ -69,6 +70,9 @@ on
 no
 yes
 
+rec
+dub
+tie
 run
 bpm
 grv

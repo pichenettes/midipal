@@ -47,8 +47,9 @@ static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
-static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res_syncltch[] PROGMEM = "syncltch";
+static const prog_char str_res_polyseq[] PROGMEM = "polyseq";
+static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
@@ -71,6 +72,9 @@ static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
 static const prog_char str_res_no[] PROGMEM = "no";
 static const prog_char str_res_yes[] PROGMEM = "yes";
+static const prog_char str_res_rec[] PROGMEM = "rec";
+static const prog_char str_res_dub[] PROGMEM = "dub";
+static const prog_char str_res_tie[] PROGMEM = "tie";
 static const prog_char str_res_run[] PROGMEM = "run";
 static const prog_char str_res_bpm[] PROGMEM = "bpm";
 static const prog_char str_res_grv[] PROGMEM = "grv";
@@ -279,8 +283,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sequencr,
   str_res_cc_lfo,
   str_res_notenuke,
-  str_res_sysxdump,
   str_res_syncltch,
+  str_res_polyseq,
+  str_res_sysxdump,
   str_res__reset_,
   str_res_sndoff,
   str_res_rstctr,
@@ -303,6 +308,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_on,
   str_res_no,
   str_res_yes,
+  str_res_rec,
+  str_res_dub,
+  str_res_tie,
   str_res_run,
   str_res_bpm,
   str_res_grv,
