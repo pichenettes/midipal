@@ -25,6 +25,7 @@ namespace midipal {
 enum EepromSetting {
   // Settings must be defined here. Please leave some space between them
   // to allow for future improvements of apps.
+  SETTINGS_POLY_SEQUENCER = 0,
   SETTINGS_MONITOR = 0,
   SETTINGS_0XFE_FILTER = 8,
   SETTINGS_SYNC_LATCH = 10,
