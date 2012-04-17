@@ -17,6 +17,7 @@ TARGET         = midipal
 PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/apps
 RESOURCES      = midipal/resources
 SYSEX_FLAGS    = --page_size=64 --device_id=3
+#  -DPOLY_SEQUENCER_FIRMWARE
 EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR
 
 LFUSE          = ff

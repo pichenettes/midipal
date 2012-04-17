@@ -46,23 +46,11 @@ const prog_AppInfo Monitor::app_info_ PROGMEM = {
   &OnControlChange, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   &OnProgramChange, // void (*OnProgramChange)(uint8_t, uint8_t);
   &OnPitchBend, // void (*OnPitchBend)(uint8_t, uint16_t);
-  &OnAllSoundOff, // void (*OnAllSoundOff)(uint8_t);
-  &OnResetAllControllers, // void (*OnResetAllControllers)(uint8_t);
-  &OnLocalControl, // void (*OnLocalControl)(uint8_t, uint8_t);
-  &OnAllNotesOff, // void (*OnAllNotesOff)(uint8_t);
-  &OnOmniModeOff, // void (*OnOmniModeOff)(uint8_t);
-  &OnOmniModeOn, // void (*OnOmniModeOn)(uint8_t);
-  &OnMonoModeOn, // void (*OnMonoModeOn)(uint8_t, uint8_t);
-  &OnPolyModeOn, // void (*OnPolyModeOn)(uint8_t);
-  &OnSysExStart, // void (*OnSysExStart)();
   &OnSysExByte, // void (*OnSysExByte)(uint8_t);
-  &OnSysExEnd, // void (*OnSysExEnd)();
   &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
   &OnContinue, // void (*OnContinue)();
   &OnStop, // void (*OnStop)();
-  &OnActiveSensing, // void (*OnActiveSensing)();
-  &OnReset, // void (*OnReset)();
   &CheckChannel, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -142,12 +130,40 @@ void Monitor::OnControlChange(
     uint8_t value) {
   // 01234567
   // 1 C45 67
-  ui.Clear();
-  ui.PrintChannel(&line_buffer[0], channel);
-  line_buffer[2] = '#';
-  ui.PrintHex(&line_buffer[3], controller);
-  ui.PrintHex(&line_buffer[6], value);
-  ui.RefreshScreen();
+  switch (controller) {
+    case 0x78:
+      OnAllSoundOff(channel);
+      break;
+    case 0x79:
+      OnResetAllControllers(channel);
+      break;
+    case 0x7a:
+      OnLocalControl(channel, value);
+      break;
+    case 0x7b:
+      OnAllNotesOff(channel);
+      break;
+    case 0x7c:
+      OnOmniModeOff(channel);
+      break;
+    case 0x7d:
+      OnOmniModeOn(channel);
+      break;
+    case 0x7e:
+      OnMonoModeOn(channel, value);
+      break;
+    case 0x7f:
+      OnPolyModeOn(channel);
+      break;
+    default:
+      ui.Clear();
+      ui.PrintChannel(&line_buffer[0], channel);
+      line_buffer[2] = '#';
+      ui.PrintHex(&line_buffer[3], controller);
+      ui.PrintHex(&line_buffer[6], value);
+      ui.RefreshScreen();
+      break;
+  }
 }
 
 /* static */
@@ -230,18 +246,14 @@ void Monitor::OnPolyModeOn(uint8_t channel) {
 }
 
 /* static */
-void Monitor::OnSysExStart() {
-  PrintString(0xff, STR_RES_SYSX__);
-}
-
-/* static */
 void Monitor::OnSysExByte(uint8_t sysex_byte) {
-  PrintString(0xff, STR_RES__SYSX_);
-}
-
-/* static */
-void Monitor::OnSysExEnd() {
-  PrintString(0xff, STR_RES___SYSX);
+  if (sysex_byte == 0xf0) {
+    PrintString(0xff, STR_RES_SYSX__);
+  } else if (sysex_byte == 0xf7) {
+    PrintString(0xff, STR_RES___SYSX);
+  } else {
+    PrintString(0xff, STR_RES__SYSX_);
+  }
 }
 
 /* static */
@@ -280,11 +292,6 @@ void Monitor::OnActiveSensing() {
 }
 
 /* static */
-void Monitor::OnReset() {
-  PrintString(0xff, STR_RES_RESET);
-}
-
-/* static */
 uint8_t Monitor::CheckChannel(uint8_t channel) {
   return (ui.editing() == 0) && 
       ((monitored_channel_ == 0) || (channel + 1 == monitored_channel_));
@@ -294,6 +301,12 @@ uint8_t Monitor::CheckChannel(uint8_t channel) {
 void Monitor::OnRawByte(uint8_t byte) {
   if (byte != 0xfe && byte != 0xf8) {
     idle_counter_ = 0;
+  }
+  if (byte == 0xfe) {
+    OnActiveSensing();
+  }
+  if (byte == 0xff) {
+    PrintString(0xff, STR_RES_RESET);
   }
   app.SendNow(byte);
 }

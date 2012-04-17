@@ -1,4 +1,4 @@
-// Copyright 2011 Olivier Gillet.
+// Copyright 2012 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -15,30 +15,46 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Active Sensing filter app.
+// Sync counter app.
 
-#ifndef MIDIPAL_APPS_ACTIVE_SENSING_FILTER_H_
-#define MIDIPAL_APPS_ACTIVE_SENSING_FILTER_H_
+#ifndef MIDIPAL_APPS_SYNC_LATCH_H_
+#define MIDIPAL_APPS_SYNC_LATCH_H_
 
 #include "midipal/app.h"
 
 namespace midipal { namespace apps {
 
-class ActiveSensingFilter {
+enum SyncState {
+  STATE_RUNNING = 1,
+  STATE_ARMED = 2
+};
+
+class SyncLatch {
  public:
-  ActiveSensingFilter() { }
+  SyncLatch() { }
 
   static void OnInit();
   static void OnRawByte(uint8_t byte);
+
+  static void OnStart();
+  static void OnStop();
+  static void OnClock();
+
+  static uint8_t OnClick();
+  static uint8_t OnRedraw();
   
   static const prog_AppInfo app_info_;
   
  private:
-  static uint8_t enabled_;
+  static uint8_t num_beats_;
+  static uint8_t beat_division_;
+  static uint8_t beat_counter_;
+  static uint8_t step_counter_;
+  static uint8_t state_;
   
-  DISALLOW_COPY_AND_ASSIGN(ActiveSensingFilter);
+  DISALLOW_COPY_AND_ASSIGN(SyncLatch);
 };
 
 } }  // namespace midipal::apps
 
-#endif // MIDIPAL_APPS_ACTIVE_SENSING_FILTER_H_
+#endif // MIDIPAL_APPS_SYNC_LATCH_H_

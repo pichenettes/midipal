@@ -20,7 +20,8 @@
 # Resource strings for the midipal.
 
 strings = """
-0xfe flt
+syncltch
+polyseq
 arpeggio
 bpm cntr
 cc knob
@@ -68,6 +69,9 @@ on
 no
 yes
 
+rec
+dub
+tie
 run
 bpm
 grv
@@ -140,7 +144,9 @@ u&d
  rnd
 oct
 dur
+lat
 div
+den
 
 4/1
 3/1

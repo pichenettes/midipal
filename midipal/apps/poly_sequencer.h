@@ -15,18 +15,22 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Arpeggiator app.
+// Sequencer app.
 
-#ifndef MIDIPAL_APPS_ARPEGGIATOR_H_
-#define MIDIPAL_APPS_ARPEGGIATOR_H_
+#ifndef MIDIPAL_APPS_POLY_SEQUENCER_H_
+#define MIDIPAL_APPS_POLY_SEQUENCER_H_
 
 #include "midipal/app.h"
 
 namespace midipal { namespace apps {
+  
+static const uint8_t kPSNumTracks = 6;
+static const uint8_t kPSNumSteps = 128;
 
-class Arpeggiator {
+
+class PolySequencer {
  public:
-  Arpeggiator() { }
+  PolySequencer() { }
 
   static void OnInit();
   static void OnRawMidiData(
@@ -36,53 +40,50 @@ class Arpeggiator {
      uint8_t accepted_channel);
   static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-  static void OnControlChange(uint8_t, uint8_t, uint8_t);
-
+  
+  static void OnInternalClockTick();
   static void OnContinue();
   static void OnStart();
   static void OnStop();
   static void OnClock();
-  static void OnInternalClockTick();
 
+  static uint8_t OnRedraw();
   static void SetParameter(uint8_t key, uint8_t value);
   
   static const prog_AppInfo app_info_;
   
- protected:
-  static void Tick();
+ private:
+  static void Stop();
   static void Start();
-  static void StartArpeggio();
-  static void StepArpeggio();
+  static void Tick();
   
   static uint8_t running_;
-   
+  static uint8_t recording_;
+  static uint8_t overdubbing_;
   static uint8_t clk_mode_;
   static uint8_t bpm_;
   static uint8_t groove_template_;
   static uint8_t groove_amount_;
+  static uint8_t clock_division_;  
   static uint8_t channel_;
-  static uint8_t direction_;
-  static uint8_t num_octaves_;
-  static uint8_t pattern_;
-  static uint8_t clock_division_;
-  static uint8_t duration_;
-  static uint8_t latch_;
+  static uint8_t rest_note_;
+  static uint8_t tie_note_;
+  static uint8_t num_steps_;
+  static uint8_t sequence_data_[kPSNumSteps * kPSNumTracks];
   
   static uint8_t midi_clock_prescaler_;
-  
   static uint8_t tick_;
-  static uint8_t idle_ticks_;
-  static uint16_t bitmask_;
-  static int8_t current_direction_;
-  static int8_t current_octave_;
-  static int8_t current_step_;
+  static uint8_t step_;
+  static uint8_t edit_step_;
+  static uint8_t root_note_;
+  static uint8_t last_note_;
+  static uint8_t previous_rec_note_;
+  static uint8_t pending_notes_[kPSNumTracks];
+  static uint8_t pending_notes_transposed_[kPSNumTracks];
   
-  static uint8_t ignore_note_off_messages_;
-  static uint8_t recording_;
-  
-  DISALLOW_COPY_AND_ASSIGN(Arpeggiator);
+  DISALLOW_COPY_AND_ASSIGN(PolySequencer);
 };
 
 } }  // namespace midipal::apps
 
-#endif // MIDIPAL_APPS_ARPEGGIATOR_H_
+#endif // MIDIPAL_APPS_POLY_SEQUENCER_H_

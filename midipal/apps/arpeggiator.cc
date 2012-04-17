@@ -41,8 +41,8 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_RANDOM,
 };
 
-const prog_uint8_t arpeggiator_factory_data[10] PROGMEM = {
-  0, 120, 0, 0, 0, 0, 1, 0, 12, 14
+const prog_uint8_t arpeggiator_factory_data[11] PROGMEM = {
+  0, 120, 0, 0, 0, 0, 1, 0, 12, 14, 0
 };
 
 /* <static> */
@@ -58,6 +58,7 @@ uint8_t Arpeggiator::num_octaves_;
 uint8_t Arpeggiator::pattern_;
 uint8_t Arpeggiator::clock_division_;
 uint8_t Arpeggiator::duration_;
+uint8_t Arpeggiator::latch_;
 
 uint8_t Arpeggiator::midi_clock_prescaler_;
 
@@ -68,6 +69,7 @@ int8_t Arpeggiator::current_direction_;
 int8_t Arpeggiator::current_octave_;
 int8_t Arpeggiator::current_step_;
 uint8_t Arpeggiator::ignore_note_off_messages_;
+uint8_t Arpeggiator::recording_;
 /* </static> */
 
 /* static */
@@ -80,23 +82,11 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &OnControlChange, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
   NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
-  NULL, // void (*OnAllSoundOff)(uint8_t);
-  NULL, // void (*OnResetAllControllers)(uint8_t);
-  NULL, // void (*OnLocalControl)(uint8_t, uint8_t);
-  NULL, // void (*OnAllNotesOff)(uint8_t);
-  NULL, // void (*OnOmniModeOff)(uint8_t);
-  NULL, // void (*OnOmniModeOn)(uint8_t);
-  NULL, // void (*OnMonoModeOn)(uint8_t, uint8_t);
-  NULL, // void (*OnPolyModeOn)(uint8_t);
-  NULL, // void (*OnSysExStart)();
   NULL, // void (*OnSysExByte)(uint8_t);
-  NULL, // void (*OnSysExEnd)();
   &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
   &OnContinue, // void (*OnContinue)();
   &OnStop, // void (*OnStop)();
-  NULL, // void (*OnActiveSensing)();
-  NULL, // void (*OnReset)();
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -110,7 +100,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  10, // settings_size
+  11, // settings_size
   SETTINGS_ARPEGGIATOR, // settings_offset
   &clk_mode_, // settings_data
   arpeggiator_factory_data, // factory_data
@@ -129,6 +119,7 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 21);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_DUR, STR_RES_2_1, 0, 16);
+  ui.AddPage(STR_RES_LAT, STR_RES_OFF, 0, 1);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
   SetParameter(8, clock_division_);  // Force an update of the prescaler.
@@ -136,6 +127,7 @@ void Arpeggiator::OnInit() {
   idle_ticks_ = 96;
   running_ = 0;
   ignore_note_off_messages_ = 0;
+  recording_ = 0;
 }
 
 /* static */
@@ -205,6 +197,10 @@ void Arpeggiator::OnNoteOn(
     }
     idle_ticks_ = 0;
   }
+  if (latch_ && !recording_) {
+    note_stack.Clear();
+    recording_ = 1;
+  }
   note_stack.NoteOn(note, velocity);
 }
 
@@ -216,7 +212,13 @@ void Arpeggiator::OnNoteOff(
   if (channel != channel_ || ignore_note_off_messages_) {
     return;
   }
-  note_stack.NoteOff(note);
+  if (!latch_) {
+    note_stack.NoteOff(note);
+  } else {
+    if (note == note_stack.most_recent_note().note) {
+      recording_ = 0;
+    }
+  }
 }
 
 /* static */
@@ -275,6 +277,7 @@ void Arpeggiator::Start() {
   bitmask_ = 1;
   tick_ = midi_clock_prescaler_ - 1;
   current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
+  recording_ = 0;
   StartArpeggio();
 }
 
@@ -353,6 +356,13 @@ void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
     // When changing the arpeggio direction, reset the pattern.
     current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
     StartArpeggio();
+  }
+  if (key == 10) {
+    // When disabling latch mode, clear the note stack.
+    if (value == 0) {
+      note_stack.Clear();
+      recording_ = 0;
+    }
   }
 }
 

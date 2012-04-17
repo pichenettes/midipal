@@ -25,8 +25,10 @@ namespace midipal {
 enum EepromSetting {
   // Settings must be defined here. Please leave some space between them
   // to allow for future improvements of apps.
+  SETTINGS_POLY_SEQUENCER = 24,
   SETTINGS_MONITOR = 0,
   SETTINGS_0XFE_FILTER = 8,
+  SETTINGS_SYNC_LATCH = 10,
   SETTINGS_CLOCK_SOURCE = 16,
   SETTINGS_CC_KNOB = 24,
   SETTINGS_EAR_TRAINING = 32,
@@ -66,23 +68,11 @@ struct AppInfo {
   void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   void (*OnProgramChange)(uint8_t, uint8_t);
   void (*OnPitchBend)(uint8_t, uint16_t);
-  void (*OnAllSoundOff)(uint8_t);
-  void (*OnResetAllControllers)(uint8_t);
-  void (*OnLocalControl)(uint8_t, uint8_t);
-  void (*OnAllNotesOff)(uint8_t);
-  void (*OnOmniModeOff)(uint8_t);
-  void (*OnOmniModeOn)(uint8_t);
-  void (*OnMonoModeOn)(uint8_t, uint8_t);
-  void (*OnPolyModeOn)(uint8_t);
-  void (*OnSysExStart)();
   void (*OnSysExByte)(uint8_t);
-  void (*OnSysExEnd)();
   void (*OnClock)();
   void (*OnStart)();
   void (*OnContinue)();
   void (*OnStop)();
-  void (*OnActiveSensing)();
-  void (*OnReset)();
   uint8_t (*CheckChannel)(uint8_t);
   void (*OnRawByte)(uint8_t);
   void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
@@ -97,7 +87,7 @@ struct AppInfo {
   uint8_t (*GetParameter)(uint8_t);
   uint8_t (*CheckPageStatus)(uint8_t);
 
-  uint8_t settings_size;
+  uint16_t settings_size;
   uint16_t settings_offset;
   uint8_t* settings_data;
   const prog_uint8_t* factory_data;
@@ -113,7 +103,7 @@ class App {
   static void Init();
   
   // Can be used to save/load settings in EEPROM.
-  static void SaveSetting(uint8_t index);
+  static void SaveSetting(uint16_t index);
   static void SaveSettingWord(uint16_t setting_id, uint16_t value);
   static void SaveSettings();
   static void LoadSettings();
@@ -161,59 +151,9 @@ class App {
       (*app_info_.OnPitchBend)(channel, pitch_bend);
     }
   }
-  static void OnAllSoundOff(uint8_t channel) {
-    if (app_info_.OnAllSoundOff) {
-      (*app_info_.OnAllSoundOff)(channel);
-    }
-  }
-  static void OnResetAllControllers(uint8_t channel) {
-    if (app_info_.OnResetAllControllers) {
-      (*app_info_.OnResetAllControllers)(channel);
-    }
-  }
-  static void OnLocalControl(uint8_t channel, uint8_t state) {
-    if (app_info_.OnLocalControl) {
-      (*app_info_.OnLocalControl)(channel, state);
-    }
-  }
-  static void OnAllNotesOff(uint8_t channel) {
-    if (app_info_.OnAllNotesOff) {
-      (*app_info_.OnAllNotesOff)(channel);
-    }
-  }
-  static void OnOmniModeOff(uint8_t channel) {
-    if (app_info_.OnOmniModeOff) {
-      (*app_info_.OnOmniModeOff)(channel);
-    }
-  }
-  static void OnOmniModeOn(uint8_t channel) {
-    if (app_info_.OnOmniModeOn) {
-      (*app_info_.OnOmniModeOn)(channel);
-    }
-  }
-  static void OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
-    if (app_info_.OnMonoModeOn) {
-      (*app_info_.OnMonoModeOn)(channel, num_channels);
-    }
-  }
-  static void OnPolyModeOn(uint8_t channel) {
-    if (app_info_.OnPolyModeOn) {
-      (*app_info_.OnPolyModeOn)(channel);
-    }
-  }
-  static void OnSysExStart() {
-    if (app_info_.OnSysExStart) {
-      (*app_info_.OnSysExStart)();
-    }
-  }
   static void OnSysExByte(uint8_t sysex_byte) {
     if (app_info_.OnSysExByte) {
       (*app_info_.OnSysExByte)(sysex_byte);
-    }
-  }
-  static void OnSysExEnd() {
-    if (app_info_.OnSysExEnd) {
-      (*app_info_.OnSysExEnd)();
     }
   }
 
@@ -235,16 +175,6 @@ class App {
   static void OnStop() {
     if (app_info_.OnStop) {
       (*app_info_.OnStop)();
-    }
-  }
-  static void OnActiveSensing() {
-    if (app_info_.OnActiveSensing) {
-      (*app_info_.OnActiveSensing)();
-    }
-  }
-  static void OnReset() {
-    if (app_info_.OnReset) {
-      (*app_info_.OnReset)();
     }
   }
 
@@ -322,7 +252,7 @@ class App {
   }
   
   // Access to settings data structure
-  static uint8_t settings_size() { return app_info_.settings_size; }
+  static uint16_t settings_size() { return app_info_.settings_size; }
   static uint16_t settings_offset() { return app_info_.settings_offset; }
   static uint8_t* settings_data() { return app_info_.settings_data; }
   static const prog_uint8_t* factory_data() { return app_info_.factory_data; }

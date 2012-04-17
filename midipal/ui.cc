@@ -185,10 +185,14 @@ void Ui::DoEvents() {
     } else if (e.control_type == CONTROL_ENCODER_CLICK) {
       if (e.value == 1) {
         if (!app.OnClick()) {
-          editing_ ^= 1;
-          // Left the editing mode, save settings.
-          if (!editing_) {
-            app.SaveSetting(page_);
+          if (page_def.value_res_id == STR_RES_OFF) {
+            app.SetParameter(page_, app.GetParameter(page_) ? 0 : 1);
+          } else {
+            editing_ ^= 1;
+            // Left the editing mode, save settings.
+            if (!editing_) {
+              app.SaveSetting(page_);
+            }
           }
         }
       } else {
@@ -247,10 +251,7 @@ void Ui::PrintKeyValuePair(
   // This is a hack to add the index id on the step sequencer pages.
   if (line_buffer[2] < 0x20 && line_buffer[1] == ' ') {
     UnsafeItoa(index + 1, 2, &line_buffer[0]);
-    AlignRight(&line_buffer[0], 2);
-    if (line_buffer[0] == ' ') {
-      line_buffer[0] = '0';
-    }
+    PadRight(&line_buffer[0], 2, '0');
   }
   
   switch (value_res_id) {
