@@ -66,6 +66,7 @@ class Arpeggiator {
   static uint8_t pattern_;
   static uint8_t clock_division_;
   static uint8_t duration_;
+  static uint8_t latch_;
   
   static uint8_t midi_clock_prescaler_;
   
@@ -77,6 +78,7 @@ class Arpeggiator {
   static int8_t current_step_;
   
   static uint8_t ignore_note_off_messages_;
+  static uint8_t recording_;
   
   DISALLOW_COPY_AND_ASSIGN(Arpeggiator);
 };

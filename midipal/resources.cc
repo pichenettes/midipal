@@ -135,6 +135,7 @@ static const prog_char str_res_dwn[] PROGMEM = "dwn";
 static const prog_char str_res_u_d[] PROGMEM = "u&d";
 static const prog_char str_res_oct[] PROGMEM = "oct";
 static const prog_char str_res_dur[] PROGMEM = "dur";
+static const prog_char str_res_lat[] PROGMEM = "lat";
 static const prog_char str_res_div[] PROGMEM = "div";
 static const prog_char str_res_den[] PROGMEM = "den";
 static const prog_char str_res_4_1[] PROGMEM = "4/1";
@@ -374,6 +375,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_rnd,
   str_res_oct,
   str_res_dur,
+  str_res_lat,
   str_res_div,
   str_res_den,
   str_res_4_1,

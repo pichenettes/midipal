@@ -28,7 +28,6 @@
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
 
-#include "midipal/apps/active_sensing_filter.h"
 #include "midipal/apps/app_selector.h"
 #include "midipal/apps/arpeggiator.h"
 #include "midipal/apps/bpm_meter.h"
@@ -85,7 +84,6 @@ const AppInfo* registry[] = {
   &apps::Monitor::app_info_,
   &apps::BpmMeter::app_info_,
   
-  &apps::ActiveSensingFilter::app_info_,
   &apps::Filter::app_info_,
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,

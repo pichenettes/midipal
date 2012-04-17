@@ -22,7 +22,6 @@
 strings = """
 syncltch
 polyseq
-0xfe flt
 arpeggio
 bpm cntr
 cc knob
@@ -145,6 +144,7 @@ u&d
  rnd
 oct
 dur
+lat
 div
 den
 

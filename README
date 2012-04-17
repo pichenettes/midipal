@@ -2,7 +2,6 @@ Midipal, the MIDI swiss army knife.
 
 A midi in, a midi out, a small display, an encoder ; 20 awesome features:
 
-* Active Sensing filter
 * MIDI monitor
 * BPM counter
 * Keyboard splitter
@@ -20,5 +19,6 @@ A midi in, a midi out, a small display, an encoder ; 20 awesome features:
 * Sequencer
 * CC lfo
 * Tempo-synchronized note delay (with transposition and decay velocity)
+* Slave start/stop synchronizer (à la Mungo Sync)
 * Scale processor / harmonizer
 * Ear training game
