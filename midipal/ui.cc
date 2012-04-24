@@ -187,6 +187,7 @@ void Ui::DoEvents() {
         if (!app.OnClick()) {
           if (page_def.value_res_id == STR_RES_OFF) {
             app.SetParameter(page_, app.GetParameter(page_) ? 0 : 1);
+            app.SaveSetting(page_);
           } else {
             editing_ ^= 1;
             // Left the editing mode, save settings.
