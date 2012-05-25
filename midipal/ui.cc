@@ -135,6 +135,8 @@ uint8_t Ui::page_index() {
 void Ui::DoEvents() {
   uint8_t redraw = 0;
   while (queue_.available()) {
+    queue_.Touch();
+    
     uint8_t p = page_;
     while (p >= num_declared_pages_ && num_declared_pages_ && stride_) {
       p -= stride_;
