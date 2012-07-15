@@ -139,7 +139,7 @@ void Sequencer::OnInit() {
   ui.AddPage(STR_RES_NOT, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_DUR, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_VEL, STR_RES_OFF, 0, 1);
-  ui.AddPage(STR_RES_CC_KNOB, STR_RES_OFF, 0, 1);
+  ui.AddPage(STR_RES_CC_LFO, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_STP, UNIT_INTEGER, 1, 32);
   ui.AddRepeatedPage(STR_RES_1, UNIT_NOTE, 0, 127, 32);
   ui.AddRepeatedPage(STR_RES_2, STR_RES_2_1, 0, 16, 32);
