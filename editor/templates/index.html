@@ -139,7 +139,7 @@ function toggleMessage(index) {
         <div id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_cell2">
         <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_preserve_zero" type="checkbox" value="1" {{ vt.preserve_zero }} />Preserve zero</input><br/>
         <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_wrap" type="checkbox" value="1" {{ vt.wrap }} />Binary wrapping</input><br/>
-        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_swap" type="checkbox" value="1" {{ vt.wrap }} />Swap source</input>
+        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_swap" type="checkbox" value="1" {{ vt.swap }} />Swap source</input>
         </div>
       </td>
       {% endfor %}
@@ -149,8 +149,6 @@ function toggleMessage(index) {
   {% endfor %}
 
 <input type="submit" value="Download .syx" />
-
 </form>
-
 
 {% endblock %}

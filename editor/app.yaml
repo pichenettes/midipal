@@ -13,3 +13,6 @@ handlers:
 
 - url: .*
   script: main.py
+
+- url: /retrieve
+  script: main.py

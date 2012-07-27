@@ -113,6 +113,7 @@ class Modifier(object):
     self._channel_shift = 0
     self._delay = 0
     self._value_transformation = [(0, 0, 0), (0, 0, 0)]
+    self.enabled = False
   
   def set_from_request(self, attributes):
     for i in xrange(16):
@@ -148,6 +149,25 @@ class Modifier(object):
       argument_1 = fn1(attributes(prefix + '_argument_1'))
       argument_2 = fn2(attributes(prefix + '_argument_2'))
       self._value_transformation.append((op, argument_1, argument_2))
+  
+  def from_bytestream(self, bytes):
+    self._channel_bitmask = bytes[0] | (bytes[1] << 8)
+    self._message_type_bitmask = bytes[2]
+    self._ranges[0] = bytes[3], bytes[4]
+    self._ranges[1] = bytes[5], bytes[6]
+    self._channel_remap = (bytes[7] & 0x10) != 0
+    self._channel_shift = bytes[7] & 0xf
+    if self._channel_remap:
+      self._channel_shift += 1
+    self._action = 0
+    if bytes[7] & 0x20:
+      self._action |= 2
+    if bytes[7] & 0x40:
+      self._action |= 1
+    if bytes[7] & 0x80:
+      self._action = 4
+    self._value_transformation[0] = bytes[10], bytes[11], bytes[12]
+    self._value_transformation[1] = bytes[13], bytes[14], bytes[15]
   
   def get_bytestream(self):
     bytes = [0] * 16
@@ -232,19 +252,25 @@ class Modifier(object):
     d['value_transformations'] = value_transformations
     return d
 
+class RetrieveHandler(webapp.RequestHandler):
+  
+  def get(self):
+    self.response.headers['Content-Type'] = 'text/html'
+    template_path = os.path.join(TEMPLATE_PATH, 'retrieve.html')
+    self.response.out.write(template.render(template_path, {}))
+
 
 class MainHandler(webapp.RequestHandler):
 
-  def get(self):
+  def show_edit_page(self, filters):
     self.response.headers['Content-Type'] = 'text/html'
     template_path = os.path.join(TEMPLATE_PATH, 'index.html')
-    filters = [Modifier() for i in xrange(4)]
     filters_dicts = []
     for i, f in enumerate(filters):
       d = f.get_template_dict()
       d['index'] = i
       d['index_base_one'] = i + 1
-      d['checked'] = 'checked' if i == 0 else ''
+      d['checked'] = 'checked' if f.enabled else ''
       filters_dicts.append(d)
 
     template_data = {
@@ -253,6 +279,32 @@ class MainHandler(webapp.RequestHandler):
       'extra_body_tags': 'onLoad=hideControls();'
     }
     self.response.out.write(template.render(template_path, template_data))
+    
+
+  def get(self):
+    filters = [Modifier() for i in xrange(4)]
+    filters[0].enabled = True
+    self.show_edit_page(filters)
+
+
+  def parse_sysex(self, data):
+    # Strip 0xf0 and 0xf7
+    blocks = [x.strip('\xf7') for x in data.split('\xf0') if x]
+    # Strip manufacturer id and 2 command bytes + 4 nibbles of address
+    # + 2 nibbles of checksum
+    data = ''.join([x[11:-2] for x in blocks])
+    # Renibblize
+    data = map(ord, data)
+    data = [x * 16 + y for (x, y) in zip(data[::2], data[1::2])]
+    modifiers = []
+    for i in xrange(4):
+      m = Modifier()
+      default_bytestream = m.get_bytestream()
+      filter_data, data = data[:16], data[16:]
+      m.enabled = ''.join(map(chr, filter_data)) != default_bytestream
+      m.from_bytestream(filter_data)
+      modifiers.append(m)
+    return modifiers
 
 
   def convert_to_sysex(self, modifiers):
@@ -286,6 +338,10 @@ class MainHandler(webapp.RequestHandler):
 
 
   def post(self):
+    if self.request.get('syx'):
+      self.show_edit_page(self.parse_sysex(self.request.get('syx')))
+      return
+
     modifiers = []
     for i in xrange(4):
       m = Modifier()
@@ -301,7 +357,7 @@ class MainHandler(webapp.RequestHandler):
 
 
 def main():
-  application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
+  application = webapp.WSGIApplication([('/', MainHandler), ('/retrieve', RetrieveHandler)], debug=True)
   util.run_wsgi_app(application)
 
 
