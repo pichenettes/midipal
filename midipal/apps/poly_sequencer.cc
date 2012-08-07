@@ -30,7 +30,17 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-const prog_uint8_t sequencer_factory_data[1] PROGMEM = {
+const prog_uint8_t sequencer_factory_data[12] PROGMEM = {
+  0, 0,
+  0, 
+  0,
+  120,
+  0,
+  0,
+  12,
+  0,
+  36,
+  38,
   1
 };
 
@@ -225,7 +235,7 @@ void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
   }
-  
+  uint8_t was_running = running_;
   if (recording_ || overdubbing_) {
     uint8_t step_data = note;
     if (note == tie_note_ && previous_rec_note_ != 0xff) {
@@ -281,7 +291,7 @@ void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     }
   }
   
-  if (!running_ && note != rest_note_ && note != tie_note_) {
+  if (!was_running && note != rest_note_ && note != tie_note_) {
     app.Send3(0x90 | channel, note, velocity);
   }
   if (running_ && !recording_ && !overdubbing_) {

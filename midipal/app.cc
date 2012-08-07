@@ -48,8 +48,9 @@
 #include "midipal/apps/poly_sequencer.h"
 #include "midipal/apps/randomizer.h"
 #include "midipal/apps/scale_processor.h"
-#include "midipal/apps/sync_latch.h"
 #include "midipal/apps/sequencer.h"
+#include "midipal/apps/sh_sequencer.h"
+#include "midipal/apps/sync_latch.h"
 #include "midipal/apps/splitter.h"
 
 namespace midipal {
@@ -102,7 +103,11 @@ const AppInfo* registry[] = {
   &apps::Arpeggiator::app_info_,
   &apps::Delay::app_info_,
   &apps::ScaleProcessor::app_info_,
+#ifdef SH_SEQUENCER_FIRMWARE
+  &apps::ShSequencer::app_info_,
+#else
   &apps::Sequencer::app_info_,
+#endif  // SH_SEQUENCER_FIRMWARE
   &apps::Lfo::app_info_,
 
   &apps::EarTrainingGame::app_info_,

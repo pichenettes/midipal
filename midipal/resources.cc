@@ -27,7 +27,6 @@ namespace midipal {
 
 static const prog_char str_res_syncltch[] PROGMEM = "syncltch";
 static const prog_char str_res_polyseq[] PROGMEM = "polyseq";
-static const prog_char str_res_0xfe_flt[] PROGMEM = "0xfe flt";
 static const prog_char str_res_arpeggio[] PROGMEM = "arpeggio";
 static const prog_char str_res_bpm_cntr[] PROGMEM = "bpm cntr";
 static const prog_char str_res_cc_knob[] PROGMEM = "cc knob";
@@ -67,6 +66,9 @@ static const prog_char str_res_cont_[] PROGMEM = "cont.";
 static const prog_char str_res_reset[] PROGMEM = "reset";
 static const prog_char str_res_chn[] PROGMEM = "chn";
 static const prog_char str_res_all[] PROGMEM = "all";
+static const prog_char str_res_rest[] PROGMEM = "rest";
+static const prog_char str_res_tie[] PROGMEM = "tie";
+static const prog_char str_res_exit[] PROGMEM = "exit";
 static const prog_char str_res_flt[] PROGMEM = "flt";
 static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
@@ -74,7 +76,6 @@ static const prog_char str_res_no[] PROGMEM = "no";
 static const prog_char str_res_yes[] PROGMEM = "yes";
 static const prog_char str_res_rec[] PROGMEM = "rec";
 static const prog_char str_res_dub[] PROGMEM = "dub";
-static const prog_char str_res_tie[] PROGMEM = "tie";
 static const prog_char str_res_run[] PROGMEM = "run";
 static const prog_char str_res_bpm[] PROGMEM = "bpm";
 static const prog_char str_res_grv[] PROGMEM = "grv";
@@ -264,7 +265,6 @@ static const prog_char str_res_prg[] PROGMEM = "prg";
 PROGMEM const prog_char* string_table[] = {
   str_res_syncltch,
   str_res_polyseq,
-  str_res_0xfe_flt,
   str_res_arpeggio,
   str_res_bpm_cntr,
   str_res_cc_knob,
@@ -304,6 +304,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_reset,
   str_res_chn,
   str_res_all,
+  str_res_rest,
+  str_res_tie,
+  str_res_exit,
   str_res_flt,
   str_res_off,
   str_res_on,

@@ -63,6 +63,10 @@ reset
 chn
 all
 
+rest
+tie
+exit
+
 flt
 off
 on
