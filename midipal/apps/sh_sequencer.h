@@ -24,6 +24,8 @@
 
 namespace midipal { namespace apps {
 
+static const uint8_t kShSequencerNumSteps = 100;
+
 class ShSequencer {
  public:
   ShSequencer() { }
@@ -42,6 +44,12 @@ class ShSequencer {
   static void OnStart();
   static void OnStop();
   static void OnClock();
+  
+  static void OnControlChange(
+      uint8_t channel,
+      uint8_t controller,
+      uint8_t value);
+  static void OnPitchBend(uint8_t channel, uint16_t value);
 
   static uint8_t OnClick();
   static uint8_t OnIncrement(int8_t increment);
@@ -65,7 +73,9 @@ class ShSequencer {
   static uint8_t clock_division_;  
   static uint8_t channel_;
   static uint8_t num_steps_;
-  static uint8_t sequence_data_[100];
+  static uint8_t sequence_data_[kShSequencerNumSteps];
+  static uint8_t slide_data_[kShSequencerNumSteps / 8 + 1];
+  static uint8_t accent_data_[kShSequencerNumSteps / 8 + 1];
   
   static uint8_t midi_clock_prescaler_;
   static uint8_t tick_;

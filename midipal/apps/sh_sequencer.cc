@@ -22,6 +22,8 @@
 #include "avrlib/op.h"
 #include "avrlib/string.h"
 
+#include "midi/midi.h"
+
 #include "midipal/clock.h"
 #include "midipal/display.h"
 #include "midipal/ui.h"
@@ -45,7 +47,9 @@ uint8_t ShSequencer::groove_amount_;
 uint8_t ShSequencer::clock_division_;  
 uint8_t ShSequencer::channel_;
 uint8_t ShSequencer::num_steps_;
-uint8_t ShSequencer::sequence_data_[100];
+uint8_t ShSequencer::sequence_data_[kShSequencerNumSteps];
+uint8_t ShSequencer::slide_data_[kShSequencerNumSteps / 8 + 1];
+uint8_t ShSequencer::accent_data_[kShSequencerNumSteps / 8 + 1];
 
 uint8_t ShSequencer::midi_clock_prescaler_;
 uint8_t ShSequencer::tick_;
@@ -63,9 +67,9 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
   &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
-  NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
+  OnControlChange, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
-  NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
+  OnPitchBend, // void (*OnPitchBend)(uint8_t, uint16_t);
   NULL, // void (*OnSysExByte)(uint8_t);
   &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
@@ -84,7 +88,7 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  109, // settings_size
+  9 + kShSequencerNumSteps + 2 * (kShSequencerNumSteps / 8 + 1), // settings_size
   SETTINGS_SEQUENCER, // settings_offset
   &running_, // settings_data
   sequencer_factory_data, // factory_data
@@ -132,6 +136,9 @@ void ShSequencer::SetParameter(uint8_t key, uint8_t value) {
   }
   if (key == 1) {
     Stop();
+    memset(sequence_data_, 60, sizeof(sequence_data_));
+    memset(slide_data_, 0, sizeof(slide_data_));
+    memset(accent_data_, 0, sizeof(accent_data_));
     recording_ = 1;
     rec_mode_menu_option_ = 0;
     num_steps_ = 0;
@@ -190,7 +197,7 @@ uint8_t ShSequencer::OnClick() {
         sequence_data_[num_steps_] = 0xff - rec_mode_menu_option_;
         app.SaveSetting(num_steps_ + 9);
         ++num_steps_;
-        if (num_steps_ == 100) {
+        if (num_steps_ == kShSequencerNumSteps) {
           recording_ = 0;
         }
         break;
@@ -242,16 +249,48 @@ void ShSequencer::OnInternalClockTick() {
 }
 
 /* static */
+void ShSequencer::OnPitchBend(uint8_t channel, uint16_t value) {
+  if (channel != channel_ || !recording_) {
+    return;
+  }
+  if ((value > 8192 + 2048 || value < 8192 - 2048)) {
+    uint8_t accent_slide_index = num_steps_ >> 3;
+    uint8_t accent_slide_mask = 1 << (num_steps_ & 0x7);
+    slide_data_[accent_slide_index] |= accent_slide_mask;
+    app.SaveSetting(9 + kShSequencerNumSteps + accent_slide_index);
+  }
+}
+
+/* static */
+void ShSequencer::OnControlChange(
+    uint8_t channel,
+    uint8_t controller,
+    uint8_t value) {
+  if (channel != channel_ || !recording_) {
+    return;
+  }
+  if (controller == midi::kModulationWheelMsb && value > 0x40)  {
+    uint8_t accent_slide_index = num_steps_ >> 3;
+    uint8_t accent_slide_mask = 1 << (num_steps_ & 0x7);
+    accent_data_[accent_slide_index] |= accent_slide_mask;
+    app.SaveSetting(
+        9 + kShSequencerNumSteps + (kShSequencerNumSteps / 8 + 1) + \
+        accent_slide_index);
+  }
+}
+
+/* static */
 void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
   }
   uint8_t was_running = running_;
+  uint8_t just_started = 0;
   if (recording_) {
     sequence_data_[num_steps_] = note;
     app.SaveSetting(num_steps_ + 9);
     ++num_steps_;
-    if (num_steps_ == 100) {
+    if (num_steps_ == kShSequencerNumSteps) {
       recording_ = 0;
     }
   } else if (running_) {
@@ -262,10 +301,11 @@ void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       Start();
       root_note_ = note;
+      just_started = 1;
     }
   }
   
-  if (!was_running) {
+  if (!was_running && !just_started) {
     app.Send3(0x90 | channel, note, velocity);
   }
   if (running_ && !recording_) {
@@ -320,20 +360,29 @@ void ShSequencer::Tick() {
   ++tick_;
   if (tick_ >= midi_clock_prescaler_) {
     tick_ = 0;
-    if (sequence_data_[step_] == 0xff) {
+    uint8_t note = sequence_data_[step_];
+    if (note == 0xff) {
       // It's a rest
       app.Send3(0x80 | channel_, pending_note_, 0);
       pending_note_ = 0xff;
-    } else if (sequence_data_[step_] == 0xfe) {
+    } else if (note == 0xfe) {
       // It's a tie, do nothing.
     } else {
-      uint8_t note = sequence_data_[step_] & 0x7f;
+      uint8_t accent_slide_index = step_ >> 3;
+      uint8_t accent_slide_mask = 1 << (step_ & 0x7);
+      bool accented = accent_data_[accent_slide_index] & accent_slide_mask;
+      bool slid = slide_data_[accent_slide_index] & accent_slide_mask;
+      note &= 0x7f;
       note = Clip(static_cast<int16_t>(note) + last_note_ - root_note_, 0, 127);
-      if (pending_note_ != 0xff) {
+      
+      if (pending_note_ != 0xff && !slid) {
+        app.Send3(0x80 | channel_, pending_note_, 0);
+      }
+      app.Send3(0x90 | channel_, note, accented ? 127 : 20);
+      if (pending_note_ != 0xff && slid) {
         app.Send3(0x80 | channel_, pending_note_, 0);
       }
       pending_note_ = note;
-      app.Send3(0x90 | channel_, note, 100);
     }
     ++step_;
     if (step_ >= num_steps_) {

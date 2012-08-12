@@ -120,6 +120,9 @@ void Dispatcher::OnRawMidiData(
 
 /* static */
 void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if (channel != input_channel_) {
+    return;
+  }
   switch (mode_) {
     case DISPATCHER_CYCLIC:
       ++counter_;
@@ -151,6 +154,9 @@ void Dispatcher::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 /* static */
 void Dispatcher::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if (channel != input_channel_) {
+    return;
+  }
   voice_allocator.NoteOff(note);
   SendMessage(0x80, channel, note, velocity);
 }
@@ -160,6 +166,9 @@ void Dispatcher::OnNoteAftertouch(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
+  if (channel != input_channel_) {
+    return;
+  }
   SendMessage(0xa0, channel, note, velocity);
 }
 
