@@ -130,6 +130,7 @@ void GenericFilter::OnRawMidiData(
       }
       if (modifier.promotes_to_cc()) {
         status = 0xb0 | (channel & 0x0f);
+        data_size = 2;
       } else {
         status = (status & 0xf0) | (channel & 0x0f);
       }

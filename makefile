@@ -25,3 +25,16 @@ bake_all: build/midipal/midipal.hex
 			-U flash:w:build/muboot/muboot.hex:i
 		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 1 \
 			-U lock:w:0x$(LOCK):m
+
+yes_bake_all: build/midipal/midipal.hex
+		make -f bootloader/makefile
+		yes | $(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 10 -u -e \
+			-U efuse:w:0x$(EFUSE):m \
+			-U hfuse:w:0x$(HFUSE):m \
+			-U lfuse:w:0x$(LFUSE):m
+		yes | $(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 1 \
+			-U eeprom:w:midipal/data/midipal_eeprom_golden.hex:i \
+			-U flash:w:build/midipal/midipal.hex:i \
+			-U flash:w:build/muboot/muboot.hex:i
+		yes | $(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 1 \
+			-U lock:w:0x$(LOCK):m
