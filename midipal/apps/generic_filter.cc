@@ -79,7 +79,7 @@ const prog_AppInfo GenericFilter::app_info_ PROGMEM = {
 /* static */
 void GenericFilter::OnInit() {
   ui.AddPage(STR_RES_PRG, UNIT_INDEX, 0, 3);
-  memset(modifiers_, 0, sizeof(modifiers_));
+  SetParameter(0, active_program_);
 }
 
 /* static */

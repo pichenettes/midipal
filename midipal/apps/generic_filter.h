@@ -124,7 +124,7 @@ class GenericFilter {
      uint8_t accepted_channel);
  
   static void SetParameter(uint8_t key, uint8_t value);
- 
+
   static const prog_AppInfo app_info_;
  
  private:
