@@ -179,7 +179,9 @@ void MidiStreamParser<Device>::MessageReceived(uint8_t status) {
     Device::RawMidiData(status, data_, data_size_, 0);
     return;
   }
-  Device::RawMidiData(status, data_, data_size_, 1);
+  if (status != 0xf0 && status != 0xf7) {
+    Device::RawMidiData(status, data_, data_size_, 1);
+  }
   switch (hi) {
     case 0x80:
       Device::NoteOff(lo, data_[0], data_[1]);

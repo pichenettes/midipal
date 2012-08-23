@@ -155,6 +155,11 @@ class App {
     if (app_info_.OnSysExByte) {
       (*app_info_.OnSysExByte)(sysex_byte);
     }
+    if (app_info_.OnRawByte == NULL) {
+      // Forwarding will not be handled by OnRawByte, nor by OnRawMidiData,
+      // so we do it explicitly here.
+      SendNow(sysex_byte);
+    }
   }
 
   static void OnClock() {
