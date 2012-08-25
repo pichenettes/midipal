@@ -1,4 +1,4 @@
-// Copyright 2011 Olivier Gillet.
+// Copyright 2012 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -15,53 +15,45 @@
 //
 // -----------------------------------------------------------------------------
 //
-// CC LFO app.
+// Tanpura app.
 
-#include "midipal/apps/lfo.h"
+#include "midipal/apps/tanpura.h"
 
 #include "avrlib/op.h"
-#include "avrlib/random.h"
+#include "avrlib/string.h"
 
 #include "midipal/clock.h"
-#include "midipal/note_stack.h"
+#include "midipal/display.h"
 #include "midipal/ui.h"
 
 namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-const prog_uint8_t lfo_factory_data[31] PROGMEM = {
-  0, 0, 120, 0, 0, 16, 0,
-  
-  7, 63, 63, 0, 2, 0,
-  10, 0, 63, 0, 4, 0,
-  74, 0, 63, 0, 2, 0,
-  71, 0, 63, 0, 4, 0,
+const prog_uint8_t tanpura_factory_data[8] PROGMEM = {
+  0, 0, 120, 8, 0, 60, 0, 0
 };
 
 /* <static> */
-uint8_t Lfo::running_;
-uint8_t Lfo::clk_mode_;
-uint8_t Lfo::bpm_;
-uint8_t Lfo::groove_template_;
-uint8_t Lfo::groove_amount_;
-uint8_t Lfo::clock_division_;  
-uint8_t Lfo::channel_;
+uint8_t Tanpura::running_;
+uint8_t Tanpura::clk_mode_;
+uint8_t Tanpura::bpm_;
+uint8_t Tanpura::clock_division_;  
+uint8_t Tanpura::channel_;
+uint8_t Tanpura::root_;
+uint8_t Tanpura::pattern_;
+uint8_t Tanpura::shift_;
 
-LfoData Lfo::lfo_data_[kNumLfos];
-
-uint16_t Lfo::phase_[kNumLfos];
-uint16_t Lfo::phase_increment_[kNumLfos];
-
-uint8_t Lfo::tick_;
-uint8_t Lfo::midi_clock_prescaler_;
+uint8_t Tanpura::midi_clock_prescaler_;
+uint8_t Tanpura::tick_;
+uint8_t Tanpura::step_;
 /* </static> */
 
 /* static */
-const prog_AppInfo Lfo::app_info_ PROGMEM = {
+const prog_AppInfo Tanpura::app_info_ PROGMEM = {
   &OnInit, // void (*OnInit)();
   &OnNoteOn, // void (*OnNoteOn)(uint8_t, uint8_t, uint8_t);
-  &OnNoteOff, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
+  NULL, // void (*OnNoteOff)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnNoteAftertouch)(uint8_t, uint8_t, uint8_t);
   NULL, // void (*OnAftertouch)(uint8_t, uint8_t);
   NULL, // void (*OnControlChange)(uint8_t, uint8_t, uint8_t);
@@ -85,46 +77,45 @@ const prog_AppInfo Lfo::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  7 + sizeof(LfoData) * kNumLfos, // settings_size
-  SETTINGS_LFO, // settings_offset
+  8, // settings_size
+  SETTINGS_TANPURA, // settings_offset
   &running_, // settings_data
-  lfo_factory_data, // factory_data
-  STR_RES_CC_LFO, // app_name
+  tanpura_factory_data, // factory_data
+  STR_RES_TANPURA, // app_name
 };
 
 /* static */
-void Lfo::OnInit() {
+void Tanpura::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
-  ui.AddClockPages();
-  ui.AddPage(STR_RES_RES, STR_RES_2_1, 0, 16);
+  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
+  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
+  ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
-  
-  for (uint8_t i = 0; i < kNumLfos; ++i) {
-    ui.AddPage(STR_RES_CC1 + i, UNIT_INTEGER, 0, 127);
-    ui.AddPage(STR_RES_AM1 + i, UNIT_SIGNED_INTEGER, -63, 63);
-    ui.AddPage(STR_RES_CE1 + i, UNIT_INTEGER, 0, 127);
-    ui.AddPage(STR_RES_WF1 + i, STR_RES_TRI, 0, 17);
-    ui.AddPage(STR_RES_RT1 + i, STR_RES_4_1, 0, 18);
-    ui.AddPage(STR_RES_SY1 + i, STR_RES_FRE, 0, 2);
-  }
-
-  clock.Update(bpm_, groove_template_, groove_amount_);
+  ui.AddPage(STR_RES_SA, UNIT_NOTE, 36, 84);
+  ui.AddPage(STR_RES_MOD, STR_RES_PA, 0, 3);
+  ui.AddPage(STR_RES_CYC, UNIT_INTEGER, 0, 7);
+  clock.Update(bpm_, 0, 0);
   SetParameter(2, bpm_);
   clock.Start();
   running_ = 0;
+  shift_ = 0;
 }
 
 /* static */
-void Lfo::OnRawMidiData(
+void Tanpura::OnRawMidiData(
    uint8_t status,
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  app.Send(status, data, data_size);
+  // Forward everything except note on for the selected channel.
+  if (status != (0x80 | channel_) && 
+      status != (0x90 | channel_)) {
+    app.Send(status, data, data_size);
+  }
 }
 
 /* static */
-void Lfo::SetParameter(uint8_t key, uint8_t value) {
+void Tanpura::SetParameter(uint8_t key, uint8_t value) {
   if (key == 0) {
     if (value == 1) {
       Start();
@@ -133,48 +124,43 @@ void Lfo::SetParameter(uint8_t key, uint8_t value) {
     }
   }
   static_cast<uint8_t*>(&running_)[key] = value;
-  if (key < 5) {
-    clock.Update(bpm_, groove_template_, groove_amount_);
+  if (key == 2) {
+    clock.Update(bpm_, 0, 0);
   }
   midi_clock_prescaler_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, clock_division_);
-  uint16_t factor = midi_clock_prescaler_;
-  for (uint8_t i = 0; i < kNumLfos; ++i) {
-    phase_increment_[i] = ResourcesManager::Lookup<uint16_t, uint8_t>(
-      lut_res_increments, lfo_data_[i].cycle_duration) * factor;
-  }
 }
 
 /* static */
-void Lfo::OnStart() {
+void Tanpura::OnStart() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Start();
   }
 }
 
 /* static */
-void Lfo::OnStop() {
+void Tanpura::OnStop() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     Stop();
   }
 }
 
 /* static */
-void Lfo::OnContinue() {
+void Tanpura::OnContinue() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
-void Lfo::OnClock() {
+void Tanpura::OnClock() {
   if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
     Tick();
   }
 }
 
 /* static */
-void Lfo::OnInternalClockTick() {
+void Tanpura::OnInternalClockTick() {
   if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
     app.SendNow(0xf8);
     Tick();
@@ -182,32 +168,31 @@ void Lfo::OnInternalClockTick() {
 }
 
 /* static */
-void Lfo::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+void Tanpura::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
     return;
   }
-  for (uint8_t i = 0; i < kNumLfos; ++i) {
-    if (lfo_data_[i].sync_mode == LFO_SYNC_NOTE_ON ||
-        (lfo_data_[i].sync_mode == LFO_SYNC_START && note_stack.size() == 0)) {
-      phase_[i] = 0;
+  if (ui.editing() && ui.page() == 5) {
+    while (note < 36) {
+      note += 12;
     }
+    while (note > 84) {
+      note -= 12;
+    }
+    root_ = note;
   }
-  note_stack.NoteOn(note, velocity);
 }
 
 /* static */
-void Lfo::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
-    return;
-  }
-  note_stack.NoteOff(note);
-}
-
-/* static */
-void Lfo::Stop() {
+void Tanpura::Stop() {
   if (!running_) {
     return;
   }
+  
+  // Flush the note off messages in the queue.
+  app.FlushQueue(channel_);
+  // To be on the safe side, send an all notes off message.
+  app.Send3(0xb0 | channel_, 123, 0);
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
     app.SendNow(0xfc);
   }
@@ -215,7 +200,7 @@ void Lfo::Stop() {
 }
 
 /* static */
-void Lfo::Start() {
+void Tanpura::Start() {
   if (running_) {
     return;
   }
@@ -224,42 +209,36 @@ void Lfo::Start() {
   }
   tick_ = midi_clock_prescaler_ - 1;
   running_ = 1;
-  for (uint8_t i = 0; i < kNumLfos; ++i) {
-    phase_[i] = 0;
-  }
+  step_ = 0;
 }
 
+const prog_int8_t shifts[] PROGMEM = { -5, -7, -1, 0 };
+const prog_uint8_t durations[] PROGMEM = { 5, 0, 0, 0, 0, 1, 1, 2 };
+
 /* static */
-void Lfo::Tick() {
+void Tanpura::Tick() {
   ++tick_;
   if (tick_ >= midi_clock_prescaler_) {
+    app.SendScheduledNotes(channel_);
     tick_ = 0;
-    for (uint8_t i = 0; i < kNumLfos; ++i) {
-      uint8_t value;
-      uint8_t skip = 0;
-      if (lfo_data_[i].waveform == 17) {
-        if (phase_[i] < phase_increment_[i]) {
-          value = Random::GetByte();
-        } else {
-          skip = 1;
-        }
-      } else {
-        uint16_t offset = U8U8Mul(lfo_data_[i].waveform, 129);
-        value = InterpolateSample(
-            wav_res_lfo_waveforms + offset,
-            phase_[i] >> 1);
+    uint8_t note = 0;
+    uint8_t actual_step = (step_ + shift_) & 0x07;
+    uint8_t duration = pgm_read_byte(durations + actual_step);
+    if (actual_step == 0) {
+      note = root_ - 12;
+    } else if (actual_step == 5) {
+      int8_t shift = pgm_read_byte(shifts + pattern_);
+      if (shift != 0) {
+        note = root_ + shift;
       }
-      phase_[i] += phase_increment_[i];
-      if (lfo_data_[i].amount && !skip) {
-        int16_t scaled_value = static_cast<int16_t>(lfo_data_[i].center_value) + 
-            S8S8MulShift8(lfo_data_[i].amount << 1, value - 128);
-        scaled_value = Clip(scaled_value, 0, 127);
-        app.Send3(
-            0xb0 | channel_,
-            lfo_data_[i].cc_number & 0x7f,
-            scaled_value & 0x7f);
-      }
+    } else if (actual_step >= 6) {
+      note = root_;
     }
+    if (note) {
+      app.Send3(0x90 | channel_, note, actual_step == 0 ? 127 : 80);
+      app.SendLater(note, 0, duration - 1);
+    }
+    step_ = (step_ + 1) & 0x7;
   }
 }
 

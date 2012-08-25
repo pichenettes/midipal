@@ -86,7 +86,8 @@ class Ui {
       uint8_t min,
       uint8_t max,
       uint8_t num_repetitions);
-    
+  static void AddClockPages();
+  
   static uint8_t page_index();
   static inline uint8_t editing() { return editing_; }
   static inline uint8_t page() { return page_; }

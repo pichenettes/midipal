@@ -52,6 +52,7 @@
 #include "midipal/apps/sh_sequencer.h"
 #include "midipal/apps/sync_latch.h"
 #include "midipal/apps/splitter.h"
+#include "midipal/apps/tanpura.h"
 
 namespace midipal {
 
@@ -110,7 +111,11 @@ const AppInfo* registry[] = {
 #endif  // SH_SEQUENCER_FIRMWARE
   &apps::Lfo::app_info_,
 
+#ifdef TANPURA_FIRMWARE
+  &apps::Tanpura::app_info_,
+#else
   &apps::EarTrainingGame::app_info_,
+#endif  // TANPURA_FIRMWARE
   
   &apps::GenericFilter::app_info_
 };

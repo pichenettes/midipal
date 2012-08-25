@@ -77,6 +77,14 @@ void Ui::AddPage(
 }
 
 /* static */
+void Ui::AddClockPages() {
+  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
+  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
+  ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
+  ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+}
+
+/* static */
 void Ui::AddRepeatedPage(
     uint8_t key_res_id,
     uint8_t value_res_id,

@@ -45,6 +45,7 @@ cc lfo
 notenuke
 sysxdump
 !reset!
+tanpura
 
 sndOff
 rstCtr
@@ -284,6 +285,11 @@ lp2
 rs1
 rs2
 s&h
+
+pa
+ma
+ni
+sa
 
 res
 fre

@@ -110,10 +110,7 @@ void PolySequencer::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_REC, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_DUB, STR_RES_OFF, 0, 1);
-  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
-  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
-  ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
-  ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+  ui.AddClockPages();
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_RST, UNIT_NOTE, 0, 127);

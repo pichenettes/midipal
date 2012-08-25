@@ -109,10 +109,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
 
 /* static */
 void Arpeggiator::OnInit() {
-  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
-  ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
-  ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
-  ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+  ui.AddClockPages();
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);

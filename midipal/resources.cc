@@ -50,6 +50,7 @@ static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
+static const prog_char str_res_tanpura[] PROGMEM = "tanpura";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -256,6 +257,10 @@ static const prog_char str_res_lp2[] PROGMEM = "lp2";
 static const prog_char str_res_rs1[] PROGMEM = "rs1";
 static const prog_char str_res_rs2[] PROGMEM = "rs2";
 static const prog_char str_res_s_h[] PROGMEM = "s&h";
+static const prog_char str_res_pa[] PROGMEM = "pa";
+static const prog_char str_res_ma[] PROGMEM = "ma";
+static const prog_char str_res_ni[] PROGMEM = "ni";
+static const prog_char str_res_sa[] PROGMEM = "sa";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
 static const prog_char str_res_chd[] PROGMEM = "chd";
@@ -288,6 +293,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_notenuke,
   str_res_sysxdump,
   str_res__reset_,
+  str_res_tanpura,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
@@ -506,6 +512,10 @@ PROGMEM const prog_char* string_table[] = {
   str_res_rs1,
   str_res_rs2,
   str_res_s_h,
+  str_res_pa,
+  str_res_ma,
+  str_res_ni,
+  str_res_sa,
   str_res_res,
   str_res_fre,
   str_res_not,
