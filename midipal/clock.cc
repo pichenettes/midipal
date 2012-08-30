@@ -26,29 +26,29 @@ namespace midipal {
 Clock clock;
 
 /* <static> */
+bool Clock::running_;
 uint32_t Clock::clock_;
-uint16_t Clock::periodic_clock_;
-uint16_t Clock::tick_duration_table_[kNumStepsInGroovePattern];
-uint8_t Clock::running_;
+uint16_t Clock::intervals_[kNumStepsInGroovePattern];
+uint16_t Clock::interval_;
 uint8_t Clock::tick_count_;
 uint8_t Clock::step_count_;
-uint16_t Clock::tick_duration_ = 0;
 /* </static> */
 
 /* static */
 void Clock::Update(
-    uint8_t bpm,
+    uint16_t bpm,
+    uint8_t bpm_tenth,
     uint8_t groove_template,
     uint8_t groove_amount) {
-  const int32_t kTempoFactor = (2 * 78125 * 60L / 24);
-  int16_t base_tick_duration = kTempoFactor / (2 * static_cast<int32_t>(bpm));
+  uint16_t base_tick_duration = 7812500 / \
+      (static_cast<uint32_t>(bpm) * 10 + bpm_tenth) - 1;
   for (uint8_t i = 0; i < kNumStepsInGroovePattern; ++i) {
-    int32_t swing_direction = ResourcesManager::Lookup<int16_t, uint8_t>(
-        LUT_RES_GROOVE_SWING + groove_template, i);
+    int32_t swing_direction = static_cast<int16_t>(pgm_read_word(
+        lookup_table_table[LUT_RES_GROOVE_SWING + groove_template] + i));
     swing_direction *= base_tick_duration;
     swing_direction *= groove_amount;
     int16_t swing = swing_direction >> 16;
-    tick_duration_table_[i] = base_tick_duration + swing;
+    intervals_[i] = base_tick_duration + swing;
   }
 }
 

@@ -78,6 +78,7 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
 
 /* static */
 void BpmMeter::OnInit() {
+  clock.Update(31250, 0, 0);
   active_page_ = 0;
   refresh_bpm_ = 1;
   ui.RefreshScreen();
@@ -130,10 +131,15 @@ void BpmMeter::PrintBpm() {
   if (num_ticks) {
     --num_ticks;
   }
-  uint32_t num = (78125 * 2 * 60 * 2 / 24 / 5) * num_ticks;
-  uint32_t den = (2 * clock_ / 25);
+  uint32_t den = clock_;
+  while (num_ticks > 550) {
+    num_ticks >>= 1;
+    den >>= 1;
+  }
+  uint32_t num = 7812500 * num_ticks;
   if (den == 0) {
     den = 1;
+    num = 0;
   }
   UnsafeItoa(num / den, 6, &line_buffer[2]);
   AlignRight(&line_buffer[2], 6);

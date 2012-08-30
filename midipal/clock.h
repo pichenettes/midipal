@@ -29,68 +29,72 @@ static const uint8_t kNumTicksPerStep = 6;
 
 class Clock {
  public:
+  static inline void Init() {
+    Update(120, 0, 0);
+    tick_count_ = 0;
+    step_count_ = 0;
+    running_ = false;
+  }
   static inline void Reset() {
     clock_ = 0;
-    periodic_clock_ = 0;
   }
   
   static inline void Start() {
     Reset();
-    running_ = 1;
+    running_ = true;
     tick_count_ = 0;
     step_count_ = 0;
-    tick_duration_ = tick_duration_table_[0];
+    interval_ = intervals_[0];
   }
   
   static inline void Stop() {
-    running_ = 0;
+    running_ = false;
+  }
+  
+  static inline bool stepped() {
+    return tick_count_ == 0;
   }
 
-  static inline uint8_t Tick() {
-    ++clock_;
-    ++periodic_clock_;
-    uint8_t result = 0;
-    if (running_ && periodic_clock_ == tick_duration_) {
-      periodic_clock_ = 0;
-      ++tick_count_;
-      result |= 1;
-      if (tick_count_ == kNumTicksPerStep) {
-        tick_count_ = 0;
-        result |= 2;
-        ++step_count_;
-        if (step_count_ == kNumStepsInGroovePattern) {
-          result |= 4;
-          step_count_ = 0;
-        }
-        tick_duration_ = tick_duration_table_[step_count_];
+  static inline bool running() {
+    return running_;
+  }
+
+  static inline uint16_t Tick() {
+    clock_ += interval_ + 1;
+    ++tick_count_;
+    if (tick_count_ == kNumTicksPerStep) {
+      tick_count_ = 0;
+      ++step_count_;
+      if (step_count_ == kNumStepsInGroovePattern) {
+        step_count_ = 0;
       }
+      interval_ = intervals_[step_count_];
     }
-    return result;
+    return interval_;
   }
-
+  
   static uint32_t value() {
     return clock_;
   }
   
-  static uint8_t tick() {
-    return tick_count_;
+  static void Update(
+      uint16_t bpm,
+      uint8_t groove_template,
+      uint8_t groove_amount) {
+    Update(bpm, 0, groove_template, groove_amount);
   }
 
-  static uint8_t step() {
-    return step_count_;
-  }
-  
   static void Update(
-      uint8_t bpm,
+      uint16_t bpm,
+      uint8_t bpm_10th,
       uint8_t groove_template,
       uint8_t groove_amount);
 
  private:
-  static uint8_t running_;
+  static bool running_;
   static uint32_t clock_;  // Counts forever
-  static uint16_t periodic_clock_;  // Is reset to 0 at each 24ppqn tick
-  static uint16_t tick_duration_table_[kNumStepsInGroovePattern];
-  static uint16_t tick_duration_;
+  static uint16_t intervals_[kNumStepsInGroovePattern];
+  static uint16_t interval_;
   static uint8_t tick_count_;
   static uint8_t step_count_;
 };

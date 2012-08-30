@@ -40,7 +40,7 @@ MidiStreamParser<MidiHandler> midi_parser;
 volatile uint8_t num_clock_ticks = 0;
 volatile uint8_t num_clock_steps = 0;
 
-ISR(TIMER1_OVF_vect, ISR_NOBLOCK) {
+ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
   static uint8_t sub_clock;
 
   if (midi_io.readable()) {
@@ -76,14 +76,14 @@ ISR(TIMER1_OVF_vect, ISR_NOBLOCK) {
   }
 }
 
-ISR(TIMER2_OVF_vect) {
+ISR(TIMER1_COMPA_vect) {
   // 78kHz
-  uint8_t events = clock.Tick();
-  if (events & 1) {
+  PwmChannel1A::set_frequency(clock.Tick());
+  if (clock.running()) {
     ++num_clock_ticks;
-  }
-  if (events & 2) {
-    ++num_clock_steps;
+    if (clock.stepped()) {
+      ++num_clock_steps;
+    }
   }
 }
 
@@ -111,14 +111,17 @@ void Init() {
   app.Launch(launch_app);
   
   ui.Init();
+  clock.Init();
   
   // Configure the timers.
-  Timer<2>::set_prescaler(1);
-  Timer<2>::set_mode(TIMER_FAST_PWM);
+  Timer<1>::set_prescaler(1);
+  Timer<1>::set_mode(0, _BV(WGM12), 3);
+  PwmChannel1A::set_frequency(6510);
+  Timer<1>::StartCompare();
+  
+  Timer<2>::set_prescaler(2);
+  Timer<2>::set_mode(TIMER_PWM_PHASE_CORRECT);
   Timer<2>::Start();
-  Timer<1>::set_prescaler(2);
-  Timer<1>::set_mode(TIMER_PWM_PHASE_CORRECT);
-  Timer<1>::Start();
   app.Init();
   midi_io.Init();
 }

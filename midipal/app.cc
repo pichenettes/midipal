@@ -35,6 +35,7 @@
 #include "midipal/apps/chord_memory.h"
 #include "midipal/apps/clock_divider.h"
 #include "midipal/apps/clock_source.h"
+#include "midipal/apps/clock_source_hd.h"
 #include "midipal/apps/combiner.h"
 #include "midipal/apps/controller.h"
 #include "midipal/apps/delay.h"
@@ -93,7 +94,11 @@ const AppInfo* registry[] = {
 
   &apps::ClockDivider::app_info_,
   &apps::SyncLatch::app_info_,
+#ifdef USE_HD_CLOCK
+  &apps::ClockSourceHD::app_info_,
+#else
   &apps::ClockSource::app_info_,
+#endif  // USE_HD_CLOCK
 
   &apps::CcKnob::app_info_,
   &apps::Controller::app_info_,
@@ -104,18 +109,18 @@ const AppInfo* registry[] = {
   &apps::Arpeggiator::app_info_,
   &apps::Delay::app_info_,
   &apps::ScaleProcessor::app_info_,
-#ifdef SH_SEQUENCER_FIRMWARE
+#ifdef USE_SH_SEQUENCER
   &apps::ShSequencer::app_info_,
 #else
   &apps::Sequencer::app_info_,
-#endif  // SH_SEQUENCER_FIRMWARE
+#endif  // USE_SH_SEQUENCER
   &apps::Lfo::app_info_,
 
-#ifdef TANPURA_FIRMWARE
+#ifdef USE_TANPURA
   &apps::Tanpura::app_info_,
 #else
   &apps::EarTrainingGame::app_info_,
-#endif  // TANPURA_FIRMWARE
+#endif  // USE_TANPURA
   
   &apps::GenericFilter::app_info_
 };

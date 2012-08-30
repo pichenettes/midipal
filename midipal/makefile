@@ -18,9 +18,10 @@ PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/apps
 RESOURCES      = midipal/resources
 SYSEX_FLAGS    = --page_size=64 --device_id=3
 #  -DPOLY_SEQUENCER_FIRMWARE
-#  -DSH_SEQUENCER_FIRMWARE
-#  -DTANPURA_FIRMWARE
-EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR
+#  -DUSE_HD_CLOCK
+#  -DUSE_SH_SEQUENCER
+#  -DUSE_TANPURA
+EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR -DUSE_HD_CLOCK
 
 LFUSE          = ff
 HFUSE          = d4
