@@ -47,12 +47,17 @@ class PolySequencer {
   static void OnStop();
   static void OnClock();
 
+  static uint8_t OnClick();
+  static uint8_t OnIncrement(int8_t increment);
   static uint8_t OnRedraw();
+
   static void SetParameter(uint8_t key, uint8_t value);
   
   static const prog_AppInfo app_info_;
   
  private:
+  // Record a note (midi note#) ; 0xfe for tie ; 0xff for rest.
+  static void Record(uint8_t note);
   static void Stop();
   static void Start();
   static void Tick();
@@ -66,8 +71,6 @@ class PolySequencer {
   static uint8_t groove_amount_;
   static uint8_t clock_division_;  
   static uint8_t channel_;
-  static uint8_t rest_note_;
-  static uint8_t tie_note_;
   static uint8_t num_steps_;
   static uint8_t sequence_data_[kPSNumSteps * kPSNumTracks];
   
@@ -78,6 +81,7 @@ class PolySequencer {
   static uint8_t root_note_;
   static uint8_t last_note_;
   static uint8_t previous_rec_note_;
+  static uint8_t rec_mode_menu_option_;
   static uint8_t pending_notes_[kPSNumTracks];
   static uint8_t pending_notes_transposed_[kPSNumTracks];
   

@@ -228,7 +228,7 @@ void Delay::SetParameter(uint8_t key, uint8_t value) {
     clock.Update(bpm_, groove_template_, groove_amount_);
   }
   if (key == 0 && value == 0) {
-    app.SendNow(0xfa);
+    app.SendNow(0xfc);
   }
   velocity_factor_reverse_log_ = ResourcesManager::Lookup<uint8_t, uint8_t>(
       velocity_factor, velocity_factor_);

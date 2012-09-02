@@ -220,6 +220,7 @@ void Lfo::Start() {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    clock.Start();
     app.SendNow(0xfa);
   }
   tick_ = midi_clock_prescaler_ - 1;

@@ -107,11 +107,7 @@ void Tanpura::OnRawMidiData(
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  // Forward everything except note on for the selected channel.
-  if (status != (0x80 | channel_) && 
-      status != (0x90 | channel_)) {
-    app.Send(status, data, data_size);
-  }
+  app.Send(status, data, data_size);
 }
 
 /* static */
@@ -205,6 +201,7 @@ void Tanpura::Start() {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    clock.Start();
     app.SendNow(0xfa);
   }
   tick_ = midi_clock_prescaler_ - 1;

@@ -283,6 +283,7 @@ void Sequencer::Start() {
     return;
   }
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    clock.Start();
     app.SendNow(0xfa);
   }
   if (root_note_ == 0 || last_note_ == 0) {
