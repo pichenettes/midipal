@@ -91,8 +91,8 @@ const AppInfo* registry[] = {
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
 
-  &apps::ClockDivider::app_info_,
   &apps::SyncLatch::app_info_,
+  &apps::ClockDivider::app_info_,
   &apps::ClockSource::app_info_,
 
   &apps::CcKnob::app_info_,
