@@ -1,6 +1,5 @@
-// Copyright 2011 Olivier Gillet.
-//
-// Author: Olivier Gillet (ol.gillet@gmail.com)
+// Author: Olivier Gillet (ol.gillet@gmail.com) +
+// Contribution from: https://github.com/wackazong/midipal
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,8 +15,6 @@
 // -----------------------------------------------------------------------------
 //
 // MIDI clock generator app.
-//
-// Contribution from: https://github.com/wackazong/midipal
 
 #ifndef MIDIPAL_APPS_CLOCK_SOURCE_HD_H_
 #define MIDIPAL_APPS_CLOCK_SOURCE_HD_H_
