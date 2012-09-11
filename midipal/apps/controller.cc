@@ -68,6 +68,7 @@ const prog_AppInfo Controller::app_info_ PROGMEM = {
   &channel_, // settings_data
   controller_factory_data, // factory_data
   STR_RES_CONTRLLR, // app_name
+  true
 };
 
 /* static */

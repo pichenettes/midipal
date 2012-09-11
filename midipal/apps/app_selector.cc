@@ -71,6 +71,7 @@ const prog_AppInfo AppSelector::app_info_ PROGMEM = {
   &active_app_, // settings_data
   0, // factory_data
   0, // app_name
+  true
 };
 
 /* static */

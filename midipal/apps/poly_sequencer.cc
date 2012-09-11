@@ -100,6 +100,7 @@ const prog_AppInfo PolySequencer::app_info_ PROGMEM = {
   &running_, // settings_data
   sequencer_factory_data, // factory_data
   STR_RES_POLYSEQ, // app_name
+  false
 };
 
 /* static */

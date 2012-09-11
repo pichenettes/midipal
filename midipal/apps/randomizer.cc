@@ -85,6 +85,7 @@ const prog_AppInfo Randomizer::app_info_ PROGMEM = {
   &channel_, // settings_data
   randomizer_factory_data, // factory_data
   STR_RES_RANDOMIZ, // app_name
+  true
 };
 
 /* static */

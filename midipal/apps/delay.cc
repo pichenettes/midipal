@@ -87,6 +87,7 @@ const prog_AppInfo Delay::app_info_ PROGMEM = {
   &clk_mode_, // settings_data
   delay_factory_data, // factory_data
   STR_RES_DELAY, // app_name
+  false
 };
 
 /* static */

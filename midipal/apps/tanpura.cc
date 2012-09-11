@@ -82,6 +82,7 @@ const prog_AppInfo Tanpura::app_info_ PROGMEM = {
   &running_, // settings_data
   tanpura_factory_data, // factory_data
   STR_RES_TANPURA, // app_name
+  true
 };
 
 /* static */

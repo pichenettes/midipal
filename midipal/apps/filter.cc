@@ -69,6 +69,7 @@ const prog_AppInfo Filter::app_info_ PROGMEM = {
   channel_enabled_, // settings_data
   filter_factory_data, // factory_data
   STR_RES_CHNFILTR, // app_name
+  true
 };  
 
 /* static */

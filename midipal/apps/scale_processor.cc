@@ -92,6 +92,7 @@ const prog_AppInfo ScaleProcessor::app_info_ PROGMEM = {
   &channel_, // settings_data
   scale_processor_factory_data, // factory_data
   STR_RES_SCALE, // app_name
+  true
 };
 
 /* static */

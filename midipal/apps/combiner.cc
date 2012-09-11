@@ -71,6 +71,7 @@ const prog_AppInfo Combiner::app_info_ PROGMEM = {
   &input_channel_, // settings_data
   combiner_factory_data, // factory_data
   STR_RES_CHNMERGR, // app_name
+  true
 };
 
 /* static */

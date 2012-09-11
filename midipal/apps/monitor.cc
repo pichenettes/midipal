@@ -68,7 +68,8 @@ const prog_AppInfo Monitor::app_info_ PROGMEM = {
   SETTINGS_MONITOR, // settings_offset
   &monitored_channel_, // settings_data
   monitor_factory_data, // factory_data
-  STR_RES_MONITOR, // app_name,
+  STR_RES_MONITOR, // app_name
+  true
 };
 
 /* static */

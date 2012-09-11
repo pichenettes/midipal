@@ -115,6 +115,7 @@ const prog_AppInfo EarTrainingGame::app_info_ PROGMEM = {
   &level_, // settings_data
   ear_training_game_factory_data, // factory_data
   STR_RES_EAR_GAME, // app_name
+  true
 };
 
 /* static */

@@ -74,6 +74,7 @@ const prog_AppInfo GenericFilter::app_info_ PROGMEM = {
   &active_program_, // settings_data
   generic_filter_factory_data, // factory_data
   STR_RES_USER_PRG, // app_name
+  true
 };  
 
 /* static */

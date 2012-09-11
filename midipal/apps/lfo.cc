@@ -90,6 +90,7 @@ const prog_AppInfo Lfo::app_info_ PROGMEM = {
   &running_, // settings_data
   lfo_factory_data, // factory_data
   STR_RES_CC_LFO, // app_name
+  true
 };
 
 /* static */

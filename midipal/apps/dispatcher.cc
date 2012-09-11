@@ -83,6 +83,7 @@ const prog_AppInfo Dispatcher::app_info_ PROGMEM = {
   &input_channel_, // settings_data
   dispatcher_factory_data, // factory_data
   STR_RES_DISPATCH, // app_name
+  true
 };
 
 /* static */

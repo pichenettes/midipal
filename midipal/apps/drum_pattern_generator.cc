@@ -90,6 +90,7 @@ const prog_AppInfo DrumPatternGenerator::app_info_ PROGMEM = {
   &mode_, // settings_data
   drum_pattern_generator_factory_data, // factory_data
   STR_RES_DRUMS, // app_name
+  true
 };
 
 static const prog_uint8_t sizes[12] PROGMEM = {

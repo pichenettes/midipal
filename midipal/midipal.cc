@@ -38,7 +38,6 @@ Serial<MidiPort, 31250, POLLED, POLLED> midi_io;
 MidiStreamParser<MidiHandler> midi_parser;
 
 volatile uint8_t num_clock_ticks = 0;
-volatile uint8_t num_clock_steps = 0;
 
 ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
   static uint8_t sub_clock;
@@ -59,11 +58,6 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
     app.OnInternalClockTick();
   }
   
-  while (num_clock_steps) {
-    --num_clock_steps;
-    app.OnInternalClockStep();
-  }
-  
   sub_clock = (sub_clock + 1) & 3;
   if ((sub_clock & 1) == 0) {
     // 2kHz
@@ -77,12 +71,15 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-  // 78kHz
   PwmChannel1A::set_frequency(clock.Tick());
   if (clock.running()) {
-    ++num_clock_ticks;
+    if (app.realtime_clock_handling()) {
+      app.OnInternalClockTick();
+    } else {
+      ++num_clock_ticks;
+    }
     if (clock.stepped()) {
-      ++num_clock_steps;
+      app.OnInternalClockStep();
     }
   }
 }

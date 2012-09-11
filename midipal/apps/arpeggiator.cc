@@ -105,6 +105,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &clk_mode_, // settings_data
   arpeggiator_factory_data, // factory_data
   STR_RES_ARPEGGIO, // app_name
+  false
 };
 
 /* static */

@@ -74,6 +74,7 @@ const prog_AppInfo Splitter::app_info_ PROGMEM = {
   &input_channel_, // settings_data
   splitter_factory_data, // factory_data
   STR_RES_SPLITTER, // app_name
+  true
 };  
 
 /* static */

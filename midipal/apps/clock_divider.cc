@@ -66,6 +66,7 @@ const prog_AppInfo ClockDivider::app_info_ PROGMEM = {
   &divider_, // settings_data
   clock_divider_factory_data, // factory_data
   STR_RES_DIVIDER, // app_name
+  true
 };  
   
 /* static */

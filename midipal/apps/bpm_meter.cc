@@ -74,6 +74,7 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
   NULL, // settings_data
   0, // factory_data
   STR_RES_BPM_CNTR, // app_name
+  true
 };
 
 /* static */

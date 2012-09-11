@@ -76,6 +76,7 @@ const prog_AppInfo ChordMemory::app_info_ PROGMEM = {
   &channel_, // settings_data
   chord_memory_factory_data, // factory_data
   STR_RES_CHORDMEM, // app_name
+  true
 };
 
 /* static */

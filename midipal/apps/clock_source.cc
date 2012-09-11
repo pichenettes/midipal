@@ -83,6 +83,7 @@ const prog_AppInfo ClockSource::app_info_ PROGMEM = {
   &running_, // settings_data
   clock_source_factory_data, // factory_data
   STR_RES_CLOCK, // app_name
+  true
 };
 
 /* static */

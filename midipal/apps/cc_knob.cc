@@ -82,6 +82,7 @@ const prog_AppInfo CcKnob::app_info_ PROGMEM = {
   &value_, // settings_data
   cc_knob_factory_data, // factory_data
   STR_RES_CC_KNOB, // app_name
+  true
 };
 
 /* static */

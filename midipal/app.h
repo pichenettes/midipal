@@ -93,6 +93,13 @@ struct AppInfo {
   uint8_t* settings_data;
   const prog_uint8_t* factory_data;
   uint8_t app_name;
+  
+  // Whether the app can respond to a clock message within 50µs. Set this to
+  // false if your app can generate a big bunch of MIDI messages upon the
+  // reception of a single clock tick (eg: anything that may generate
+  // overlapping notes, polyphony...). Set to true if your app generates only
+  // a couple of MIDI messages or does nothing on clock ticks.
+  bool realtime_clock_handling;
 };
 
 typedef AppInfo PROGMEM prog_AppInfo;
@@ -263,7 +270,10 @@ class App {
   static uint8_t* settings_data() { return app_info_.settings_data; }
   static const prog_uint8_t* factory_data() { return app_info_.factory_data; }
   static uint8_t app_name() { return app_info_.app_name; }
-
+  static bool realtime_clock_handling() {
+    return app_info_.realtime_clock_handling;
+  }
+  
   static void FlushOutputBuffer(uint8_t size);
   static void SendNow(uint8_t byte);
   static void Send(uint8_t status, uint8_t* data, uint8_t size);

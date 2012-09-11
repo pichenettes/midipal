@@ -94,6 +94,7 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
   &running_, // settings_data
   sequencer_factory_data, // factory_data
   STR_RES_SEQUENCR, // app_name
+  true
 };
 
 /* static */
