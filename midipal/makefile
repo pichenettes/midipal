@@ -11,16 +11,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION        = 1.1
+VERSION        = 1.2
 MCU_NAME       = 328
 TARGET         = midipal
 PACKAGES       = avrlib avrlib/i2c avrlib/devices midipal midipal/apps
 RESOURCES      = midipal/resources
 SYSEX_FLAGS    = --page_size=64 --device_id=3
-#  -DPOLY_SEQUENCER_FIRMWARE
-#  -DUSE_HD_CLOCK
-#  -DUSE_SH_SEQUENCER
-#  -DUSE_TANPURA
+# -DPOLY_SEQUENCER_FIRMWARE
+# -DUSE_HD_CLOCK
+# -DUSE_SH_SEQUENCER
+# -DUSE_TANPURA
 EXTRA_DEFINES  = -DDISABLE_DEFAULT_UART_RX_ISR -DUSE_SH_SEQUENCER -DUSE_TANPURA
 
 LFUSE          = ff
