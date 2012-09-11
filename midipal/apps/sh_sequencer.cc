@@ -32,9 +32,10 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-const prog_uint8_t sequencer_factory_data[10] PROGMEM = {
+const prog_uint8_t sequencer_factory_data[18] PROGMEM = {
   0, 0,
-  0, 120, 0, 0, 12, 0, 8
+  0, 120, 0, 0, 12, 0, 8,
+  48, 0xff, 48, 0xff, 60, 0xff, 60, 0xff,
 };
 
 /* <static> */
@@ -200,6 +201,7 @@ uint8_t ShSequencer::OnClick() {
         break;
       case 2:
         recording_ = 0;
+        ui.set_page(0);  // Go back to "run" page.
         break;
     }
   } else {
