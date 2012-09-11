@@ -378,7 +378,7 @@ void ShSequencer::Tick() {
       if (pending_note_ != 0xff && !slid) {
         app.Send3(0x80 | channel_, pending_note_, 0);
       }
-      app.Send3(0x90 | channel_, note, accented ? 127 : 20);
+      app.Send3(0x90 | channel_, note, accented ? 127 : 64);
       if (pending_note_ != 0xff && slid) {
         app.Send3(0x80 | channel_, pending_note_, 0);
       }
