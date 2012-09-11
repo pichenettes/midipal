@@ -83,7 +83,9 @@ void AppSelector::OnInit() {
 
 /* static */
 void AppSelector::OnRawByte(uint8_t byte) {
-  app.SendNow(byte);
+  if (byte != 0xfe) {
+    app.SendNow(byte);
+  }
 }
 
 /* static */
