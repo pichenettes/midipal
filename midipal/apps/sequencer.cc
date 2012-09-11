@@ -234,6 +234,10 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
     if (velocity_track_) {
       sequence_data_[offset + 2] = velocity >> 3;
     }
+    uint8_t next_page = ui.page() + kNumBytesPerStep;
+    if (CheckPageStatus(next_page) == PAGE_GOOD) {
+      ui.set_page(next_page);
+    }
     return;
   }
   if (running_ &&
@@ -367,6 +371,8 @@ uint8_t Sequencer::CheckPageStatus(uint8_t index) {
   if (index == 3 && !cc_track_) {
     return PAGE_BAD;
   }
+  
+  return PAGE_GOOD;
 }
 
 } }  // namespace midipal::apps
