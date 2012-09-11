@@ -42,10 +42,11 @@ delay
 scale
 sequencr
 cc lfo
+tanpura
 notenuke
 sysxdump
 !reset!
-tanpura
+\xa5 v1.2 \xa5
 
 sndOff
 rstCtr

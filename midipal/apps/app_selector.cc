@@ -120,8 +120,8 @@ uint8_t AppSelector::OnIncrement(int8_t increment) {
   selected_item_ += increment;
   if (selected_item_ < 1) {
     selected_item_ = 1;
-  } else if (selected_item_ > app.num_apps() + 2) {
-    selected_item_ = app.num_apps() + 2;
+  } else if (selected_item_ > app.num_apps() + 3) {
+    selected_item_ = app.num_apps() + 3;
   }
   return 1;
 }
