@@ -203,6 +203,7 @@ uint8_t ClockSourceHD::OnRedraw() {
   if (ui.page() == 1) {
     memset(line_buffer, ' ', kLcdWidth);
     UnsafeItoa(bpm_, 3, &line_buffer[2]);
+    PadRight(&line_buffer[2], 3, ' ');
     line_buffer[5] = '.';
     line_buffer[6] = '0' + bpm_10th_;
     if (ui.editing() == 1) {
