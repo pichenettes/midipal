@@ -31,7 +31,7 @@ namespace midipal { namespace apps {
 using namespace avrlib;
 
 const prog_uint8_t tanpura_factory_data[8] PROGMEM = {
-  0, 0, 120, 8, 0, 60, 0, 0
+  0, 0, 120, 8, 0, 60, 0, 5
 };
 
 /* <static> */
@@ -98,7 +98,6 @@ void Tanpura::OnInit() {
   SetParameter(2, bpm_);
   clock.Start();
   running_ = 0;
-  shift_ = 0;
 }
 
 /* static */
