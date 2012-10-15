@@ -96,6 +96,8 @@ void Ui::AddRepeatedPage(
   ++stride_;
 }
 
+const uint16_t kHoldTime = 2 * 600 /* milliseconds */;
+
 /* static */
 void Ui::Poll() {
   int8_t increment = encoder_.Read();
@@ -104,14 +106,14 @@ void Ui::Poll() {
   }
   if (encoder_.immediate_value() == 0x00) {
     ++encoder_hold_time_;
-    if (encoder_hold_time_ > 4000) {
+    if (encoder_hold_time_ > kHoldTime) {
       queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 0xff);
     }
   }
   if (encoder_.clicked()) {
     // Do not enqueue a click event when the encoder is released after a long
     // press.
-    if (encoder_hold_time_ <= 4000) {
+    if (encoder_hold_time_ <= kHoldTime) {
       queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
     }
     encoder_hold_time_ = 0;

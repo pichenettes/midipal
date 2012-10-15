@@ -53,7 +53,6 @@ class Monitor {
   static void OnStart();
   static void OnContinue();
   static void OnStop();
-  static void OnActiveSensing();
   static void OnRawByte(uint8_t byte);
 
   static uint8_t CheckChannel(uint8_t channel);
