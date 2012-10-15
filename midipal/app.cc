@@ -36,6 +36,7 @@
 #include "midipal/apps/clock_divider.h"
 #include "midipal/apps/clock_source.h"
 #include "midipal/apps/clock_source_hd.h"
+#include "midipal/apps/clock_source_live.h"
 #include "midipal/apps/combiner.h"
 #include "midipal/apps/controller.h"
 #include "midipal/apps/delay.h"

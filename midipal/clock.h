@@ -83,6 +83,13 @@ class Clock {
       uint8_t groove_amount) {
     Update(bpm, 0, groove_template, groove_amount);
   }
+  
+  static void UpdateFractional(
+      uint16_t bpm,
+      uint8_t multiplier,
+      uint8_t divider,
+      uint8_t groove_template,
+      uint8_t groove_amount);
 
   static void Update(
       uint16_t bpm,

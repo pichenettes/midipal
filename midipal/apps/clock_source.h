@@ -44,7 +44,6 @@ class ClockSource {
   static const prog_AppInfo app_info_;
   
  private:
-  static void UpdateCursor();
   static void Stop();
   static void Start();
   

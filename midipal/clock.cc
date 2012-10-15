@@ -51,4 +51,22 @@ void Clock::Update(
   }
 }
 
+/* static */
+void Clock::UpdateFractional(
+    uint16_t bpm,
+    uint8_t multiplier,
+    uint8_t divider,
+    uint8_t groove_template,
+    uint8_t groove_amount) {
+  int32_t base_tick_duration = (781250L * divider) / \
+      (static_cast<uint32_t>(bpm) * multiplier) - 1;
+  for (uint8_t i = 0; i < kNumStepsInGroovePattern; ++i) {
+    int32_t swing_direction = ResourcesManager::Lookup<int16_t, uint8_t>(
+          LUT_RES_GROOVE_SWING + groove_template, i);
+    swing_direction *= base_tick_duration;
+    swing_direction *= groove_amount;
+    intervals_[i] = base_tick_duration + (swing_direction >> 16);
+  }
+}
+
 }  // namespace midipal
