@@ -94,13 +94,13 @@ const AppInfo* registry[] = {
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
 
-  &apps::ClockDivider::app_info_,
   &apps::SyncLatch::app_info_,
 #ifdef USE_HD_CLOCK
   &apps::ClockSourceHD::app_info_,
 #else
   &apps::ClockSource::app_info_,
 #endif  // USE_HD_CLOCK
+  &apps::ClockDivider::app_info_,
 
   &apps::CcKnob::app_info_,
   &apps::Controller::app_info_,
