@@ -108,7 +108,7 @@ extern const prog_uint8_t wav_res_lfo_waveforms[] PROGMEM;
 #define STR_RES_NOTENUKE 24  // notenuke
 #define STR_RES_SYSXDUMP 25  // sysxdump
 #define STR_RES__RESET_ 26  // !reset!
-#define STR_RES___V1_2__ 27  // ¥ v1.2 ¥
+#define STR_RES___V1_3__ 27  // ¥ v1.3 ¥
 #define STR_RES_SNDOFF 28  // sndOff
 #define STR_RES_RSTCTR 29  // rstCtr
 #define STR_RES_NOTOFF 30  // notOff

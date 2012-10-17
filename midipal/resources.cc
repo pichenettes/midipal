@@ -52,7 +52,7 @@ static const prog_char str_res_settings[] PROGMEM = "settings";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
-static const prog_char str_res___v1_2__[] PROGMEM = "¥ v1.2 ¥";
+static const prog_char str_res___v1_3__[] PROGMEM = "¥ v1.3 ¥";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
@@ -303,7 +303,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_notenuke,
   str_res_sysxdump,
   str_res__reset_,
-  str_res___v1_2__,
+  str_res___v1_3__,
   str_res_sndoff,
   str_res_rstctr,
   str_res_notoff,
