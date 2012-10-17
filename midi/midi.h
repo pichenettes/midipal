@@ -111,10 +111,6 @@ MidiStreamParser<Device>::MidiStreamParser() {
 
 template<typename Device>
 void MidiStreamParser<Device>::PushByte(uint8_t byte) {
-  // Active sensing messages are filtered at the source, the hard way...
-  if (byte == 0xfe) {
-    return;
-  }
   // Realtime messages are immediately passed-through, and do not modify the
   // state of the parser.
   Device::RawByte(byte);

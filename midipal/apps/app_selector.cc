@@ -67,7 +67,7 @@ const prog_AppInfo AppSelector::app_info_ PROGMEM = {
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
   1, // settings_size
-  SETTINGS_SETUP, // settings_offset
+  SETTINGS_APP_SELECTOR, // settings_offset
   &active_app_, // settings_data
   0, // factory_data
   0, // app_name

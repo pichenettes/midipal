@@ -43,6 +43,7 @@ scale
 sequencr
 cc lfo
 tanpura
+settings
 notenuke
 sysxdump
 !reset!
@@ -69,11 +70,18 @@ rest
 tie
 exit
 
-flt
 off
 on
 no
 yes
+
+xFE
+let
+flt
+hld
+.5s
+ 1s
+ 2s
 
 rec
 dub

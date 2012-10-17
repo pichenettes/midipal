@@ -22,6 +22,7 @@
 
 #include "midi/midi.h"
 #include "midipal/app.h"
+#include "midipal/apps/settings.h"
 #include "midipal/clock.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
@@ -43,8 +44,11 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
   static uint8_t sub_clock;
 
   if (midi_io.readable()) {
-    LedIn::High();
-    midi_parser.PushByte(midi_io.ImmediateRead());
+    uint8_t byte = midi_io.ImmediateRead();
+    if (byte != 0xfe || !apps::Settings::filter_active_sensing()) {
+      LedIn::High();
+      midi_parser.PushByte(byte);
+    }
   }
   
   // 4kHz
@@ -93,6 +97,10 @@ void Init() {
   
   note_stack.Init();
   event_scheduler.Init();
+  
+  // Boot the settings app.
+  app.Launch(app.num_apps() - 1);
+  app.LoadSettings();
   
   // Boot the app selector app.
   app.Launch(0);

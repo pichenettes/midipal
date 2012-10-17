@@ -48,6 +48,7 @@ static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
 static const prog_char str_res_tanpura[] PROGMEM = "tanpura";
+static const prog_char str_res_settings[] PROGMEM = "settings";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
@@ -71,11 +72,17 @@ static const prog_char str_res_all[] PROGMEM = "all";
 static const prog_char str_res_rest[] PROGMEM = "rest";
 static const prog_char str_res_tie[] PROGMEM = "tie";
 static const prog_char str_res_exit[] PROGMEM = "exit";
-static const prog_char str_res_flt[] PROGMEM = "flt";
 static const prog_char str_res_off[] PROGMEM = "off";
 static const prog_char str_res_on[] PROGMEM = "on";
 static const prog_char str_res_no[] PROGMEM = "no";
 static const prog_char str_res_yes[] PROGMEM = "yes";
+static const prog_char str_res_xfe[] PROGMEM = "xFE";
+static const prog_char str_res_let[] PROGMEM = "let";
+static const prog_char str_res_flt[] PROGMEM = "flt";
+static const prog_char str_res_hld[] PROGMEM = "hld";
+static const prog_char str_res__5s[] PROGMEM = ".5s";
+static const prog_char str_res__1s[] PROGMEM = "1s";
+static const prog_char str_res__2s[] PROGMEM = "2s";
 static const prog_char str_res_rec[] PROGMEM = "rec";
 static const prog_char str_res_dub[] PROGMEM = "dub";
 static const prog_char str_res_run[] PROGMEM = "run";
@@ -292,6 +299,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_sequencr,
   str_res_cc_lfo,
   str_res_tanpura,
+  str_res_settings,
   str_res_notenuke,
   str_res_sysxdump,
   str_res__reset_,
@@ -315,11 +323,17 @@ PROGMEM const prog_char* string_table[] = {
   str_res_rest,
   str_res_tie,
   str_res_exit,
-  str_res_flt,
   str_res_off,
   str_res_on,
   str_res_no,
   str_res_yes,
+  str_res_xfe,
+  str_res_let,
+  str_res_flt,
+  str_res_hld,
+  str_res__5s,
+  str_res__1s,
+  str_res__2s,
   str_res_rec,
   str_res_dub,
   str_res_tie,
