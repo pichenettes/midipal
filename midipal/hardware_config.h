@@ -32,6 +32,7 @@ using avrlib::PARALLEL_NIBBLE_HIGH;
 using avrlib::ParallelPort;
 using avrlib::PortB;
 using avrlib::PortD;
+using avrlib::PortC;
 using avrlib::SerialPort0;
 
 static const uint8_t kLcdWidth = 8;
@@ -50,6 +51,16 @@ typedef Gpio<PortB, 2> EncoderALine;
 typedef Gpio<PortB, 1> EncoderBLine;
 typedef Gpio<PortB, 0> EncoderClickLine;
 
+#ifdef MIDIBUD_FIRMWARE
+// Switches
+typedef Gpio<PortC, 0> Switch1Line;
+typedef Gpio<PortC, 1> Switch2Line;
+typedef Gpio<PortC, 2> Switch3Line;
+typedef Gpio<PortC, 3> Switch4Line;
+typedef Gpio<PortB, 4> Switch5Line;
+#endif
+
+// LEDs
 typedef Gpio<PortB, 3> LedOut;
 typedef Gpio<PortB, 5> LedIn;
 

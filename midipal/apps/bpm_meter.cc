@@ -63,7 +63,11 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
   NULL, // void (*OnInternalClockStep)();
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
+#ifdef MIDIBUD_FIRMWARE
+  &OnSwitch, // uint8_t (*OnSwitch)(uint8_t);
+#else
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+#endif
   &OnRedraw, // uint8_t (*OnRedraw)();
   NULL, // void (*OnIdle)();
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
@@ -195,5 +199,17 @@ uint8_t BpmMeter::OnClick() {
   Reset();
   return 1;
 }
+
+#ifdef MIDIBUD_FIRMWARE
+/* static */
+uint8_t BpmMeter::OnSwitch(uint8_t sw) {
+  active_page_ = sw;
+  if (active_page_ > 2) {
+    active_page_ = 2;
+  }
+  ui.RefreshScreen();
+  return 1;
+}
+#endif
 
 } }  // namespace midipal::apps

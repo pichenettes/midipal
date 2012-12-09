@@ -82,7 +82,11 @@ struct AppInfo {
   void (*OnInternalClockStep)();
   uint8_t (*OnIncrement)(int8_t);
   uint8_t (*OnClick)();
+#ifdef MIDIBUD_FIRMWARE
+  uint8_t (*OnSwitch)(uint8_t);
+#else
   uint8_t (*OnPot)(uint8_t, uint8_t);
+#endif
   uint8_t (*OnRedraw)();
   void (*OnIdle)();
   void (*SetParameter)(uint8_t, uint8_t);
@@ -234,9 +238,15 @@ class App {
   static uint8_t OnClick() {
     return app_info_.OnClick ? (*app_info_.OnClick)() : 0;
   }
+#ifdef MIDIBUD_FIRMWARE
+  static uint8_t OnSwitch(uint8_t sw) {
+    return app_info_.OnSwitch ? (*app_info_.OnSwitch)(sw) : 0;
+  }
+#else
   static uint8_t OnPot(uint8_t pot, uint8_t value) {
     return app_info_.OnPot ? (*app_info_.OnPot)(pot, value) : 0;
   }
+#endif
   static uint8_t OnRedraw() {
     return app_info_.OnRedraw ? (*app_info_.OnRedraw)() : 0;
   }

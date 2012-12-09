@@ -65,7 +65,11 @@ const prog_AppInfo ChordMemory::app_info_ PROGMEM = {
   NULL, // void (*OnInternalClockStep)();
   NULL, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
+#ifdef MIDIBUD_FIRMWARE
+  NULL, // uint8_t (*OnSwitch)(uint8_t);
+#else
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+#endif
   NULL, // uint8_t (*OnRedraw)();
   NULL, // void (*OnIdle)();
   NULL, // void (*SetParameter)(uint8_t, uint8_t);

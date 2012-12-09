@@ -20,6 +20,8 @@
 #ifndef MIDIPAL_APPS_CONTROLLER_H_
 #define MIDIPAL_APPS_CONTROLLER_H_
 
+#ifndef MIDIBUD_FIRMWARE
+
 #include "midipal/app.h"
 
 namespace midipal { namespace apps {
@@ -47,5 +49,7 @@ class Controller {
 };
 
 } }  // namespace midipal::apps
+
+#endif // #ifndef MIDIBUD_FIRMWARE
 
 #endif // MIDIPAL_APPS_CONTROLLER_H_

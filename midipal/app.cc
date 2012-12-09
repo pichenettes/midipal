@@ -103,8 +103,9 @@ const AppInfo* registry[] = {
 #endif  // USE_HD_CLOCK
 
   &apps::CcKnob::app_info_,
+#ifndef MIDIBUD_FIRMWARE
   &apps::Controller::app_info_,
-
+#endif
   &apps::DrumPatternGenerator::app_info_,
   &apps::Randomizer::app_info_,
   &apps::ChordMemory::app_info_,

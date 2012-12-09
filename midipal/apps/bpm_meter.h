@@ -40,6 +40,10 @@ class BpmMeter {
   static uint8_t OnIncrement(int8_t increment);
   static uint8_t OnRedraw();
   
+#ifdef MIDIBUD_FIRMWARE
+  static uint8_t OnSwitch(uint8_t pot);
+#endif  
+  
   static const prog_AppInfo app_info_;
   
  private:
