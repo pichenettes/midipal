@@ -55,6 +55,7 @@
 #include "midipal/apps/sync_latch.h"
 #include "midipal/apps/splitter.h"
 #include "midipal/apps/tanpura.h"
+#include "midipal/apps/transposer.h"
 
 namespace midipal {
 
