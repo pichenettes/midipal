@@ -247,20 +247,22 @@ void Arpeggiator::Tick() {
     if (note_stack.size() && has_arpeggiator_note) {
       uint8_t note = note_stack.sorted_note(current_step_).note;
       uint8_t velocity = note_stack.sorted_note(current_step_).velocity;
-      note += 12 * current_octave_;
-      while (note > 127) {
-        note -= 12;
+      if (velocity) {
+        note += 12 * current_octave_;
+        while (note > 127) {
+          note -= 12;
+        }
+        // If there are some Note Off messages for the note about to be triggeered
+        // remove them from the queue and process them now.
+        if (event_scheduler.Remove(note, 0)) {
+          app.Send3(0x80 | channel_, note, 0);
+        }
+        // Send a note on and schedule a note off later.
+        app.Send3(0x90 | channel_, note, velocity);
+        app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
+            midi_clock_tick_per_step, duration_) - 1);
+        StepArpeggio();
       }
-      // If there are some Note Off messages for the note about to be triggeered
-      // remove them from the queue and process them now.
-      if (event_scheduler.Remove(note, 0)) {
-        app.Send3(0x80 | channel_, note, 0);
-      }
-      // Send a note on and schedule a note off later.
-      app.Send3(0x90 | channel_, note, velocity);
-      app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
-          midi_clock_tick_per_step, duration_) - 1);
-      StepArpeggio();
     }
     bitmask_ <<= 1;
     if (!bitmask_) {

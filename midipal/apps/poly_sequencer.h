@@ -46,6 +46,8 @@ class PolySequencer {
   static void OnStart();
   static void OnStop();
   static void OnClock();
+  
+  static void OnIdle();
 
   static uint8_t OnClick();
   static uint8_t OnIncrement(int8_t increment);
@@ -56,15 +58,17 @@ class PolySequencer {
   static const prog_AppInfo app_info_;
   
  private:
-  // Record a note (midi note#) ; 0xfe for tie ; 0xff for rest.
+  // Record a note (midi note#) ; 0xff for tie.
   static void Record(uint8_t note);
+  static void NextStep(bool clear_pending_notes);
+  static void ClearStep();
   static void Stop();
   static void Start();
   static void Tick();
   
-  static uint8_t running_;
-  static uint8_t recording_;
-  static uint8_t overdubbing_;
+  static bool running_;
+  static bool recording_;
+  static bool overdubbing_;
   static uint8_t clk_mode_;
   static uint8_t bpm_;
   static uint8_t groove_template_;
@@ -80,10 +84,13 @@ class PolySequencer {
   static uint8_t edit_step_;
   static uint8_t root_note_;
   static uint8_t last_note_;
-  static uint8_t previous_rec_note_;
+  static uint8_t previous_rec_note_[kPSNumTracks];
+  static uint8_t num_previous_rec_notes_;
   static uint8_t rec_mode_menu_option_;
   static uint8_t pending_notes_[kPSNumTracks];
   static uint8_t pending_notes_transposed_[kPSNumTracks];
+  static uint8_t pending_chord_delay_;
+  static bool clear_step_;
   
   DISALLOW_COPY_AND_ASSIGN(PolySequencer);
 };
