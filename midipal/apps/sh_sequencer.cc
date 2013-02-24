@@ -101,7 +101,7 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
 void ShSequencer::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_REC, STR_RES_OFF, 0, 1);
-  ui.AddClockPages();
+  ui.AddClockPages(true);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   clock.Update(bpm_, groove_template_, groove_amount_);
@@ -281,9 +281,21 @@ void ShSequencer::OnControlChange(
 
 /* static */
 void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if ((clk_mode_ == CLOCK_MODE_KEYBOARD) &&
+      (channel == 15) ||
+      (channel == channel_ && note == 96)) {
+    if (running_) {
+      Tick();
+    } else {
+      Start();
+    }
+    return;
+  }
+  
   if (channel != channel_) {
     return;
   }
+  
   uint8_t was_running = running_;
   uint8_t just_started = 0;
   if (recording_) {
@@ -316,6 +328,10 @@ void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 /* static */
 void ShSequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (channel != channel_) {
+    return;
+  }
+  
+  if (clk_mode_ == CLOCK_MODE_KEYBOARD && note == 96) {
     return;
   }
   
@@ -359,7 +375,7 @@ void ShSequencer::Start() {
 /* static */
 void ShSequencer::Tick() {
   ++tick_;
-  if (tick_ >= midi_clock_prescaler_) {
+  if (tick_ >= midi_clock_prescaler_ || clk_mode_ == CLOCK_MODE_KEYBOARD) {
     tick_ = 0;
     uint8_t note = sequence_data_[step_];
     if (note == 0xff) {

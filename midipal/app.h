@@ -57,7 +57,8 @@ enum EepromSetting {
 
 enum ClockMode {
   CLOCK_MODE_INTERNAL,
-  CLOCK_MODE_EXTERNAL
+  CLOCK_MODE_EXTERNAL,
+  CLOCK_MODE_KEYBOARD
 };
 
 struct AppInfo {

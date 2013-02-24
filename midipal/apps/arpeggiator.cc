@@ -110,7 +110,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
 
 /* static */
 void Arpeggiator::OnInit() {
-  ui.AddClockPages();
+  ui.AddClockPages(true);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
@@ -184,9 +184,21 @@ void Arpeggiator::OnNoteOn(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
+  if ((clk_mode_ == CLOCK_MODE_KEYBOARD) &&
+      (channel == 15) ||
+      (channel == channel_ && note == 96)) {
+    if (running_) {
+      Tick();
+    } else {
+      Start();
+    }
+    return;
+  }
+
   if (channel != channel_) {
     return;
   }
+  
   if (clk_mode_ == CLOCK_MODE_INTERNAL) {
     if (idle_ticks_ >= 96) {
       clock.Start();
@@ -210,6 +222,11 @@ void Arpeggiator::OnNoteOff(
   if (channel != channel_ || ignore_note_off_messages_) {
     return;
   }
+  
+  if (clk_mode_ == CLOCK_MODE_KEYBOARD && note == 96) {
+    return;
+  }
+  
   if (!latch_) {
     note_stack.NoteOff(note);
   } else {
@@ -229,7 +246,7 @@ void Arpeggiator::Tick() {
   ++idle_ticks_;
   if (idle_ticks_ >= 96) {
     idle_ticks_ = 96;
-    if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    if (clk_mode_ == CLOCK_MODE_INTERNAL || clk_mode_ == CLOCK_MODE_KEYBOARD) {
       running_ = 0;
       app.SendNow(0xfc);
       app.FlushQueue(channel_);
@@ -238,12 +255,13 @@ void Arpeggiator::Tick() {
   
   app.SendScheduledNotes(channel_);
   
-  if (tick_ >= midi_clock_prescaler_) {
+  if (tick_ >= midi_clock_prescaler_ || clk_mode_ == CLOCK_MODE_KEYBOARD) {
     tick_ = 0;
     uint16_t pattern = ResourcesManager::Lookup<uint16_t, uint8_t>(
         lut_res_arpeggiator_patterns,
         pattern_);
-    uint8_t has_arpeggiator_note = (bitmask_ & pattern) ? 255 : 0;
+    bool has_arpeggiator_note = bitmask_ & pattern;
+    has_arpeggiator_note |= clk_mode_ == CLOCK_MODE_KEYBOARD;
     if (note_stack.size() && has_arpeggiator_note) {
       uint8_t note = note_stack.sorted_note(current_step_).note;
       uint8_t velocity = note_stack.sorted_note(current_step_).velocity;

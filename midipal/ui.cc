@@ -77,8 +77,12 @@ void Ui::AddPage(
 }
 
 /* static */
-void Ui::AddClockPages() {
-  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
+void Ui::AddClockPages(bool keyboard_clock_stepping) {
+  ui.AddPage(
+      STR_RES_CLK,
+      STR_RES_INT,
+      0,
+      1 + (keyboard_clock_stepping ? 1 : 0));
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);

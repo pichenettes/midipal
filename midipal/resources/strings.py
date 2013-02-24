@@ -110,6 +110,7 @@ ptn
 euc
 int
 ext
+kbd
 clk
 pt1
 pt2

@@ -100,7 +100,7 @@ static const prog_uint8_t sizes[12] PROGMEM = {
 /* static */
 void DrumPatternGenerator::OnInit() {
   ui.AddPage(STR_RES_MOD, STR_RES_PTN, 0, 1);
-  ui.AddClockPages();
+  ui.AddClockPages(false);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   for (uint8_t i = 0; i < kNumDrumParts; ++i) {
     ui.AddPage(STR_RES_PT1 + i, UNIT_NOTE, 20, 108);

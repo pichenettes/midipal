@@ -110,7 +110,7 @@ void PolySequencer::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_REC, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_DUB, STR_RES_OFF, 0, 1);
-  ui.AddClockPages();
+  ui.AddClockPages(false);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   clock.Update(bpm_, groove_template_, groove_amount_);

@@ -92,7 +92,7 @@ const prog_AppInfo Delay::app_info_ PROGMEM = {
 
 /* static */
 void Delay::OnInit() {
-  ui.AddClockPages();
+  ui.AddClockPages(false);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_DELAY, STR_RES_2_1, 0, 12);
   ui.AddPage(STR_RES_REP, UNIT_INTEGER, 0, 32);

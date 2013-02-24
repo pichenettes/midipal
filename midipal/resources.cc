@@ -106,6 +106,7 @@ static const prog_char str_res_ptn[] PROGMEM = "ptn";
 static const prog_char str_res_euc[] PROGMEM = "euc";
 static const prog_char str_res_int[] PROGMEM = "int";
 static const prog_char str_res_ext[] PROGMEM = "ext";
+static const prog_char str_res_kbd[] PROGMEM = "kbd";
 static const prog_char str_res_clk[] PROGMEM = "clk";
 static const prog_char str_res_pt1[] PROGMEM = "pt1";
 static const prog_char str_res_pt2[] PROGMEM = "pt2";
@@ -351,6 +352,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_euc,
   str_res_int,
   str_res_ext,
+  str_res_kbd,
   str_res_clk,
   str_res_pt1,
   str_res_pt2,

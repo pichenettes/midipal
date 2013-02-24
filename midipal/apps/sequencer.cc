@@ -130,7 +130,7 @@ const prog_AppInfo Sequencer::app_info_ PROGMEM = {
 void Sequencer::OnInit() {
   lcd.SetCustomCharMapRes(chr_res_sequencer_icons, 4, 1);
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
-  ui.AddClockPages();
+  ui.AddClockPages(false);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_CC_, UNIT_INTEGER, 0, 127);
