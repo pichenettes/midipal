@@ -245,6 +245,7 @@ void Arpeggiator::Tick() {
         pattern_);
     uint8_t has_arpeggiator_note = (bitmask_ & pattern) ? 255 : 0;
     if (note_stack.size() && has_arpeggiator_note) {
+      StepArpeggio();
       uint8_t note = note_stack.sorted_note(current_step_).note;
       uint8_t velocity = note_stack.sorted_note(current_step_).velocity;
       note += 12 * current_octave_;
@@ -260,7 +261,6 @@ void Arpeggiator::Tick() {
       app.Send3(0x90 | channel_, note, velocity);
       app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
           midi_clock_tick_per_step, duration_) - 1);
-      StepArpeggio();
     }
     bitmask_ <<= 1;
     if (!bitmask_) {
@@ -275,8 +275,8 @@ void Arpeggiator::Start() {
   bitmask_ = 1;
   tick_ = midi_clock_prescaler_ - 1;
   current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
+  current_octave_ = 127;
   recording_ = 0;
-  StartArpeggio();
 }
 
 /* static */
@@ -304,6 +304,11 @@ void Arpeggiator::OnControlChange(uint8_t channel, uint8_t cc, uint8_t value) {
 
 /* static */
 void Arpeggiator::StepArpeggio() {
+  if (current_octave_ == 127) {
+    StartArpeggio();
+    return;
+  }
+  
   uint8_t num_notes = note_stack.size();
   if (direction_ == ARPEGGIO_DIRECTION_RANDOM) {
     uint8_t random_byte = Random::GetByte();
