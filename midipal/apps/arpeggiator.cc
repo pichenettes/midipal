@@ -41,8 +41,8 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_RANDOM,
 };
 
-const prog_uint8_t arpeggiator_factory_data[11] PROGMEM = {
-  0, 120, 0, 0, 0, 0, 1, 0, 12, 14, 0
+const prog_uint8_t arpeggiator_factory_data[12] PROGMEM = {
+  0, 120, 0, 0, 0, 0, 1, 0, 16, 12, 14, 0
 };
 
 /* <static> */
@@ -56,6 +56,7 @@ uint8_t Arpeggiator::channel_;
 uint8_t Arpeggiator::direction_;
 uint8_t Arpeggiator::num_octaves_;
 uint8_t Arpeggiator::pattern_;
+uint8_t Arpeggiator::pattern_length_;
 uint8_t Arpeggiator::clock_division_;
 uint8_t Arpeggiator::duration_;
 uint8_t Arpeggiator::latch_;
@@ -100,7 +101,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  11, // settings_size
+  12, // settings_size
   SETTINGS_ARPEGGIATOR, // settings_offset
   &clk_mode_, // settings_data
   arpeggiator_factory_data, // factory_data
@@ -115,12 +116,13 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 21);
+  ui.AddPage(STR_RES_LEN, UNIT_INTEGER, 1, 16);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_DUR, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_LAT, STR_RES_OFF, 0, 1);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
-  SetParameter(8, clock_division_);  // Force an update of the prescaler.
+  SetParameter(9, clock_division_);  // Force an update of the prescaler.
   clock.Start();
   idle_ticks_ = 96;
   running_ = 0;
@@ -263,7 +265,7 @@ void Arpeggiator::Tick() {
           midi_clock_tick_per_step, duration_) - 1);
     }
     bitmask_ <<= 1;
-    if (!bitmask_) {
+    if (bitmask_ == (1 << pattern_length_) || bitmask_ == 0) {
       bitmask_ = 1;
     }
   }

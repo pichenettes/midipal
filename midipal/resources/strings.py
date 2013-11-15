@@ -64,6 +64,9 @@ stop
 cont.
 reset
 chn
+ccc
+clc
+clr
 all
 
 rest
@@ -115,6 +118,7 @@ not bad!
 
 mod
 ptn
+len
 euc
 int
 ext
@@ -223,30 +227,6 @@ jap
 gam
 whl
 
-C
-C#
-D
-D#
-E
-F
-F#
-G
-G#
-A
-A#
-B
- C
-Db
- D
-Eb
- E
- F
-Gb
- G
-Ab
- A
-Bb
- B
 key
  
 stp

@@ -27,6 +27,7 @@
 #include "midipal/hardware_config.h"
 #include "midipal/event_scheduler.h"
 #include "midipal/midi_handler.h"
+#include "midipal/ui.h"
 
 #include "midipal/apps/app_selector.h"
 #include "midipal/apps/arpeggiator.h"
@@ -129,6 +130,12 @@ const AppInfo* registry[] = {
 };
 
 #endif  // POLY_SEQUENCER_FIRMWARE
+
+/* static */
+uint8_t App::note_clock_note_;
+
+/* static */
+bool App::note_clock_running_;
 
 
 /* static */
@@ -252,6 +259,49 @@ void App::FlushQueue(uint8_t channel) {
 /* static */
 uint8_t App::num_apps() {
   return sizeof(registry) / sizeof(AppInfo*);
+}
+
+/* static */
+void App::RemoteControl(
+    uint8_t channel,
+    uint8_t controller,
+    uint8_t value) {
+  uint8_t remote_control_channel = apps::Settings::remote_control_channel();
+  if (remote_control_channel &&
+      controller >= 80 &&
+      remote_control_channel == channel + 1 &&
+      controller < settings_size() + 80) {
+    controller -= 80;
+    PageDefinition page = ui.page_definition(controller);
+    uint8_t range = page.max - page.min + 1;
+    uint8_t scaled_value = U8U8MulShift8(range, value << 1);
+    scaled_value += page.min;
+    SetParameter(controller, scaled_value);
+  }
+}
+
+/* static */
+void App::NoteClock(uint8_t channel, uint8_t note) {
+  if (channel + 1 == apps::Settings::note_clock_channel()) {
+    if (!note_clock_running_) {
+      note_clock_note_ = note;
+      note_clock_running_ = true;
+      OnStart();
+      OnClock();
+    } else {
+      if (note == note_clock_note_) {
+        uint8_t steps = ResourcesManager::Lookup<uint8_t, uint8_t>(
+            midi_clock_tick_per_step,
+            apps::Settings::note_clock_ticks());
+        for (uint8_t i = 0; i < steps; ++i) {
+          OnClock();
+        }
+      } else {
+        note_clock_running_ = false;
+        OnStop();
+      }
+    }
+  }
 }
 
 /* extern */

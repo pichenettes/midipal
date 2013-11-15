@@ -26,8 +26,8 @@
 
 namespace midipal { namespace apps {
 
-const prog_uint8_t settings_factory_data[4] PROGMEM = {
-  0, 2
+const prog_uint8_t settings_factory_data[5] PROGMEM = {
+  0, 2, 0, 0, 12
 };
 
 /* static */
@@ -35,6 +35,15 @@ uint8_t Settings::filter_active_sensing_;
 
 /* static */
 uint8_t Settings::encoder_hold_threshold_;
+
+/* static */
+uint8_t Settings::remote_control_channel_;
+
+/* static */
+uint8_t Settings::note_clock_channel_;
+
+/* static */
+uint8_t Settings::note_clock_ticks_;
 
 /* static */
 const prog_AppInfo Settings::app_info_ PROGMEM = {
@@ -68,7 +77,7 @@ const prog_AppInfo Settings::app_info_ PROGMEM = {
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  2, // settings_size
+  5, // settings_size
   SETTINGS_SYSTEM_SETTINGS, // settings_offset
   &filter_active_sensing_, // settings_data
   settings_factory_data, // factory_data
@@ -79,6 +88,9 @@ const prog_AppInfo Settings::app_info_ PROGMEM = {
 void Settings::OnInit() {
   ui.AddPage(STR_RES_XFE, STR_RES_LET, 0, 1);
   ui.AddPage(STR_RES_HLD, STR_RES__5S, 0, 2);
+  ui.AddPage(STR_RES_CCC, UNIT_INTEGER, 0, 16);
+  ui.AddPage(STR_RES_CLC, UNIT_INTEGER, 0, 16);
+  ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
 }
 
 /* static */

@@ -125,6 +125,9 @@ class App {
     }
   }
   static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+    if (velocity) {
+      NoteClock(channel, note);
+    }
     if (app_info_.OnNoteOn) {
       (*app_info_.OnNoteOn)(channel, note, velocity);
     }
@@ -145,7 +148,8 @@ class App {
     }
   }
   static void OnControlChange(uint8_t channel, uint8_t controller,
-                               uint8_t value) {
+                              uint8_t value) {
+    RemoteControl(channel, controller, value);
     if (app_info_.OnControlChange) {
       (*app_info_.OnControlChange)(channel, controller, value);
     }
@@ -289,7 +293,12 @@ class App {
   static uint8_t num_apps();
   
  private:
+  static void RemoteControl(uint8_t channel, uint8_t controller, uint8_t value);
+  static void NoteClock(uint8_t channel, uint8_t note);
+  
   static AppInfo app_info_;
+  static uint8_t note_clock_note_;
+  static bool note_clock_running_;
   
   DISALLOW_COPY_AND_ASSIGN(App);
 };

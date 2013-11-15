@@ -256,10 +256,11 @@ void Lfo::Tick() {
         int16_t scaled_value = static_cast<int16_t>(lfo_data_[i].center_value) + 
             S8S8MulShift8(lfo_data_[i].amount << 1, value - 128);
         scaled_value = Clip(scaled_value, 0, 127);
-        app.Send3(
-            0xb0 | channel_,
-            lfo_data_[i].cc_number & 0x7f,
-            scaled_value & 0x7f);
+        if (lfo_data_[i].cc_number >= 127) {
+          app.Send3(0xe0 | channel_, 0, scaled_value);
+        } else {
+          app.Send3(0xb0 | channel_, lfo_data_[i].cc_number, scaled_value);
+        }
       }
     }
   }

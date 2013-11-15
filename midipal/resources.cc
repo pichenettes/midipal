@@ -68,6 +68,9 @@ static const prog_char str_res_stop[] PROGMEM = "stop";
 static const prog_char str_res_cont_[] PROGMEM = "cont.";
 static const prog_char str_res_reset[] PROGMEM = "reset";
 static const prog_char str_res_chn[] PROGMEM = "chn";
+static const prog_char str_res_ccc[] PROGMEM = "ccc";
+static const prog_char str_res_clc[] PROGMEM = "clc";
+static const prog_char str_res_clr[] PROGMEM = "clr";
 static const prog_char str_res_all[] PROGMEM = "all";
 static const prog_char str_res_rest[] PROGMEM = "rest";
 static const prog_char str_res_tie[] PROGMEM = "tie";
@@ -110,6 +113,7 @@ static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
 static const prog_char str_res_not_bad_[] PROGMEM = "not bad!";
 static const prog_char str_res_mod[] PROGMEM = "mod";
 static const prog_char str_res_ptn[] PROGMEM = "ptn";
+static const prog_char str_res_len[] PROGMEM = "len";
 static const prog_char str_res_euc[] PROGMEM = "euc";
 static const prog_char str_res_int[] PROGMEM = "int";
 static const prog_char str_res_ext[] PROGMEM = "ext";
@@ -203,23 +207,6 @@ static const prog_char str_res_flk[] PROGMEM = "flk";
 static const prog_char str_res_jap[] PROGMEM = "jap";
 static const prog_char str_res_gam[] PROGMEM = "gam";
 static const prog_char str_res_whl[] PROGMEM = "whl";
-static const prog_char str_res_c[] PROGMEM = "C";
-static const prog_char str_res_c_[] PROGMEM = "C#";
-static const prog_char str_res_d[] PROGMEM = "D";
-static const prog_char str_res_d_[] PROGMEM = "D#";
-static const prog_char str_res_e[] PROGMEM = "E";
-static const prog_char str_res_f[] PROGMEM = "F";
-static const prog_char str_res_f_[] PROGMEM = "F#";
-static const prog_char str_res_g[] PROGMEM = "G";
-static const prog_char str_res_g_[] PROGMEM = "G#";
-static const prog_char str_res_a[] PROGMEM = "A";
-static const prog_char str_res_a_[] PROGMEM = "A#";
-static const prog_char str_res_b[] PROGMEM = "B";
-static const prog_char str_res_db[] PROGMEM = "Db";
-static const prog_char str_res_eb[] PROGMEM = "Eb";
-static const prog_char str_res_gb[] PROGMEM = "Gb";
-static const prog_char str_res_ab[] PROGMEM = "Ab";
-static const prog_char str_res_bb[] PROGMEM = "Bb";
 static const prog_char str_res_key[] PROGMEM = "key";
 static const prog_char str_res__[] PROGMEM = "";
 static const prog_char str_res_stp[] PROGMEM = "stp";
@@ -319,6 +306,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cont_,
   str_res_reset,
   str_res_chn,
+  str_res_ccc,
+  str_res_clc,
+  str_res_clr,
   str_res_all,
   str_res_rest,
   str_res_tie,
@@ -362,6 +352,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_not_bad_,
   str_res_mod,
   str_res_ptn,
+  str_res_len,
   str_res_euc,
   str_res_int,
   str_res_ext,
@@ -459,30 +450,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_jap,
   str_res_gam,
   str_res_whl,
-  str_res_c,
-  str_res_c_,
-  str_res_d,
-  str_res_d_,
-  str_res_e,
-  str_res_f,
-  str_res_f_,
-  str_res_g,
-  str_res_g_,
-  str_res_a,
-  str_res_a_,
-  str_res_b,
-  str_res_c,
-  str_res_db,
-  str_res_d,
-  str_res_eb,
-  str_res_e,
-  str_res_f,
-  str_res_gb,
-  str_res_g,
-  str_res_ab,
-  str_res_a,
-  str_res_bb,
-  str_res_b,
   str_res_key,
   str_res__,
   str_res_stp,
