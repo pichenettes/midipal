@@ -23,15 +23,25 @@
 
 namespace midipal { namespace apps {
 
-const prog_uint8_t clock_divider_factory_data[1] PROGMEM = {
-  1,
+const prog_uint8_t clock_divider_factory_data[2] PROGMEM = {
+  1, 0,
 };
 
 /* static */
 uint8_t ClockDivider::divider_;
 
 /* static */
+uint8_t ClockDivider::start_delay_;
+
+/* static */
 uint8_t ClockDivider::counter_;
+
+/* static */
+uint8_t ClockDivider::start_delay_counter_;
+
+/* static */
+bool ClockDivider::running_;
+
 
 /* static */
 const prog_AppInfo ClockDivider::app_info_ PROGMEM = {
@@ -61,7 +71,7 @@ const prog_AppInfo ClockDivider::app_info_ PROGMEM = {
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  1, // settings_size
+  2, // settings_size
   SETTINGS_CLOCK_DIVIDER, // settings_offset
   &divider_, // settings_data
   clock_divider_factory_data, // factory_data
@@ -72,19 +82,44 @@ const prog_AppInfo ClockDivider::app_info_ PROGMEM = {
 /* static */
 void ClockDivider::OnInit() {
   ui.AddPage(STR_RES_DIV, UNIT_INTEGER, 1, 32);
+  ui.AddPage(STR_RES_DELAY, UNIT_INTEGER, 0, 96);
+  counter_ = 0;
+  start_delay_counter_ = 0;
+  running_ = false;
 }
 
 /* static */
 void ClockDivider::OnRawByte(uint8_t byte) {
   if (byte == 0xf8) {
-    ++counter_;
-    if (counter_ >= divider_) {
-      counter_ = 0;
-    } else {
-      return;
+    // Send a delayed START if necessary.
+    if (start_delay_counter_) {
+      --start_delay_counter_;
+      if (!start_delay_counter_) {
+        app.SendNow(0xfa);
+        running_ = true;
+      }
     }
+    // Process clock message and divide it.
+    if (running_) {
+      ++counter_;
+      if (counter_ >= divider_) {
+        app.SendNow(0xf8);
+        counter_ = 0;
+      }
+    }
+  } else if (byte == 0xfa) {
+    counter_ = divider_ - 1;
+    start_delay_counter_ = start_delay_;
+    if (!start_delay_counter_) {
+      app.SendNow(0xfa);
+      running_ = true;
+    }
+  } else {
+    if (byte == 0xfc) {
+      running_ = false;
+    }
+    app.SendNow(byte);
   }
-  app.SendNow(byte);
 }
 
 } }  // namespace midipal::apps

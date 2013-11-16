@@ -40,6 +40,7 @@ enum Unit {
   UNIT_INTEGER,
   UNIT_INDEX,
   UNIT_NOTE,
+  UNIT_SCALE,
   UNIT_INTEGER_ALL,
   UNIT_SIGNED_INTEGER,
   UNIT_CHANNEL
@@ -67,7 +68,10 @@ class Ui {
       uint8_t selected);
   static void PrintChannel(char* buffer, uint8_t channel);
   static void PrintHex(char* buffer, uint8_t value);
-  static void PrintNote(char* buffer, uint8_t note);
+  static void PrintNote(char* buffer, uint8_t note, bool flat);
+  static void PrintNote(char* buffer, uint8_t note) {
+    PrintNote(buffer, note, false);
+  }
   static void PrintString(uint8_t res_id);
 
   static void RefreshScreen();
@@ -92,7 +96,13 @@ class Ui {
   static inline uint8_t editing() { return editing_; }
   static inline uint8_t page() { return page_; }
   static inline void set_page(uint8_t page) { page_ = page; }
-
+  static const PageDefinition& page_definition(uint8_t offset) {
+    while (offset >= num_declared_pages_ && num_declared_pages_ && stride_) {
+      offset -= stride_;
+    }
+    return pages_[offset];
+  }
+  
  private:
   static avrlib::RotaryEncoder<
       EncoderALine, EncoderBLine, EncoderClickLine> encoder_;

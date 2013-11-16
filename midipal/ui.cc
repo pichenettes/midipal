@@ -240,7 +240,8 @@ void Ui::DoEvents() {
   display.Tick();
 }
 
-static const prog_char note_names[] PROGMEM = " CC# DD# E FF# GG# AA# B";
+static const prog_char note_names[] PROGMEM =      " CC# DD# E FF# GG# AA# B";
+static const prog_char note_names_flat[] PROGMEM = " CDb DEb E FGb GAb ABb B";
 static const prog_char octaves[] PROGMEM = "-012345678";
 
 /* static */
@@ -282,7 +283,20 @@ void Ui::PrintKeyValuePair(
       UnsafeItoa(value + 1, 3, &line_buffer[4]);
       break;
     case UNIT_NOTE:
-      PrintNote(&line_buffer[4], value);
+      PrintNote(&line_buffer[4], value, false);
+      break;
+    case UNIT_SCALE:
+      if (value < 12) {
+        PrintNote(&line_buffer[4], value, false);
+        line_buffer[6] = ' ';
+      } else if (value < 24) {
+        PrintNote(&line_buffer[4], value, true);
+        line_buffer[6] = ' ';
+      } else {
+        line_buffer[4] = 'k';
+        line_buffer[5] = 'e';
+        line_buffer[6] = 'y';
+      }
       break;
     default:
       ResourcesManager::LoadStringResource(
@@ -324,16 +338,17 @@ void Ui::PrintHex(char* buffer, uint8_t value) {
 }
 
 /* static */
-void Ui::PrintNote(char* buffer, uint8_t note) {
+void Ui::PrintNote(char* buffer, uint8_t note, bool flat) {
   uint8_t octave = 0;
   while (note >= 12) {
     ++octave;
     note -= 12;
   }
+  const prog_char* table = flat ? note_names_flat : note_names;
   *buffer++ = ResourcesManager::Lookup<char, uint8_t>(
-      note_names, note << 1);
+      table, note << 1);
   *buffer++ = ResourcesManager::Lookup<char, uint8_t>(
-      note_names, 1 + (note << 1));
+      table, 1 + (note << 1));
   *buffer = ResourcesManager::Lookup<char, uint8_t>(
       octaves, octave);
 }

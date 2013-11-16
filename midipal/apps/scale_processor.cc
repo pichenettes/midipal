@@ -98,7 +98,7 @@ const prog_AppInfo ScaleProcessor::app_info_ PROGMEM = {
 /* static */
 void ScaleProcessor::OnInit() {
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
-  ui.AddPage(STR_RES_ROO, STR_RES_C, 0, 24);
+  ui.AddPage(STR_RES_ROO, UNIT_SCALE, 0, 24);
   ui.AddPage(STR_RES_SCL, STR_RES_CHR, 0, 24);
   ui.AddPage(STR_RES_TRS, UNIT_SIGNED_INTEGER, -24, 24);
   ui.AddPage(STR_RES_VOI, UNIT_SIGNED_INTEGER, -24, 24);

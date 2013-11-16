@@ -30,28 +30,12 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-static const prog_uint8_t random_octave[8 * 5] PROGMEM = {
-  48, 48, 48, 48, 48, 48, 48, 48,
-  48, 48, 48, 48, 48, 48, 60, 60,
-  48, 48, 48, 48, 60, 60, 60, 60,
-  48, 48, 48, 60, 60, 60, 36, 36,
-  36, 48, 60, 72, 36, 48, 60, 72
-};
-
 static const prog_uint8_t random_interval[16 * 5] PROGMEM = {
   0, 0, 0, 0, 5, 5, 5, 5, 7, 7, 7, 7, 12, 12, 12, 12,
-  0, 0, 3, 3, 3, 4, 4, 4, 5, 5, 5, 7, 7, 7, 12, 12,
-  0, 0, 3, 3, 4, 4, 5, 5, 7, 7, 9, 9, 10, 10, 12, 12,
-  0, 2, 3, 4, 5, 7, 9, 10, 11, 12, 0, 3, 4, 5, 7, 11,
+  0, 0, 3, 3, -3, 4, 4, -4, 5, 5, -5, 7, 7, -7, 12, -12,
+  0, 0, 3, -3, 4, -4, 5, -5, 7, -7, 9, -9, 10, -10, 12, -12,
+  0, 2, 3, 4, 5, 7, 9, 10, 11, 12, 0, -3, -4, -5, -7, -1,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 7, 5, 4,
-};
-
-static const prog_uint8_t random_sign[4 * 5] PROGMEM = {
-  1, 1, 1, 1,
-  1, 1, 1, -1,
-  1, 1, -1, -1,
-  1, 1, -1, -1,
-  1, 1, -1, -1,
 };
 
 static const prog_uint8_t rank[16] PROGMEM = {
@@ -147,15 +131,22 @@ void EarTrainingGame::OnRawMidiData(
 /* static */
 void EarTrainingGame::GenerateChallenge() {
   uint8_t root = Random::GetByte() & 0xf;
-  root += ResourcesManager::Lookup<uint8_t, uint8_t>(
-      random_octave, (Random::GetByte() & 0x07) + 8 * level_);
+  if (level_) {
+    uint8_t octave = Random::GetByte();
+    while (octave >= level_) {
+      octave -= level_;
+    }
+    root += U8U8Mul(octave, 12);
+    root += 36;
+  } else {
+    root += 48;
+  }
+  
   played_notes_[0] = root;
   for (uint8_t i = 1; i < kMaxNotes; ++i) {
     int8_t interval = ResourcesManager::Lookup<int8_t, uint8_t>(
         random_interval, (Random::GetByte() & 0x0f) + 16 * level_);
-    int8_t sign = ResourcesManager::Lookup<int8_t, uint8_t>(
-        random_sign, (Random::GetByte() & 0x03) + 4 * level_);
-    played_notes_[i] = root + interval * sign;
+    played_notes_[i] = root + interval;
   }
   new_challenge_ = 1;
   if (attempts_) {

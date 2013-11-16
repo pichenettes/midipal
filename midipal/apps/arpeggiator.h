@@ -64,6 +64,7 @@ class Arpeggiator {
   static uint8_t direction_;
   static uint8_t num_octaves_;
   static uint8_t pattern_;
+  static uint8_t pattern_length_;
   static uint8_t clock_division_;
   static uint8_t duration_;
   static uint8_t latch_;

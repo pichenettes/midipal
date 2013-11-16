@@ -39,14 +39,6 @@ class Monitor {
   static void OnProgramChange(uint8_t channel, uint8_t program);
   static void OnPitchBend(uint8_t channel, uint16_t pitch_bend);
 
-  static void OnAllSoundOff(uint8_t channel);
-  static void OnResetAllControllers(uint8_t channel);
-  static void OnLocalControl(uint8_t channel, uint8_t state);
-  static void OnAllNotesOff(uint8_t channel);
-  static void OnOmniModeOff(uint8_t channel);
-  static void OnOmniModeOn(uint8_t channel);
-  static void OnMonoModeOn(uint8_t channel, uint8_t num_channels);
-  static void OnPolyModeOn(uint8_t channel);
   static void OnSysExByte(uint8_t sysex_byte);
 
   static void OnClock();

@@ -41,8 +41,8 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_RANDOM,
 };
 
-const prog_uint8_t arpeggiator_factory_data[11] PROGMEM = {
-  0, 120, 0, 0, 0, 0, 1, 0, 12, 14, 0
+const prog_uint8_t arpeggiator_factory_data[12] PROGMEM = {
+  0, 120, 0, 0, 0, 0, 1, 0, 16, 12, 14, 0
 };
 
 /* <static> */
@@ -56,6 +56,7 @@ uint8_t Arpeggiator::channel_;
 uint8_t Arpeggiator::direction_;
 uint8_t Arpeggiator::num_octaves_;
 uint8_t Arpeggiator::pattern_;
+uint8_t Arpeggiator::pattern_length_;
 uint8_t Arpeggiator::clock_division_;
 uint8_t Arpeggiator::duration_;
 uint8_t Arpeggiator::latch_;
@@ -100,7 +101,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  11, // settings_size
+  12, // settings_size
   SETTINGS_ARPEGGIATOR, // settings_offset
   &clk_mode_, // settings_data
   arpeggiator_factory_data, // factory_data
@@ -115,12 +116,13 @@ void Arpeggiator::OnInit() {
   ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 21);
+  ui.AddPage(STR_RES_LEN, UNIT_INTEGER, 1, 16);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_DUR, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_LAT, STR_RES_OFF, 0, 1);
   
   clock.Update(bpm_, groove_template_, groove_amount_);
-  SetParameter(8, clock_division_);  // Force an update of the prescaler.
+  SetParameter(9, clock_division_);  // Force an update of the prescaler.
   clock.Start();
   idle_ticks_ = 96;
   running_ = 0;
@@ -245,6 +247,7 @@ void Arpeggiator::Tick() {
         pattern_);
     uint8_t has_arpeggiator_note = (bitmask_ & pattern) ? 255 : 0;
     if (note_stack.size() && has_arpeggiator_note) {
+      StepArpeggio();
       uint8_t note = note_stack.sorted_note(current_step_).note;
       uint8_t velocity = note_stack.sorted_note(current_step_).velocity;
       note += 12 * current_octave_;
@@ -260,10 +263,9 @@ void Arpeggiator::Tick() {
       app.Send3(0x90 | channel_, note, velocity);
       app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
           midi_clock_tick_per_step, duration_) - 1);
-      StepArpeggio();
     }
     bitmask_ <<= 1;
-    if (!bitmask_) {
+    if (bitmask_ == (1 << pattern_length_) || bitmask_ == 0) {
       bitmask_ = 1;
     }
   }
@@ -275,8 +277,8 @@ void Arpeggiator::Start() {
   bitmask_ = 1;
   tick_ = midi_clock_prescaler_ - 1;
   current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
+  current_octave_ = 127;
   recording_ = 0;
-  StartArpeggio();
 }
 
 /* static */
@@ -304,6 +306,11 @@ void Arpeggiator::OnControlChange(uint8_t channel, uint8_t cc, uint8_t value) {
 
 /* static */
 void Arpeggiator::StepArpeggio() {
+  if (current_octave_ == 127) {
+    StartArpeggio();
+    return;
+  }
+  
   uint8_t num_notes = note_stack.size();
   if (direction_ == ARPEGGIO_DIRECTION_RANDOM) {
     uint8_t random_byte = Random::GetByte();
