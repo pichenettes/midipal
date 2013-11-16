@@ -86,18 +86,18 @@ void Monitor::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   ui.Clear();
   ui.PrintChannel(&line_buffer[0], channel);
   ui.PrintNote(&line_buffer[2], note);
-  ui.PrintHex(&line_buffer[6], velocity);
+  if (velocity == 0xff) {
+    line_buffer[6] = '-';
+    line_buffer[7] = '-';
+  } else {
+    ui.PrintHex(&line_buffer[6], velocity);
+  }
   ui.RefreshScreen();
 }
 
 /* static */
 void Monitor::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  ui.Clear();
-  ui.PrintChannel(&line_buffer[0], channel);
-  ui.PrintNote(&line_buffer[2], note);
-  line_buffer[6] = '-';
-  line_buffer[7] = '-';
-  ui.RefreshScreen();
+  OnNoteOn(channel, note, 0xff);
 }
 
 /* static */
@@ -105,12 +105,7 @@ void Monitor::OnNoteAftertouch(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  ui.Clear();
-  ui.PrintChannel(&line_buffer[0], channel);
-  ui.PrintNote(&line_buffer[2], note);
-  line_buffer[6] = 'a';
-  ui.PrintHex(&line_buffer[7], velocity);
-  ui.RefreshScreen();
+  OnNoteOn(channel, note, 0xa0 | (velocity >> 4));
 }
 
 /* static */
@@ -131,39 +126,13 @@ void Monitor::OnControlChange(
     uint8_t value) {
   // 01234567
   // 1 C45 67
-  switch (controller) {
-    case 0x78:
-      OnAllSoundOff(channel);
-      break;
-    case 0x79:
-      OnResetAllControllers(channel);
-      break;
-    case 0x7a:
-      OnLocalControl(channel, value);
-      break;
-    case 0x7b:
-      OnAllNotesOff(channel);
-      break;
-    case 0x7c:
-      OnOmniModeOff(channel);
-      break;
-    case 0x7d:
-      OnOmniModeOn(channel);
-      break;
-    case 0x7e:
-      OnMonoModeOn(channel, value);
-      break;
-    case 0x7f:
-      OnPolyModeOn(channel);
-      break;
-    default:
-      ui.Clear();
-      ui.PrintChannel(&line_buffer[0], channel);
-      line_buffer[2] = '#';
-      ui.PrintHex(&line_buffer[3], controller);
-      ui.PrintHex(&line_buffer[6], value);
-      ui.RefreshScreen();
-      break;
+  if (controller >= 0x78) {
+    PrintString(channel, STR_RES_SNDOFF + controller - 0x78);
+  } else {
+    ui.PrintChannel(&line_buffer[0], channel);
+    line_buffer[2] = '#';
+    ui.PrintHex(&line_buffer[3], controller);
+    ui.PrintHex(&line_buffer[6], value);
   }
 }
 
@@ -198,52 +167,6 @@ void Monitor::PrintString(uint8_t channel, uint8_t res_id) {
   ResourcesManager::LoadStringResource(res_id, &line_buffer[2], 6);
   AlignRight(&line_buffer[2], 6);
   ui.RefreshScreen();
-}
-
-/* static */
-void Monitor::OnAllSoundOff(uint8_t channel) {
-  PrintString(channel, STR_RES_SNDOFF);
-}
-
-/* static */
-void Monitor::OnResetAllControllers(uint8_t channel) {
-  PrintString(channel, STR_RES_RSTCTR);
-}
-
-/* static */
-void Monitor::OnLocalControl(uint8_t channel, uint8_t state) {
-  ui.Clear();
-  ui.PrintChannel(&line_buffer[0], channel);
-  line_buffer[2] = 'l';
-  line_buffer[3] = 'o';
-  line_buffer[4] = 'c';
-  ui.PrintHex(&line_buffer[6], state);
-  ui.RefreshScreen();
-}
-
-/* static */
-void Monitor::OnAllNotesOff(uint8_t channel) {
-  PrintString(channel, STR_RES_NOTOFF);
-}
-
-/* static */
-void Monitor::OnOmniModeOff(uint8_t channel) {
-  PrintString(channel, STR_RES_OMNOFF);
-}
-
-/* static */
-void Monitor::OnOmniModeOn(uint8_t channel) {
-  PrintString(channel, STR_RES_OMNION);
-}
-
-/* static */
-void Monitor::OnMonoModeOn(uint8_t channel, uint8_t num_channels) {
-  PrintString(channel, STR_RES_MONOON);
-}
-
-/* static */
-void Monitor::OnPolyModeOn(uint8_t channel) {
-  PrintString(channel, STR_RES_POLYON);
 }
 
 /* static */

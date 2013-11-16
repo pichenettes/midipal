@@ -51,6 +51,7 @@ sysxdump
 
 sndOff
 rstCtr
+lclCtr
 notOff
 omnOff
 omniOn

@@ -55,6 +55,7 @@ static const prog_char str_res__reset_[] PROGMEM = "!reset!";
 static const prog_char str_res___v1_3__[] PROGMEM = "¥ v1.3 ¥";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
+static const prog_char str_res_lclctr[] PROGMEM = "lclCtr";
 static const prog_char str_res_notoff[] PROGMEM = "notOff";
 static const prog_char str_res_omnoff[] PROGMEM = "omnOff";
 static const prog_char str_res_omnion[] PROGMEM = "omniOn";
@@ -293,6 +294,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res___v1_3__,
   str_res_sndoff,
   str_res_rstctr,
+  str_res_lclctr,
   str_res_notoff,
   str_res_omnoff,
   str_res_omnion,

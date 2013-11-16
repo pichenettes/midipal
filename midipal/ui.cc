@@ -240,7 +240,7 @@ void Ui::DoEvents() {
   display.Tick();
 }
 
-static const prog_char note_names[] PROGMEM = " CC# DD# E FF# GG# AA# B";
+static const prog_char note_names[] PROGMEM =      " CC# DD# E FF# GG# AA# B";
 static const prog_char note_names_flat[] PROGMEM = " CDb DEb E FGb GAb ABb B";
 static const prog_char octaves[] PROGMEM = "-012345678";
 
@@ -350,7 +350,7 @@ void Ui::PrintNote(char* buffer, uint8_t note, bool flat) {
   *buffer++ = ResourcesManager::Lookup<char, uint8_t>(
       table, 1 + (note << 1));
   *buffer = ResourcesManager::Lookup<char, uint8_t>(
-      table, octave);
+      octaves, octave);
 }
 
 /* static */

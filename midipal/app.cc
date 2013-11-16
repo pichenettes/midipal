@@ -171,10 +171,7 @@ void App::SaveSetting(uint16_t index) {
 
 /* static */
 void App::ResetToFactorySettings() {
-  memcpy_P(
-      settings_data(),
-      factory_data(),
-      settings_size());
+  memcpy_P(settings_data(), factory_data(), settings_size());
   SaveSettings();
 }
 
