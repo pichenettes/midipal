@@ -35,7 +35,11 @@ class ClockDivider {
   
  private:
   static uint8_t divider_;
+  static uint8_t start_delay_;
+  
   static uint8_t counter_;
+  static uint8_t start_delay_counter_;
+  static bool running_;
   
   DISALLOW_COPY_AND_ASSIGN(ClockDivider);
 };
