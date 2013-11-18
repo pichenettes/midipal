@@ -31,9 +31,6 @@ enum EepromSetting {
   SETTINGS_SYNC_LATCH = 10,
   SETTINGS_CLOCK_SOURCE = 16,
   SETTINGS_CC_KNOB = 24,
-  SETTINGS_EAR_TRAINING = 32,
-  SETTINGS_EAR_TRAINING_NUM_GAMES = 35,
-  SETTINGS_EAR_TRAINING_NUM_ATTEMPTS = 37,
   SETTINGS_TANPURA = 48,
   SETTINGS_DRUM_PATTERN_GENERATOR = 64,
   SETTINGS_CONTROLLER = 80,
@@ -79,12 +76,10 @@ struct AppInfo {
   void (*OnRawByte)(uint8_t);
   void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
   void (*OnInternalClockTick)();
-  void (*OnInternalClockStep)();
   uint8_t (*OnIncrement)(int8_t);
   uint8_t (*OnClick)();
   uint8_t (*OnPot)(uint8_t, uint8_t);
   uint8_t (*OnRedraw)();
-  void (*OnIdle)();
   void (*SetParameter)(uint8_t, uint8_t);
   uint8_t (*GetParameter)(uint8_t);
   uint8_t (*CheckPageStatus)(uint8_t);
@@ -225,11 +220,6 @@ class App {
       (*app_info_.OnInternalClockTick)();
     }
   }
-  static void OnInternalClockStep() {
-    if (app_info_.OnInternalClockStep) {
-      (*app_info_.OnInternalClockStep)();
-    }
-  }
   
   // Event handlers for UI.
   static uint8_t OnIncrement(int8_t increment) { 
@@ -243,11 +233,6 @@ class App {
   }
   static uint8_t OnRedraw() {
     return app_info_.OnRedraw ? (*app_info_.OnRedraw)() : 0;
-  }
-  static void OnIdle() {
-    if (app_info_.OnIdle) {
-      return (*app_info_.OnIdle)();
-    }
   }
   
   // Parameter and page checking.

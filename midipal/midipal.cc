@@ -82,9 +82,6 @@ ISR(TIMER1_COMPA_vect) {
     } else {
       ++num_clock_ticks;
     }
-    if (clock.stepped()) {
-      app.OnInternalClockStep();
-    }
   }
 }
 

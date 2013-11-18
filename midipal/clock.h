@@ -51,10 +51,6 @@ class Clock {
     running_ = false;
   }
   
-  static inline bool stepped() {
-    return tick_count_ == 0;
-  }
-
   static inline bool running() {
     return running_;
   }

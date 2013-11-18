@@ -24,6 +24,7 @@
 #include "midipal/display.h"
 #include "midipal/resources.h"
 #include "midipal/apps/settings.h"
+#include "midipal/apps/monitor.h"
 
 namespace midipal {
 
@@ -42,7 +43,6 @@ uint8_t Ui::pot_value_[8];
 uint8_t Ui::editing_;
 uint8_t Ui::read_pots_;
 uint16_t Ui::encoder_hold_time_;
-
 /* </static> */
 
 /* extern */
@@ -218,7 +218,9 @@ void Ui::DoEvents() {
   if (queue_.idle_time_ms() > 50) {
     redraw = 1;
     queue_.Touch();
-    app.OnIdle();
+    if (app.app_name() == STR_RES_MONITOR) {
+      apps::Monitor::OnIdle();
+    }
   }
   
   if (redraw && !app.OnRedraw()) {
