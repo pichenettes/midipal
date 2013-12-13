@@ -131,6 +131,7 @@ void Monitor::OnControlChange(
     line_buffer[2] = '#';
     ui.PrintHex(&line_buffer[3], controller);
     ui.PrintHex(&line_buffer[6], value);
+    ui.RefreshScreen();
   }
 }
 
