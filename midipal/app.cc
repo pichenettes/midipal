@@ -43,7 +43,6 @@
 #include "midipal/apps/delay.h"
 #include "midipal/apps/dispatcher.h"
 #include "midipal/apps/drum_pattern_generator.h"
-#include "midipal/apps/ear_training_game.h"
 #include "midipal/apps/filter.h"
 #include "midipal/apps/generic_filter.h"
 #include "midipal/apps/lfo.h"
@@ -119,11 +118,7 @@ const AppInfo* registry[] = {
 #endif  // USE_SH_SEQUENCER
   &apps::Lfo::app_info_,
 
-#ifdef USE_TANPURA
   &apps::Tanpura::app_info_,
-#else
-  &apps::EarTrainingGame::app_info_,
-#endif  // USE_TANPURA
   
   &apps::GenericFilter::app_info_,
   &apps::Settings::app_info_

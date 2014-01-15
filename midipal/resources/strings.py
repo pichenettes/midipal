@@ -33,7 +33,6 @@ chnmergr
 user prg
 dispatch
 drums
-ear game
 monitor
 randomiz
 contrllr
@@ -110,12 +109,6 @@ cc#
 nrp
 min
 max
-
-lvl
-rst
-sorry...
-perfect!
-not bad!
 
 mod
 ptn

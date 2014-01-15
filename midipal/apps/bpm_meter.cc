@@ -60,12 +60,10 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
   NULL, // void (*OnInternalClockTick)();
-  NULL, // void (*OnInternalClockStep)();
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
   &OnRedraw, // uint8_t (*OnRedraw)();
-  NULL, // void (*OnIdle)();
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);

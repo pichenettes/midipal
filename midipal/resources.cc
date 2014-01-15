@@ -38,7 +38,6 @@ static const prog_char str_res_chnmergr[] PROGMEM = "chnmergr";
 static const prog_char str_res_user_prg[] PROGMEM = "user prg";
 static const prog_char str_res_dispatch[] PROGMEM = "dispatch";
 static const prog_char str_res_drums[] PROGMEM = "drums";
-static const prog_char str_res_ear_game[] PROGMEM = "ear game";
 static const prog_char str_res_monitor[] PROGMEM = "monitor";
 static const prog_char str_res_randomiz[] PROGMEM = "randomiz";
 static const prog_char str_res_contrllr[] PROGMEM = "contrllr";
@@ -107,11 +106,6 @@ static const prog_char str_res_cc_[] PROGMEM = "cc#";
 static const prog_char str_res_nrp[] PROGMEM = "nrp";
 static const prog_char str_res_min[] PROGMEM = "min";
 static const prog_char str_res_max[] PROGMEM = "max";
-static const prog_char str_res_lvl[] PROGMEM = "lvl";
-static const prog_char str_res_rst[] PROGMEM = "rst";
-static const prog_char str_res_sorry___[] PROGMEM = "sorry...";
-static const prog_char str_res_perfect_[] PROGMEM = "perfect!";
-static const prog_char str_res_not_bad_[] PROGMEM = "not bad!";
 static const prog_char str_res_mod[] PROGMEM = "mod";
 static const prog_char str_res_ptn[] PROGMEM = "ptn";
 static const prog_char str_res_len[] PROGMEM = "len";
@@ -277,7 +271,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_user_prg,
   str_res_dispatch,
   str_res_drums,
-  str_res_ear_game,
   str_res_monitor,
   str_res_randomiz,
   str_res_contrllr,
@@ -347,11 +340,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_nrp,
   str_res_min,
   str_res_max,
-  str_res_lvl,
-  str_res_rst,
-  str_res_sorry___,
-  str_res_perfect_,
-  str_res_not_bad_,
   str_res_mod,
   str_res_ptn,
   str_res_len,
