@@ -201,7 +201,7 @@ void App::Send3(uint8_t a, uint8_t b, uint8_t c) {
 
 /* static */
 void App::Send(uint8_t status, uint8_t* data, uint8_t size) {
-  FlushOutputBuffer(size);
+  FlushOutputBuffer(size + 1);
   MidiHandler::OutputBuffer::Write(status);
   if (size) {
     MidiHandler::OutputBuffer::Write(*data++);
