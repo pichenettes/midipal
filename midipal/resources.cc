@@ -142,6 +142,8 @@ static const prog_char str_res_dir[] PROGMEM = "dir";
 static const prog_char str_res_up[] PROGMEM = "up";
 static const prog_char str_res_dwn[] PROGMEM = "dwn";
 static const prog_char str_res_u_d[] PROGMEM = "u&d";
+static const prog_char str_res_pla[] PROGMEM = "pla";
+static const prog_char str_res_chd[] PROGMEM = "chd";
 static const prog_char str_res_oct[] PROGMEM = "oct";
 static const prog_char str_res_dur[] PROGMEM = "dur";
 static const prog_char str_res_lat[] PROGMEM = "lat";
@@ -253,7 +255,6 @@ static const prog_char str_res_ni[] PROGMEM = "ni";
 static const prog_char str_res_sa[] PROGMEM = "sa";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
-static const prog_char str_res_chd[] PROGMEM = "chd";
 static const prog_char str_res_prg[] PROGMEM = "prg";
 
 
@@ -379,6 +380,8 @@ PROGMEM const prog_char* string_table[] = {
   str_res_dwn,
   str_res_u_d,
   str_res_rnd,
+  str_res_pla,
+  str_res_chd,
   str_res_oct,
   str_res_dur,
   str_res_lat,

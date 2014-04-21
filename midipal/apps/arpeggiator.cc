@@ -39,6 +39,8 @@ enum ArpeggiatorDirection {
   ARPEGGIO_DIRECTION_DOWN,
   ARPEGGIO_DIRECTION_UP_DOWN,
   ARPEGGIO_DIRECTION_RANDOM,
+  ARPEGGIO_DIRECTION_AS_PLAYED,
+  ARPEGGIO_DIRECTION_CHORD
 };
 
 const prog_uint8_t arpeggiator_factory_data[12] PROGMEM = {
@@ -111,7 +113,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
 void Arpeggiator::OnInit() {
   ui.AddClockPages();
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
-  ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 3);
+  ui.AddPage(STR_RES_DIR, STR_RES_UP, 0, 5);
   ui.AddPage(STR_RES_OCT, UNIT_INTEGER, 1, 4);
   ui.AddPage(STR_RES_PTN, UNIT_INDEX, 0, 21);
   ui.AddPage(STR_RES_LEN, UNIT_INTEGER, 1, 16);
@@ -220,6 +222,18 @@ void Arpeggiator::OnNoteOff(
 }
 
 /* static */
+void Arpeggiator::SendNote(uint8_t note, uint8_t velocity) {
+  velocity = velocity & 0x7f;
+  if (event_scheduler.Remove(note, 0)) {
+    app.Send3(0x80 | channel_, note, 0);
+  }
+  // Send a note on and schedule a note off later.
+  app.Send3(0x90 | channel_, note, velocity);
+  app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
+      midi_clock_tick_per_step, duration_) - 1);
+}
+
+/* static */
 void Arpeggiator::Tick() {
   ++tick_;
   
@@ -245,22 +259,26 @@ void Arpeggiator::Tick() {
         pattern_);
     uint8_t has_arpeggiator_note = (bitmask_ & pattern) ? 255 : 0;
     if (note_stack.size() && has_arpeggiator_note) {
-      StepArpeggio();
-      uint8_t note = note_stack.sorted_note(current_step_).note;
-      uint8_t velocity = note_stack.sorted_note(current_step_).velocity;
-      note += 12 * current_octave_;
-      while (note > 127) {
-        note -= 12;
+      if (direction_ != ARPEGGIO_DIRECTION_CHORD) {
+        StepArpeggio();
+      
+        const NoteEntry* arpeggio_note = &note_stack.sorted_note(current_step_);
+        if (direction_ == ARPEGGIO_DIRECTION_AS_PLAYED) {
+          arpeggio_note = &note_stack.played_note(current_step_);
+        }
+        uint8_t note = arpeggio_note->note;
+        uint8_t velocity = arpeggio_note->velocity;
+        note += 12 * current_octave_;
+        while (note > 127) {
+          note -= 12;
+        }
+        SendNote(note, velocity);
+      } else {
+        for (uint8_t i = 0; i < note_stack.size(); ++i) {
+          const NoteEntry* chord_note = &note_stack.sorted_note(i);
+          SendNote(chord_note->note, chord_note->velocity);
+        }
       }
-      // If there are some Note Off messages for the note about to be triggeered
-      // remove them from the queue and process them now.
-      if (event_scheduler.Remove(note, 0)) {
-        app.Send3(0x80 | channel_, note, 0);
-      }
-      // Send a note on and schedule a note off later.
-      app.Send3(0x90 | channel_, note, velocity);
-      app.SendLater(note, 0, ResourcesManager::Lookup<uint8_t, uint8_t>(
-          midi_clock_tick_per_step, duration_) - 1);
     }
     bitmask_ <<= 1;
     if (bitmask_ == (1 << pattern_length_) || bitmask_ == 0) {
@@ -360,7 +378,7 @@ void Arpeggiator::SetParameter(uint8_t key, uint8_t value) {
     current_direction_ = (direction_ == ARPEGGIO_DIRECTION_DOWN ? -1 : 1);
     StartArpeggio();
   }
-  if (key == 10) {
+  if (key == 11) {
     // When disabling latch mode, clear the note stack.
     if (value == 0) {
       note_stack.Clear();

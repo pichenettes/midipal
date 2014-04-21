@@ -53,6 +53,7 @@ class Arpeggiator {
   static void Start();
   static void StartArpeggio();
   static void StepArpeggio();
+  static void SendNote(uint8_t note, uint8_t velocity);
   
   static uint8_t running_;
    

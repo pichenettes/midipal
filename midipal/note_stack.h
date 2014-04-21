@@ -72,6 +72,14 @@ class NoteStack {
     }
     return pool_[current];
   }
+  const NoteEntry& played_note(uint8_t index) const {
+    uint8_t current = root_ptr_;
+    index = size_ - index - 1;
+    for (uint8_t i = 0; i < index; ++i) {
+      current = pool_[current].next_ptr;
+    }
+    return pool_[current];
+  }
   static const NoteEntry& sorted_note(uint8_t index) {
     return pool_[sorted_ptr_[index]];
   }

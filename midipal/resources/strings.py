@@ -154,6 +154,8 @@ up
 dwn
 u&d
  rnd
+pla
+chd
 oct
 dur
 lat
