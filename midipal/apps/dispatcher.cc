@@ -31,8 +31,8 @@ namespace midipal { namespace apps {
 
 using namespace avrlib;
 
-const prog_uint8_t dispatcher_factory_data[4] PROGMEM = {
-  0, 0, 0, 3
+const prog_uint8_t dispatcher_factory_data[5] PROGMEM = {
+  0, 0, 0, 3, 1
 };
 
 /* static */
@@ -46,6 +46,9 @@ uint8_t Dispatcher::base_channel_;
 
 /* static */
 uint8_t Dispatcher::num_voices_;
+
+/* static */
+uint8_t Dispatcher::polyphony_voices_;
 
 /* static */
 uint8_t Dispatcher::counter_;
@@ -76,7 +79,7 @@ const prog_AppInfo Dispatcher::app_info_ PROGMEM = {
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  4, // settings_size
+  5, // settings_size
   SETTINGS_DISPATCHER, // settings_offset
   &input_channel_, // settings_data
   dispatcher_factory_data, // factory_data
@@ -91,7 +94,21 @@ void Dispatcher::OnInit() {
   ui.AddPage(STR_RES_MOD, STR_RES_CYC, 0, 4);
   ui.AddPage(STR_RES_OUT, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_NUM, UNIT_INTEGER, 1, 16);
+  ui.AddPage(STR_RES_POL, UNIT_INTEGER, 1, 8);
   counter_ = 0;
+}
+
+/* static */
+uint8_t Dispatcher::map_channel(uint8_t index) {
+  if (polyphony_voices_ == 0) {
+    polyphony_voices_ = 1;
+  }
+  uint8_t channel = 0;
+  while (index >= polyphony_voices_) {
+    ++channel;
+    index -= polyphony_voices_;
+  }
+  return (base_channel_ + channel) & 0xf;
 }
 
 /* static */
@@ -110,8 +127,8 @@ void Dispatcher::OnRawMidiData(
   
   // Forward the global messages to all channels.
   if (type != 0x80 && type != 0x90 && type != 0xa0) {
-    for (uint8_t i = 0; i < num_voices_; ++i) {
-      app.Send(type | ((base_channel_ + i) & 0x0f), data, data_size);
+    for (uint8_t i = 0; i < num_voices_; i += polyphony_voices_) {
+      app.Send(type | map_channel(i), data, data_size);
     }
   }
   // That's it, the note specific messages have dedicated handlers.
@@ -180,11 +197,11 @@ void Dispatcher::SendMessage(
   NoteMapEntry* entry = note_map.Find(note);
   if (entry) {
     if (entry-> value == 0xff) {
-      for (uint8_t i = 0; i < num_voices_; ++i) {
-        app.Send3(message | ((base_channel_ + i) & 0x0f), note, velocity);
+      for (uint8_t i = 0; i < num_voices_; i += polyphony_voices_) {
+        app.Send3(message | map_channel(i), note, velocity);
       }
     } else {
-      app.Send3(message | ((base_channel_ + entry->value) & 0x0f), note, velocity);
+      app.Send3(message | map_channel(entry->value), note, velocity);
     }
     if (message == 0x80) {
       entry->note = 0xff;

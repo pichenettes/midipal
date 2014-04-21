@@ -103,7 +103,6 @@ const AppInfo* registry[] = {
 #endif  // USE_HD_CLOCK
 
   &apps::CcKnob::app_info_,
-  &apps::Controller::app_info_,
 
   &apps::DrumPatternGenerator::app_info_,
   &apps::Randomizer::app_info_,

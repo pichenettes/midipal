@@ -64,11 +64,14 @@ class Dispatcher {
       uint8_t channel,
       uint8_t note,
       uint8_t velocity);
+  
+  static uint8_t map_channel(uint8_t index);
    
   static uint8_t input_channel_;
   static uint8_t mode_;
   static uint8_t base_channel_;
   static uint8_t num_voices_;
+  static uint8_t polyphony_voices_;
 
   static uint8_t counter_;
   
