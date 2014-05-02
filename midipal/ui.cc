@@ -105,14 +105,14 @@ void Ui::Poll() {
   }
   if (encoder_.immediate_value() == 0x00) {
     ++encoder_hold_time_;
-    if (encoder_hold_time_ > apps::Settings::encoder_hold_threshold()) {
+    if (encoder_hold_time_ > 800) {
       queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 0xff);
     }
   }
   if (encoder_.clicked()) {
     // Do not enqueue a click event when the encoder is released after a long
     // press.
-    if (encoder_hold_time_ <= apps::Settings::encoder_hold_threshold()) {
+    if (encoder_hold_time_ <= 800) {
       queue_.AddEvent(CONTROL_ENCODER_CLICK, 0, 1);
     }
     encoder_hold_time_ = 0;
@@ -285,7 +285,12 @@ void Ui::PrintKeyValuePair(
       UnsafeItoa(value + 1, 3, &line_buffer[4]);
       break;
     case UNIT_NOTE:
+    case UNIT_NOTE_OFF:
       PrintNote(&line_buffer[4], value, false);
+      if ((value_res_id == UNIT_NOTE_OFF) && value == 23) {
+        line_buffer[4] = 'o';
+        line_buffer[6] = line_buffer[5] = 'f';
+      }
       break;
     case UNIT_SCALE:
       if (value < 12) {

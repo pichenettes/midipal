@@ -274,22 +274,32 @@ void App::RemoteControl(
 /* static */
 void App::NoteClock(uint8_t channel, uint8_t note) {
   if (channel + 1 == apps::Settings::note_clock_channel()) {
-    if (!note_clock_running_) {
-      note_clock_note_ = note;
-      note_clock_running_ = true;
-      OnStart();
-      OnClock();
-    } else {
-      if (note == note_clock_note_) {
-        uint8_t steps = ResourcesManager::Lookup<uint8_t, uint8_t>(
-            midi_clock_tick_per_step,
-            apps::Settings::note_clock_ticks());
-        for (uint8_t i = 0; i < steps; ++i) {
-          OnClock();
-        }
+    if (apps::Settings::note_clock_note() == 23) {
+      if (!note_clock_running_) {
+        note_clock_note_ = note;
+        note_clock_running_ = true;
+        OnStart();
+        OnClock();
       } else {
-        note_clock_running_ = false;
-        OnStop();
+        if (note == note_clock_note_) {
+          uint8_t steps = ResourcesManager::Lookup<uint8_t, uint8_t>(
+              midi_clock_tick_per_step,
+              apps::Settings::note_clock_ticks());
+          for (uint8_t i = 0; i < steps; ++i) {
+            OnClock();
+          }
+        } else {
+          note_clock_running_ = false;
+          OnStop();
+        }
+      }
+    } else if (note == apps::Settings::note_clock_note()) {
+      uint8_t steps = ResourcesManager::Lookup<uint8_t, uint8_t>(
+          midi_clock_tick_per_step,
+          apps::Settings::note_clock_ticks());
+      OnStart();
+      for (uint8_t i = 0; i < steps; ++i) {
+        OnClock();
       }
     }
   }

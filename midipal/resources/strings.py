@@ -46,7 +46,7 @@ settings
 notenuke
 sysxdump
 !reset!
-\xa5 v1.3 \xa5
+\xa5 v1.4 \xa5
 
 sndOff
 rstCtr
@@ -66,7 +66,7 @@ reset
 chn
 ccc
 clc
-clr
+cln
 all
 
 rest
@@ -81,10 +81,6 @@ yes
 xFE
 let
 flt
-hld
-.5s
- 1s
- 2s
 
 rec
 dub

@@ -51,7 +51,7 @@ static const prog_char str_res_settings[] PROGMEM = "settings";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
 static const prog_char str_res__reset_[] PROGMEM = "!reset!";
-static const prog_char str_res___v1_3__[] PROGMEM = "¥ v1.3 ¥";
+static const prog_char str_res___v1_4__[] PROGMEM = "¥ v1.4 ¥";
 static const prog_char str_res_sndoff[] PROGMEM = "sndOff";
 static const prog_char str_res_rstctr[] PROGMEM = "rstCtr";
 static const prog_char str_res_lclctr[] PROGMEM = "lclCtr";
@@ -70,7 +70,7 @@ static const prog_char str_res_reset[] PROGMEM = "reset";
 static const prog_char str_res_chn[] PROGMEM = "chn";
 static const prog_char str_res_ccc[] PROGMEM = "ccc";
 static const prog_char str_res_clc[] PROGMEM = "clc";
-static const prog_char str_res_clr[] PROGMEM = "clr";
+static const prog_char str_res_cln[] PROGMEM = "cln";
 static const prog_char str_res_all[] PROGMEM = "all";
 static const prog_char str_res_rest[] PROGMEM = "rest";
 static const prog_char str_res_tie[] PROGMEM = "tie";
@@ -82,10 +82,6 @@ static const prog_char str_res_yes[] PROGMEM = "yes";
 static const prog_char str_res_xfe[] PROGMEM = "xFE";
 static const prog_char str_res_let[] PROGMEM = "let";
 static const prog_char str_res_flt[] PROGMEM = "flt";
-static const prog_char str_res_hld[] PROGMEM = "hld";
-static const prog_char str_res__5s[] PROGMEM = ".5s";
-static const prog_char str_res__1s[] PROGMEM = "1s";
-static const prog_char str_res__2s[] PROGMEM = "2s";
 static const prog_char str_res_rec[] PROGMEM = "rec";
 static const prog_char str_res_dub[] PROGMEM = "dub";
 static const prog_char str_res_run[] PROGMEM = "run";
@@ -285,7 +281,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_notenuke,
   str_res_sysxdump,
   str_res__reset_,
-  str_res___v1_3__,
+  str_res___v1_4__,
   str_res_sndoff,
   str_res_rstctr,
   str_res_lclctr,
@@ -304,7 +300,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_chn,
   str_res_ccc,
   str_res_clc,
-  str_res_clr,
+  str_res_cln,
   str_res_all,
   str_res_rest,
   str_res_tie,
@@ -316,10 +312,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_xfe,
   str_res_let,
   str_res_flt,
-  str_res_hld,
-  str_res__5s,
-  str_res__1s,
-  str_res__2s,
   str_res_rec,
   str_res_dub,
   str_res_tie,

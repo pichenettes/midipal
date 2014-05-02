@@ -43,7 +43,8 @@ enum Unit {
   UNIT_SCALE,
   UNIT_INTEGER_ALL,
   UNIT_SIGNED_INTEGER,
-  UNIT_CHANNEL
+  UNIT_CHANNEL,
+  UNIT_NOTE_OFF
 };
 
 enum PageScrollingStatus {

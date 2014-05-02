@@ -27,20 +27,20 @@
 namespace midipal { namespace apps {
 
 const prog_uint8_t settings_factory_data[5] PROGMEM = {
-  0, 2, 0, 0, 12
+  0, 0, 0, 60, 12
 };
 
 /* static */
 uint8_t Settings::filter_active_sensing_;
 
 /* static */
-uint8_t Settings::encoder_hold_threshold_;
-
-/* static */
 uint8_t Settings::remote_control_channel_;
 
 /* static */
 uint8_t Settings::note_clock_channel_;
+
+/* static */
+uint8_t Settings::note_clock_note_;
 
 /* static */
 uint8_t Settings::note_clock_ticks_;
@@ -75,7 +75,7 @@ const prog_AppInfo Settings::app_info_ PROGMEM = {
   NULL, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  5, // settings_size
+  6, // settings_size
   SETTINGS_SYSTEM_SETTINGS, // settings_offset
   &filter_active_sensing_, // settings_data
   settings_factory_data, // factory_data
@@ -85,9 +85,9 @@ const prog_AppInfo Settings::app_info_ PROGMEM = {
 /* static */
 void Settings::OnInit() {
   ui.AddPage(STR_RES_XFE, STR_RES_LET, 0, 1);
-  ui.AddPage(STR_RES_HLD, STR_RES__5S, 0, 2);
   ui.AddPage(STR_RES_CCC, UNIT_INTEGER, 0, 16);
   ui.AddPage(STR_RES_CLC, UNIT_INTEGER, 0, 16);
+  ui.AddPage(STR_RES_CLN, UNIT_NOTE_OFF, 23, 108);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
 }
 
@@ -95,15 +95,5 @@ void Settings::OnInit() {
 void Settings::OnRawByte(uint8_t byte) {
   app.SendNow(byte);
 }
-
-/* static */
-uint16_t Settings::encoder_hold_threshold() {
-  // Return encoder hold threshold in 500us ticks for Ui::Poll() at 2Khz
-  switch (encoder_hold_threshold_) {
-    case 0: return  500 * 2;
-    case 1: return 1000 * 2;
-  }
-  return 2000 * 2;
-};
 
 } }  // namespace midipal::apps
