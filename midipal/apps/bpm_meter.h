@@ -30,7 +30,7 @@ class BpmMeter {
 
   static void OnInit();
 
-  static void OnClock();
+  static void OnClock(uint8_t clock_mode);
   static void OnStart();
   static void OnStop();
   static void OnContinue();

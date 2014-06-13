@@ -67,7 +67,6 @@ const prog_AppInfo SyncLatch::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  NULL, // void (*OnInternalClockTick)();
   NULL, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -112,7 +111,10 @@ void SyncLatch::OnStop() {
 }
 
 /* static */
-void SyncLatch::OnClock() {
+void SyncLatch::OnClock(uint8_t clock_mode) {
+  if (clock_mode != CLOCK_MODE_EXTERNAL) {
+    return;
+  }
   ++step_counter_;
   uint8_t num_ticks_per_beat = ResourcesManager::Lookup<uint8_t, uint8_t>(
       midi_clock_tick_per_step, beat_division_);

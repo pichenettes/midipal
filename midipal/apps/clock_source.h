@@ -39,7 +39,7 @@ class ClockSource {
   static uint8_t OnClick();
   static uint8_t OnIncrement(int8_t increment);
   
-  static void OnInternalClockTick();
+  static void OnClock(uint8_t clock_source);
   
   static const prog_AppInfo app_info_;
   

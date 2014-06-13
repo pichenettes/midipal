@@ -93,7 +93,7 @@ const prog_AppInfo Arpeggiator::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -146,37 +146,32 @@ void Arpeggiator::OnRawMidiData(
 
 /* static */
 void Arpeggiator::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
 void Arpeggiator::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL && !running_) {
     Start();
   }
 }
 
 /* static */
 void Arpeggiator::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 0;
     app.FlushQueue(channel_);
   }
 }
 
 /* static */
-void Arpeggiator::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void Arpeggiator::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void Arpeggiator::OnClock(uint8_t clock_mode) {
+  if (clk_mode_ == clock_mode && running_) {
+    if (clock_mode == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }
@@ -186,10 +181,11 @@ void Arpeggiator::OnNoteOn(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
     return;
   }
-  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_EXTERNAL) {
     if (idle_ticks_ >= 96) {
       clock.Start();
       Start();
@@ -209,7 +205,8 @@ void Arpeggiator::OnNoteOff(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_ || ignore_note_off_messages_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_ || ignore_note_off_messages_) {
     return;
   }
   if (!latch_) {

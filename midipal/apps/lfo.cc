@@ -75,7 +75,7 @@ const prog_AppInfo Lfo::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -119,7 +119,15 @@ void Lfo::OnRawMidiData(
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  app.Send(status, data, data_size);
+  if (status != (0x80 | channel_) && 
+      status != (0x90 | channel_)) {
+    app.Send(status, data, data_size);
+  } else {
+    if (clk_mode_ != CLOCK_MODE_NOTE ||
+        !app.NoteClock(false, status & 0xf, data[0])) {
+      app.Send(status, data, data_size);
+    }
+  }
 }
 
 /* static */
@@ -146,42 +154,41 @@ void Lfo::SetParameter(uint8_t key, uint8_t value) {
 
 /* static */
 void Lfo::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Start();
   }
 }
 
 /* static */
 void Lfo::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Stop();
   }
 }
 
 /* static */
 void Lfo::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
-void Lfo::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void Lfo::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void Lfo::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source && running_) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }
 
 /* static */
 void Lfo::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
+    return;
+  }
   if (channel != channel_) {
     return;
   }
@@ -196,7 +203,8 @@ void Lfo::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 /* static */
 void Lfo::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_) {
     return;
   }
   note_stack.NoteOff(note);

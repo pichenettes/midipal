@@ -55,7 +55,8 @@ enum EepromSetting {
 
 enum ClockMode {
   CLOCK_MODE_INTERNAL,
-  CLOCK_MODE_EXTERNAL
+  CLOCK_MODE_EXTERNAL,
+  CLOCK_MODE_NOTE,
 };
 
 struct AppInfo {
@@ -68,14 +69,13 @@ struct AppInfo {
   void (*OnProgramChange)(uint8_t, uint8_t);
   void (*OnPitchBend)(uint8_t, uint16_t);
   void (*OnSysExByte)(uint8_t);
-  void (*OnClock)();
+  void (*OnClock)(uint8_t);
   void (*OnStart)();
   void (*OnContinue)();
   void (*OnStop)();
   uint8_t (*CheckChannel)(uint8_t);
   void (*OnRawByte)(uint8_t);
   void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  void (*OnInternalClockTick)();
   uint8_t (*OnIncrement)(int8_t);
   uint8_t (*OnClick)();
   uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -120,9 +120,6 @@ class App {
     }
   }
   static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-    if (velocity) {
-      NoteClock(channel, note);
-    }
     if (app_info_.OnNoteOn) {
       (*app_info_.OnNoteOn)(channel, note, velocity);
     }
@@ -170,9 +167,9 @@ class App {
     }
   }
 
-  static void OnClock() {
+  static void OnClock(uint8_t clock_mode) {
     if (app_info_.OnClock) {
-      (*app_info_.OnClock)();
+      (*app_info_.OnClock)(clock_mode);
     }
   }
   static void OnStart() {
@@ -211,13 +208,6 @@ class App {
      uint8_t accepted_channel) {
     if (app_info_.OnRawMidiData) {
       (*app_info_.OnRawMidiData)(status, data, data_size, accepted_channel);
-    }
-  }
-  
-  // Event handlers for internal clock.
-  static void OnInternalClockTick() {
-    if (app_info_.OnInternalClockTick) {
-      (*app_info_.OnInternalClockTick)();
     }
   }
   
@@ -276,14 +266,12 @@ class App {
   static void FlushQueue(uint8_t channel);
   
   static uint8_t num_apps();
+  static bool NoteClock(bool on, uint8_t channel, uint8_t note);
   
  private:
   static void RemoteControl(uint8_t channel, uint8_t controller, uint8_t value);
-  static void NoteClock(uint8_t channel, uint8_t note);
   
   static AppInfo app_info_;
-  static uint8_t note_clock_note_;
-  static bool note_clock_running_;
   
   DISALLOW_COPY_AND_ASSIGN(App);
 };

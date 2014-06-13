@@ -79,7 +79,7 @@ void Ui::AddPage(
 
 /* static */
 void Ui::AddClockPages() {
-  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
+  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 2);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
@@ -285,12 +285,7 @@ void Ui::PrintKeyValuePair(
       UnsafeItoa(value + 1, 3, &line_buffer[4]);
       break;
     case UNIT_NOTE:
-    case UNIT_NOTE_OFF:
       PrintNote(&line_buffer[4], value, false);
-      if ((value_res_id == UNIT_NOTE_OFF) && value == 23) {
-        line_buffer[4] = 'o';
-        line_buffer[6] = line_buffer[5] = 'f';
-      }
       break;
     case UNIT_SCALE:
       if (value < 12) {

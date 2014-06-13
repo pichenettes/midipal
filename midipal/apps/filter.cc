@@ -54,7 +54,6 @@ const prog_AppInfo Filter::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  NULL, // void (*OnInternalClockTick)();
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);

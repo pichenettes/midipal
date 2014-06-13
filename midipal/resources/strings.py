@@ -112,6 +112,7 @@ len
 euc
 int
 ext
+not
 clk
 pt1
 pt2

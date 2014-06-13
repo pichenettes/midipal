@@ -42,8 +42,7 @@ class DrumPatternGenerator {
   static void OnContinue();
   static void OnStart();
   static void OnStop();
-  static void OnClock();
-  static void OnInternalClockTick();
+  static void OnClock(uint8_t clock_mode);
 
   static void SetParameter(uint8_t key, uint8_t value);
   

@@ -79,7 +79,7 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -192,8 +192,9 @@ uint8_t ShSequencer::OnClick() {
       case 0:
       case 1:
         sequence_data_[num_steps_] = 0xff - rec_mode_menu_option_;
-        app.SaveSetting(num_steps_ + 9);
+        app.SaveSetting(9 + num_steps_);
         ++num_steps_;
+        app.SaveSetting(8);
         if (num_steps_ == kShSequencerNumSteps) {
           recording_ = 0;
         }
@@ -212,14 +213,14 @@ uint8_t ShSequencer::OnClick() {
 
 /* static */
 void ShSequencer::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Start();
   }
 }
 
 /* static */
 void ShSequencer::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Stop();
   }
 }
@@ -232,16 +233,11 @@ void ShSequencer::OnContinue() {
 }
 
 /* static */
-void ShSequencer::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void ShSequencer::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void ShSequencer::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source && running_) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }
@@ -279,15 +275,17 @@ void ShSequencer::OnControlChange(
 
 /* static */
 void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
     return;
   }
   uint8_t was_running = running_;
   uint8_t just_started = 0;
   if (recording_) {
     sequence_data_[num_steps_] = note;
-    app.SaveSetting(num_steps_ + 9);
+    app.SaveSetting(9 + num_steps_);
     ++num_steps_;
+    app.SaveSetting(8);
     if (num_steps_ == kShSequencerNumSteps) {
       recording_ = 0;
     }
@@ -313,7 +311,8 @@ void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 /* static */
 void ShSequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_) {
     return;
   }
   

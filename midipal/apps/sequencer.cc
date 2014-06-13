@@ -108,7 +108,7 @@ const prog_AppInfo Sequencer::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -179,43 +179,39 @@ void Sequencer::SetParameter(uint8_t key, uint8_t value) {
 
 /* static */
 void Sequencer::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Start();
   }
 }
 
 /* static */
 void Sequencer::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Stop();
   }
 }
 
 /* static */
 void Sequencer::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
-void Sequencer::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void Sequencer::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void Sequencer::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source && running_) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }
 
 /* static */
 void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
     return;
   }
   
@@ -253,7 +249,8 @@ void Sequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 /* static */
 void Sequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_) {
     return;
   }
   

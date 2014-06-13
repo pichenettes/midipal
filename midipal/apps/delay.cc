@@ -72,7 +72,7 @@ const prog_AppInfo Delay::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -110,42 +110,45 @@ void Delay::OnRawMidiData(
    uint8_t* data,
    uint8_t data_size,
    uint8_t accepted_channel) {
-  // Forward everything.
-  app.Send(status, data, data_size);
+  if (status != (0x80 | channel_) && 
+      status != (0x90 | channel_)) {
+    app.Send(status, data, data_size);
+  } else {
+    if (clk_mode_ != CLOCK_MODE_NOTE ||
+        !app.NoteClock(false, status & 0xf, data[0])) {
+      app.Send(status, data, data_size);
+    }
+  }
 }
 
 /* static */
 void Delay::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
 void Delay::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
 void Delay::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 0;
   }
 }
 
 /* static */
-void Delay::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    SendEchoes();
-  }
-}
-
-/* static */
-void Delay::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    app.SendNow(0xf8);
+void Delay::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source &&
+      (running_ || clock_source == CLOCK_MODE_INTERNAL)) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     SendEchoes();
   }
 }
@@ -155,7 +158,8 @@ void Delay::OnNoteOn(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
     return;
   }
   ScheduleEchoes(note, velocity, num_taps_);
@@ -166,7 +170,8 @@ void Delay::OnNoteOff(
     uint8_t channel,
     uint8_t note,
     uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_) {
     return;
   }
   ScheduleEchoes(note, 0, num_taps_);

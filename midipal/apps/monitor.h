@@ -41,7 +41,7 @@ class Monitor {
 
   static void OnSysExByte(uint8_t sysex_byte);
 
-  static void OnClock();
+  static void OnClock(uint8_t clock_mode);
   static void OnStart();
   static void OnContinue();
   static void OnStop();

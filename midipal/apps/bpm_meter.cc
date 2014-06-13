@@ -59,7 +59,6 @@ const prog_AppInfo BpmMeter::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  NULL, // void (*OnInternalClockTick)();
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -91,12 +90,14 @@ void BpmMeter::Reset() {
 }
 
 /* static */
-void BpmMeter::OnClock() {
-  if (num_ticks_ == 0) {
-    clock.Reset();
+void BpmMeter::OnClock(uint8_t clock_mode) {
+  if (clock_mode == CLOCK_MODE_EXTERNAL) {
+    if (num_ticks_ == 0) {
+      clock.Reset();
+    }
+    clock_ = clock.value();
+    ++num_ticks_;
   }
-  clock_ = clock.value();
-  ++num_ticks_;
 }
 
 /* static */

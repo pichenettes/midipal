@@ -35,11 +35,10 @@ class Tanpura {
      uint8_t data_size,
      uint8_t accepted_channel);
   static void OnNoteOn(uint8_t, uint8_t, uint8_t);
-  static void OnInternalClockTick();
   static void OnContinue();
   static void OnStart();
   static void OnStop();
-  static void OnClock();
+  static void OnClock(uint8_t clock_mode);
   
   static void SetParameter(uint8_t key, uint8_t value);
   

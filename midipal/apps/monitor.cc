@@ -54,7 +54,6 @@ const prog_AppInfo Monitor::app_info_ PROGMEM = {
   &CheckChannel, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  NULL, // void (*OnInternalClockTick)();
   NULL, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)();
@@ -180,13 +179,14 @@ void Monitor::OnSysExByte(uint8_t sysex_byte) {
 }
 
 /* static */
-void Monitor::OnClock() {
+void Monitor::OnClock(uint8_t clock_mode) {
   if (ui.editing()) {
     return;
   }
-  
-  line_buffer[1] = 0xa5;
-  ui.RefreshScreen();
+  if (clock_mode == CLOCK_MODE_EXTERNAL) {
+    line_buffer[1] = 0xa5;
+    ui.RefreshScreen();
+  }
 }
 
 /* static */

@@ -82,7 +82,7 @@ struct MidiHandler : public midi::MidiDevice {
   static void BozoByte(uint8_t bozo_byte) { }
 
   static void Clock() {
-    app.OnClock();
+    app.OnClock(CLOCK_MODE_EXTERNAL);
   }
   
   static void Start() {

@@ -38,7 +38,7 @@ class SyncLatch {
 
   static void OnStart();
   static void OnStop();
-  static void OnClock();
+  static void OnClock(uint8_t clock_mode);
 
   static uint8_t OnClick();
   static uint8_t OnRedraw();

@@ -59,7 +59,7 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
   
   while (num_clock_ticks) {
     --num_clock_ticks;
-    app.OnInternalClockTick();
+    app.OnClock(CLOCK_MODE_INTERNAL);
   }
   
   sub_clock = (sub_clock + 1) & 3;
@@ -78,7 +78,7 @@ ISR(TIMER1_COMPA_vect) {
   PwmChannel1A::set_frequency(clock.Tick());
   if (clock.running()) {
     if (app.realtime_clock_handling()) {
-      app.OnInternalClockTick();
+      app.OnClock(CLOCK_MODE_INTERNAL);
     } else {
       ++num_clock_ticks;
     }

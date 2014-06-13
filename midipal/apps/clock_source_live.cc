@@ -70,14 +70,14 @@ const prog_AppInfo ClockSourceLive::app_info_ PROGMEM = {
   NULL, // void (*OnProgramChange)(uint8_t, uint8_t);
   NULL, // void (*OnPitchBend)(uint8_t, uint16_t);
   NULL, // void (*OnSysExByte)(uint8_t);
-  NULL, // void (*OnClock)();
+  &OnClock, // void (*OnClock)();
   &OnStart, // void (*OnStart)();
   &OnContinue, // void (*OnContinue)();
   &OnStop, // void (*OnStop)();
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   &OnRawByte, // void (*OnRawByte)(uint8_t);
   NULL, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -221,8 +221,10 @@ void ClockSourceLive::OnContinue() {
 }
 
 /* static */
-void ClockSourceLive::OnInternalClockTick() {
-  app.SendNow(0xf8);
+void ClockSourceLive::OnClock(uint8_t clock_source) {
+  if (clock_source == CLOCK_MODE_INTERNAL) {
+    app.SendNow(0xf8);
+  }
 }
 
 /* static */

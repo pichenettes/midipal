@@ -85,7 +85,7 @@ const prog_AppInfo PolySequencer::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -218,14 +218,14 @@ uint8_t PolySequencer::OnClick() {
 
 /* static */
 void PolySequencer::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Start();
   }
 }
 
 /* static */
 void PolySequencer::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Stop();
   }
 }
@@ -238,16 +238,11 @@ void PolySequencer::OnContinue() {
 }
 
 /* static */
-void PolySequencer::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void PolySequencer::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void PolySequencer::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source && running_) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }
@@ -301,7 +296,8 @@ void PolySequencer::Record(uint8_t note) {
 
 /* static */
 void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(true, channel, note)) ||
+      channel != channel_) {
     return;
   }
   uint8_t was_running = running_;
@@ -330,7 +326,8 @@ void PolySequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 
 /* static */
 void PolySequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-  if (channel != channel_) {
+  if ((clk_mode_ == CLOCK_MODE_NOTE && app.NoteClock(false, channel, note)) ||
+      channel != channel_) {
     return;
   }
   

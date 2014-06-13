@@ -108,6 +108,7 @@ static const prog_char str_res_len[] PROGMEM = "len";
 static const prog_char str_res_euc[] PROGMEM = "euc";
 static const prog_char str_res_int[] PROGMEM = "int";
 static const prog_char str_res_ext[] PROGMEM = "ext";
+static const prog_char str_res_not[] PROGMEM = "not";
 static const prog_char str_res_clk[] PROGMEM = "clk";
 static const prog_char str_res_pt1[] PROGMEM = "pt1";
 static const prog_char str_res_pt2[] PROGMEM = "pt2";
@@ -126,7 +127,6 @@ static const prog_char str_res_out[] PROGMEM = "out";
 static const prog_char str_res_spl[] PROGMEM = "spl";
 static const prog_char str_res_low[] PROGMEM = "low";
 static const prog_char str_res_upp[] PROGMEM = "upp";
-static const prog_char str_res_not[] PROGMEM = "not";
 static const prog_char str_res_vel[] PROGMEM = "vel";
 static const prog_char str_res__c1[] PROGMEM = "#c1";
 static const prog_char str_res__c2[] PROGMEM = "#c2";
@@ -339,6 +339,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_euc,
   str_res_int,
   str_res_ext,
+  str_res_not,
   str_res_clk,
   str_res_pt1,
   str_res_pt2,

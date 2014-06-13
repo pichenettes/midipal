@@ -67,7 +67,7 @@ const prog_AppInfo Tanpura::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckChannel)(uint8_t);
   NULL, // void (*OnRawByte)(uint8_t);
   &OnRawMidiData, // void (*OnRawMidiData)(uint8_t, uint8_t*, uint8_t, uint8_t);
-  &OnInternalClockTick, // void (*OnInternalClockTick)();
+
   NULL, // uint8_t (*OnIncrement)(int8_t);
   NULL, // uint8_t (*OnClick)();
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
@@ -86,7 +86,7 @@ const prog_AppInfo Tanpura::app_info_ PROGMEM = {
 /* static */
 void Tanpura::OnInit() {
   ui.AddPage(STR_RES_RUN, STR_RES_OFF, 0, 1);
-  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 1);
+  ui.AddPage(STR_RES_CLK, STR_RES_INT, 0, 2);
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_DIV, STR_RES_2_1, 0, 16);
   ui.AddPage(STR_RES_CHN, UNIT_INDEX, 0, 15);
@@ -127,36 +127,31 @@ void Tanpura::SetParameter(uint8_t key, uint8_t value) {
 
 /* static */
 void Tanpura::OnStart() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Start();
   }
 }
 
 /* static */
 void Tanpura::OnStop() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     Stop();
   }
 }
 
 /* static */
 void Tanpura::OnContinue() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL) {
+  if (clk_mode_ != CLOCK_MODE_INTERNAL) {
     running_ = 1;
   }
 }
 
 /* static */
-void Tanpura::OnClock() {
-  if (clk_mode_ == CLOCK_MODE_EXTERNAL && running_) {
-    Tick();
-  }
-}
-
-/* static */
-void Tanpura::OnInternalClockTick() {
-  if (clk_mode_ == CLOCK_MODE_INTERNAL && running_) {
-    app.SendNow(0xf8);
+void Tanpura::OnClock(uint8_t clock_source) {
+  if (clk_mode_ == clock_source && running_) {
+    if (clock_source == CLOCK_MODE_INTERNAL) {
+      app.SendNow(0xf8);
+    }
     Tick();
   }
 }

@@ -39,11 +39,10 @@ class ShSequencer {
   static void OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
   static void OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
   
-  static void OnInternalClockTick();
   static void OnContinue();
   static void OnStart();
   static void OnStop();
-  static void OnClock();
+  static void OnClock(uint8_t clock_mode);
   
   static void OnControlChange(
       uint8_t channel,
