@@ -42,7 +42,6 @@ class Settings {
 
  private:
   static uint8_t filter_active_sensing_;
-  static uint8_t encoder_hold_threshold_;
   static uint8_t remote_control_channel_;
   static uint8_t note_clock_channel_;
   static uint8_t note_clock_note_;
