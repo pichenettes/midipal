@@ -62,6 +62,7 @@ class ShSequencer {
   static void Stop();
   static void Start();
   static void Tick();
+  static void SaveAndAdvanceStep();
   
   static uint8_t running_;
   static uint8_t recording_;

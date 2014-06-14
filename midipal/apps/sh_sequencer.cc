@@ -192,9 +192,7 @@ uint8_t ShSequencer::OnClick() {
       case 0:
       case 1:
         sequence_data_[num_steps_] = 0xff - rec_mode_menu_option_;
-        app.SaveSetting(9 + num_steps_);
-        ++num_steps_;
-        app.SaveSetting(8);
+        SaveAndAdvanceStep();
         if (num_steps_ == kShSequencerNumSteps) {
           recording_ = 0;
         }
@@ -283,9 +281,7 @@ void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   uint8_t just_started = 0;
   if (recording_) {
     sequence_data_[num_steps_] = note;
-    app.SaveSetting(9 + num_steps_);
-    ++num_steps_;
-    app.SaveSetting(8);
+    SaveAndAdvanceStep();
     if (num_steps_ == kShSequencerNumSteps) {
       recording_ = 0;
     }
@@ -387,6 +383,18 @@ void ShSequencer::Tick() {
       step_ = 0;
     }
   }
+}
+
+/* static */
+void ShSequencer::SaveAndAdvanceStep() {
+  app.SaveSetting(9 + num_steps_);
+  if ((num_steps_ & 0x7) == 0) {
+    uint8_t offset = 9 + kShSequencerNumSteps + (num_steps_ >> 3);
+    app.SaveSetting(offset);
+    app.SaveSetting(offset + kShSequencerNumSteps / 8 + 1);
+  }
+  ++num_steps_;
+  app.SaveSetting(8);
 }
 
 } }  // namespace midipal::apps
