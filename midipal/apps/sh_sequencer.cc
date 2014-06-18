@@ -357,7 +357,9 @@ void ShSequencer::Tick() {
     uint8_t note = sequence_data_[step_];
     if (note == 0xff) {
       // It's a rest
-      app.Send3(0x80 | channel_, pending_note_, 0);
+      if (pending_note_ != 0xff) {
+        app.Send3(0x80 | channel_, pending_note_, 0);
+      }
       pending_note_ = 0xff;
     } else if (note == 0xfe) {
       // It's a tie, do nothing.
