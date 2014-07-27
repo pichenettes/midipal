@@ -73,7 +73,7 @@ struct Modifier {
   inline uint8_t accept_channel(uint8_t channel) const {
     uint16_t channel_bit = 1;
     channel_bit <<= channel;
-    return channel_bit & channel_bitmask;
+    return (channel_bit & channel_bitmask) != 0;
   }
   
   inline uint8_t accept_message(uint8_t message) const {
