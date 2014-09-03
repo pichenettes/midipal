@@ -23,6 +23,7 @@ strings = """
 syncltch
 polyseq
 arpeggio
+latch
 bpm cntr
 cc knob
 chordmem
@@ -159,6 +160,17 @@ lat
 div
 den
 
+ch>
+ch<
+no>
+no<
+ve>
+ve<<
+
+offi
+glo
+loc
+
 4/1
 3/1
 2/1
@@ -267,11 +279,6 @@ lp2
 rs1
 rs2
 s&h
-
-pa
-ma
-ni
-sa
 
 res
 fre

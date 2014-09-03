@@ -69,6 +69,8 @@ class NoteMap {
     }
     return NULL;
   }
+  
+  inline void* raw_data() { return map_; }
 
  private:
   NoteMapEntry map_[size];

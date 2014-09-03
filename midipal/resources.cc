@@ -28,6 +28,7 @@ namespace midipal {
 static const prog_char str_res_syncltch[] PROGMEM = "syncltch";
 static const prog_char str_res_polyseq[] PROGMEM = "polyseq";
 static const prog_char str_res_arpeggio[] PROGMEM = "arpeggio";
+static const prog_char str_res_latch[] PROGMEM = "latch";
 static const prog_char str_res_bpm_cntr[] PROGMEM = "bpm cntr";
 static const prog_char str_res_cc_knob[] PROGMEM = "cc knob";
 static const prog_char str_res_chordmem[] PROGMEM = "chordmem";
@@ -145,6 +146,15 @@ static const prog_char str_res_dur[] PROGMEM = "dur";
 static const prog_char str_res_lat[] PROGMEM = "lat";
 static const prog_char str_res_div[] PROGMEM = "div";
 static const prog_char str_res_den[] PROGMEM = "den";
+static const prog_char str_res_chg[] PROGMEM = "ch>";
+static const prog_char str_res_chl[] PROGMEM = "ch<";
+static const prog_char str_res_nog[] PROGMEM = "no>";
+static const prog_char str_res_nol[] PROGMEM = "no<";
+static const prog_char str_res_veg[] PROGMEM = "ve>";
+static const prog_char str_res_vell[] PROGMEM = "ve<<";
+static const prog_char str_res_offi[] PROGMEM = "offi";
+static const prog_char str_res_glo[] PROGMEM = "glo";
+static const prog_char str_res_loc[] PROGMEM = "loc";
 static const prog_char str_res_4_1[] PROGMEM = "4/1";
 static const prog_char str_res_3_1[] PROGMEM = "3/1";
 static const prog_char str_res_2_1[] PROGMEM = "2/1";
@@ -182,7 +192,6 @@ static const prog_char str_res_phr[] PROGMEM = "phr";
 static const prog_char str_res_lyd[] PROGMEM = "lyd";
 static const prog_char str_res_mix[] PROGMEM = "mix";
 static const prog_char str_res_aeo[] PROGMEM = "aeo";
-static const prog_char str_res_loc[] PROGMEM = "loc";
 static const prog_char str_res_bmj[] PROGMEM = "bmj";
 static const prog_char str_res_bmn[] PROGMEM = "bmn";
 static const prog_char str_res_pmj[] PROGMEM = "pmj";
@@ -245,10 +254,6 @@ static const prog_char str_res_lp2[] PROGMEM = "lp2";
 static const prog_char str_res_rs1[] PROGMEM = "rs1";
 static const prog_char str_res_rs2[] PROGMEM = "rs2";
 static const prog_char str_res_s_h[] PROGMEM = "s&h";
-static const prog_char str_res_pa[] PROGMEM = "pa";
-static const prog_char str_res_ma[] PROGMEM = "ma";
-static const prog_char str_res_ni[] PROGMEM = "ni";
-static const prog_char str_res_sa[] PROGMEM = "sa";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
 static const prog_char str_res_prg[] PROGMEM = "prg";
@@ -258,6 +263,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_syncltch,
   str_res_polyseq,
   str_res_arpeggio,
+  str_res_latch,
   str_res_bpm_cntr,
   str_res_cc_knob,
   str_res_chordmem,
@@ -380,6 +386,15 @@ PROGMEM const prog_char* string_table[] = {
   str_res_lat,
   str_res_div,
   str_res_den,
+  str_res_chg,
+  str_res_chl,
+  str_res_nog,
+  str_res_nol,
+  str_res_veg,
+  str_res_vell,
+  str_res_offi,
+  str_res_glo,
+  str_res_loc,
   str_res_4_1,
   str_res_3_1,
   str_res_2_1,
@@ -481,10 +496,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_rs1,
   str_res_rs2,
   str_res_s_h,
-  str_res_pa,
-  str_res_ma,
-  str_res_ni,
-  str_res_sa,
   str_res_res,
   str_res_fre,
   str_res_not,

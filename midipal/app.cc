@@ -39,12 +39,12 @@
 #include "midipal/apps/clock_source_hd.h"
 #include "midipal/apps/clock_source_live.h"
 #include "midipal/apps/combiner.h"
-#include "midipal/apps/controller.h"
 #include "midipal/apps/delay.h"
 #include "midipal/apps/dispatcher.h"
 #include "midipal/apps/drum_pattern_generator.h"
 #include "midipal/apps/filter.h"
 #include "midipal/apps/generic_filter.h"
+#include "midipal/apps/latch.h"
 #include "midipal/apps/lfo.h"
 #include "midipal/apps/monitor.h"
 #include "midipal/apps/poly_sequencer.h"
@@ -55,7 +55,6 @@
 #include "midipal/apps/sync_latch.h"
 #include "midipal/apps/settings.h"
 #include "midipal/apps/splitter.h"
-#include "midipal/apps/tanpura.h"
 
 namespace midipal {
 
@@ -108,8 +107,9 @@ const AppInfo* registry[] = {
   &apps::Randomizer::app_info_,
   &apps::ChordMemory::app_info_,
   &apps::Arpeggiator::app_info_,
+  &apps::Latch::app_info_,
   &apps::Delay::app_info_,
-  &apps::ScaleProcessor::app_info_,
+//   &apps::ScaleProcessor::app_info_,
 #ifdef USE_SH_SEQUENCER
   &apps::ShSequencer::app_info_,
 #else
@@ -117,8 +117,6 @@ const AppInfo* registry[] = {
 #endif  // USE_SH_SEQUENCER
   &apps::Lfo::app_info_,
 
-  &apps::Tanpura::app_info_,
-  
   &apps::GenericFilter::app_info_,
   &apps::Settings::app_info_
 };
