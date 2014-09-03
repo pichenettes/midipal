@@ -18,6 +18,7 @@
 // Latch app.
 //
 // 02/09 - 9:30 PM .. 11:30 PM. Project setup, UI, interrupt logic.
+// 03/09 - 7:00 PM .. 8:00 PM. Merge with latest code branch, tests.
 
 #ifndef MIDIPAL_APPS_LATCH_H_
 #define MIDIPAL_APPS_LATCH_H_
