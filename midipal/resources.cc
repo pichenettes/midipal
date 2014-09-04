@@ -46,6 +46,7 @@ static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
+static const prog_char str_res_tanpura[] PROGMEM = "tanpura";
 static const prog_char str_res_settings[] PROGMEM = "settings";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
@@ -252,6 +253,10 @@ static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
 static const prog_char str_res_mon[] PROGMEM = "mon";
 static const prog_char str_res_cho[] PROGMEM = "cho";
+static const prog_char str_res_pa[] PROGMEM = "pa";
+static const prog_char str_res_ma[] PROGMEM = "ma";
+static const prog_char str_res_ni[] PROGMEM = "ni";
+static const prog_char str_res_sa[] PROGMEM = "sa";
 static const prog_char str_res_prg[] PROGMEM = "prg";
 
 
@@ -277,6 +282,7 @@ PROGMEM const prog_char* string_table[] = {
   str_res_scale,
   str_res_sequencr,
   str_res_cc_lfo,
+  str_res_tanpura,
   str_res_settings,
   str_res_notenuke,
   str_res_sysxdump,
@@ -493,6 +499,10 @@ PROGMEM const prog_char* string_table[] = {
   str_res_mon,
   str_res_pol,
   str_res_cho,
+  str_res_pa,
+  str_res_ma,
+  str_res_ni,
+  str_res_sa,
   str_res_prg,
 };
 

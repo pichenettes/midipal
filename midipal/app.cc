@@ -55,6 +55,7 @@
 #include "midipal/apps/sync_latch.h"
 #include "midipal/apps/settings.h"
 #include "midipal/apps/splitter.h"
+#include "midipal/apps/tanpura.h"
 
 namespace midipal {
 
@@ -116,6 +117,7 @@ const AppInfo* registry[] = {
   &apps::Sequencer::app_info_,
 #endif  // USE_SH_SEQUENCER
   &apps::Lfo::app_info_,
+  &apps::Tanpura::app_info_,
 
   &apps::GenericFilter::app_info_,
   &apps::Settings::app_info_

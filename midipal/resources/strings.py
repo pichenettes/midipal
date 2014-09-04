@@ -41,6 +41,7 @@ delay
 scale
 sequencr
 cc lfo
+tanpura
 settings
 notenuke
 sysxdump
@@ -282,6 +283,11 @@ chd
 mon
 pol
 cho
+
+pa
+ma
+ni
+sa
 
 prg
 """
