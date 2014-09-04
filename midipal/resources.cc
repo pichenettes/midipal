@@ -41,13 +41,11 @@ static const prog_char str_res_dispatch[] PROGMEM = "dispatch";
 static const prog_char str_res_drums[] PROGMEM = "drums";
 static const prog_char str_res_monitor[] PROGMEM = "monitor";
 static const prog_char str_res_randomiz[] PROGMEM = "randomiz";
-static const prog_char str_res_contrllr[] PROGMEM = "contrllr";
 static const prog_char str_res_splitter[] PROGMEM = "splitter";
 static const prog_char str_res_delay[] PROGMEM = "delay";
 static const prog_char str_res_scale[] PROGMEM = "scale";
 static const prog_char str_res_sequencr[] PROGMEM = "sequencr";
 static const prog_char str_res_cc_lfo[] PROGMEM = "cc lfo";
-static const prog_char str_res_tanpura[] PROGMEM = "tanpura";
 static const prog_char str_res_settings[] PROGMEM = "settings";
 static const prog_char str_res_notenuke[] PROGMEM = "notenuke";
 static const prog_char str_res_sysxdump[] PROGMEM = "sysxdump";
@@ -119,10 +117,6 @@ static const prog_char str_res_cc1[] PROGMEM = "cc1";
 static const prog_char str_res_cc2[] PROGMEM = "cc2";
 static const prog_char str_res_cc3[] PROGMEM = "cc3";
 static const prog_char str_res_cc4[] PROGMEM = "cc4";
-static const prog_char str_res_cc5[] PROGMEM = "cc5";
-static const prog_char str_res_cc6[] PROGMEM = "cc6";
-static const prog_char str_res_cc7[] PROGMEM = "cc7";
-static const prog_char str_res_cc8[] PROGMEM = "cc8";
 static const prog_char str_res_inp[] PROGMEM = "inp";
 static const prog_char str_res_out[] PROGMEM = "out";
 static const prog_char str_res_spl[] PROGMEM = "spl";
@@ -256,6 +250,8 @@ static const prog_char str_res_rs2[] PROGMEM = "rs2";
 static const prog_char str_res_s_h[] PROGMEM = "s&h";
 static const prog_char str_res_res[] PROGMEM = "res";
 static const prog_char str_res_fre[] PROGMEM = "fre";
+static const prog_char str_res_mon[] PROGMEM = "mon";
+static const prog_char str_res_cho[] PROGMEM = "cho";
 static const prog_char str_res_prg[] PROGMEM = "prg";
 
 
@@ -276,13 +272,11 @@ PROGMEM const prog_char* string_table[] = {
   str_res_drums,
   str_res_monitor,
   str_res_randomiz,
-  str_res_contrllr,
   str_res_splitter,
   str_res_delay,
   str_res_scale,
   str_res_sequencr,
   str_res_cc_lfo,
-  str_res_tanpura,
   str_res_settings,
   str_res_notenuke,
   str_res_sysxdump,
@@ -355,10 +349,6 @@ PROGMEM const prog_char* string_table[] = {
   str_res_cc2,
   str_res_cc3,
   str_res_cc4,
-  str_res_cc5,
-  str_res_cc6,
-  str_res_cc7,
-  str_res_cc8,
   str_res_inp,
   str_res_out,
   str_res_spl,
@@ -500,6 +490,9 @@ PROGMEM const prog_char* string_table[] = {
   str_res_fre,
   str_res_not,
   str_res_chd,
+  str_res_mon,
+  str_res_pol,
+  str_res_cho,
   str_res_prg,
 };
 

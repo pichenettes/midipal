@@ -35,7 +35,7 @@ const prog_uint8_t latch_factory_data[8] PROGMEM = {
 };
 
 /* static */
-uint8_t Latch::poly_mode_;
+uint8_t Latch::mode_;
 
 /* static */
 uint8_t Latch::channel_min_;
@@ -57,6 +57,9 @@ uint8_t Latch::int_velocity_min_;
 
 /* static */
 uint8_t Latch::int_velocity_max_;
+
+/* static */
+uint16_t Latch::kill_mask_;
 
 /* static */
 HeldNoteEntry* Latch::held_notes_;
@@ -88,7 +91,7 @@ const prog_AppInfo Latch::app_info_ PROGMEM = {
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
   8, // settings_size
   SETTINGS_LATCH, // settings_offset
-  &poly_mode_, // settings_data
+  &mode_, // settings_data
   latch_factory_data, // factory_data
   STR_RES_LATCH, // app_name
   true
@@ -96,7 +99,7 @@ const prog_AppInfo Latch::app_info_ PROGMEM = {
 
 /* static */
 void Latch::OnInit() {
-  ui.AddPage(STR_RES_MOD, STR_RES_MONOON, 0, 1);
+  ui.AddPage(STR_RES_MOD, STR_RES_MON, 0, 2);
   ui.AddPage(STR_RES_CHG, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_CHL, UNIT_INDEX, 0, 15);
   ui.AddPage(STR_RES_INT, STR_RES_OFFI, 0, 2);
@@ -111,17 +114,19 @@ void Latch::OnInit() {
     held_notes_[i].note = 0xff;
     held_notes_[i].channel = 0xff;
   }
+  
+  kill_mask_ = 0;
 }
 
 /* static */
 void Latch::SetParameter(uint8_t key, uint8_t value) {
   if (key == 0) {
     // When the mode is changed; kill all notes.
-    if (value != poly_mode_) {
+    if (value != mode_) {
       KillSustainedNotesByChannel(0xffff);
     }
   }
-  static_cast<uint8_t*>(&poly_mode_)[key] = value;
+  static_cast<uint8_t*>(&mode_)[key] = value;
   
   if (key <= 2) {
     uint16_t to_kill = 0;
@@ -176,13 +181,18 @@ void Latch::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
   // Check if the note is an int trigger.
   bool note_in_range = note >= int_note_min_ && note <= int_note_max_;
   bool velocity_in_range = velocity >= int_velocity_min_ && velocity <= int_velocity_max_;
-  bool interrupt = note_in_range && velocity_in_range && int_mode_;
+  bool interrupt = note_in_range && velocity_in_range && (int_mode_ > 1);
   
+  uint16_t channel_mask = 1 << uint16_t(channel);
   if (interrupt) {
-    KillSustainedNotesByChannel(
-        int_mode_ == 1 ? 0xffff : (1 << uint16_t(channel)));
+    KillSustainedNotesByChannel(int_mode_ == 1 ? 0xffff : channel_mask);
   } else {
-    if (poly_mode_) {
+    if (kill_mask_ & channel_mask) {
+      KillSustainedNotesByChannel(channel_mask);
+    }
+    kill_mask_ &= ~channel_mask;
+    
+    if (mode_ != mode_MONO) {
       uint8_t index = 0xff;
       uint8_t blank_entry = 0xff;
       for (uint8_t i = 0; i < kMaxHeldNotes; ++i) {
@@ -209,20 +219,10 @@ void Latch::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       }
     } else {
       HeldNoteEntry& entry = held_notes_[channel];
-      bool kill_old = false;
-      bool play_new = false;
-      
-      kill_old = entry.note != 0xff && entry.note != note;
-      play_new = entry.note != note;
-      
-      if (kill_old) {
+      if (entry.note != 0xff) {
         app.Send3(0x80 | channel, entry.note, 0);
       }
-      if (play_new) {
-        app.Send3(0x90 | channel, note, velocity);
-      }
-      
-      // Replace with new note in map.
+      app.Send3(0x90 | channel, note, velocity);
       entry.note = note;
       entry.channel = channel;
     }
@@ -235,6 +235,10 @@ void Latch::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
   if (!is_active_channel(channel)) {
     app.Send3(0x80 | channel, note, velocity);
     return;
+  }
+  
+  if (mode_ == mode_CHORD) {
+    kill_mask_ |= 1 << uint16_t(channel);
   }
 }
 

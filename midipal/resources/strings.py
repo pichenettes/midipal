@@ -36,13 +36,11 @@ dispatch
 drums
 monitor
 randomiz
-contrllr
 splitter
 delay
 scale
 sequencr
 cc lfo
-tanpura
 settings
 notenuke
 sysxdump
@@ -124,10 +122,6 @@ cc1
 cc2
 cc3
 cc4
-cc5
-cc6
-cc7
-cc8
 
 inp
 out
@@ -284,6 +278,10 @@ res
 fre
  not
 chd
+
+mon
+pol
+cho
 
 prg
 """

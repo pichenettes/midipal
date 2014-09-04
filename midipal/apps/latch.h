@@ -33,6 +33,12 @@ struct HeldNoteEntry {
   uint8_t channel;
 };
 
+enum LatchMode {
+  mode_MONO,
+  mode_POLY,
+  mode_CHORD
+};
+
 class Latch {
  public:
   Latch() { }
@@ -60,7 +66,7 @@ class Latch {
       uint8_t note,
       uint8_t velocity);
   
-  static uint8_t poly_mode_;
+  static uint8_t mode_;
   static uint8_t channel_min_;
   static uint8_t channel_max_;
   static uint8_t int_mode_;
@@ -68,6 +74,8 @@ class Latch {
   static uint8_t int_note_max_;
   static uint8_t int_velocity_min_;
   static uint8_t int_velocity_max_;
+  
+  static uint16_t kill_mask_;
   
   static HeldNoteEntry* held_notes_;
   

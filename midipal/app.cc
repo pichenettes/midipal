@@ -86,7 +86,7 @@ const AppInfo* registry[] = {
   &apps::AppSelector::app_info_,
   
   &apps::Monitor::app_info_,
-  &apps::BpmMeter::app_info_,
+  // &apps::BpmMeter::app_info_,
   
   &apps::Filter::app_info_,
   &apps::Splitter::app_info_,
@@ -109,7 +109,7 @@ const AppInfo* registry[] = {
   &apps::Arpeggiator::app_info_,
   &apps::Latch::app_info_,
   &apps::Delay::app_info_,
-//   &apps::ScaleProcessor::app_info_,
+  &apps::ScaleProcessor::app_info_,
 #ifdef USE_SH_SEQUENCER
   &apps::ShSequencer::app_info_,
 #else
