@@ -341,15 +341,15 @@ void PolySequencer::Stop() {
   if (!running_) {
     return;
   }
-  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    app.SendNow(0xfc);
-  }
   running_ = 0;
   // Stop pending notes.
   for (uint8_t i = 0; i < kPSNumTracks; ++i) {
     if (pending_notes_[i] != 0xff) {
       app.Send3(0x80 | channel_, pending_notes_transposed_[i], 0);
     }
+  }
+  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    app.SendNow(0xfc);
   }
 }
 

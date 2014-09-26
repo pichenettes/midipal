@@ -242,8 +242,8 @@ void Arpeggiator::Tick() {
     idle_ticks_ = 96;
     if (clk_mode_ == CLOCK_MODE_INTERNAL) {
       running_ = 0;
-      app.SendNow(0xfc);
       app.FlushQueue(channel_);
+      app.SendNow(0xfc);
     }
   }
   

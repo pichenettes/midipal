@@ -322,14 +322,14 @@ void ShSequencer::Stop() {
   if (!running_) {
     return;
   }
-  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
-    app.SendNow(0xfc);
-  }
   running_ = 0;
   if (pending_note_ != 0xff) {
     app.Send3(0x80 | channel_, pending_note_, 0);
   }
   pending_note_ = 0xff;
+  if (clk_mode_ == CLOCK_MODE_INTERNAL) {
+    app.SendNow(0xfc);
+  }
 }
 
 /* static */
