@@ -17,6 +17,8 @@
 //
 // Knob controller app.
 
+#ifndef MIDIBUD_FIRMWARE
+
 #include "midipal/apps/controller.h"
 
 #include "midi/midi.h"
@@ -92,3 +94,5 @@ uint8_t Controller::OnPot(uint8_t pot, uint8_t value) {
 }
 
 } }  // namespace midipal::apps
+
+#endif // #ifndef MIDIBUD_FIRMWARE

@@ -45,7 +45,7 @@ uint8_t ShSequencer::clk_mode_;
 uint8_t ShSequencer::bpm_;
 uint8_t ShSequencer::groove_template_;
 uint8_t ShSequencer::groove_amount_;
-uint8_t ShSequencer::clock_division_;  
+uint8_t ShSequencer::clock_division_;
 uint8_t ShSequencer::channel_;
 uint8_t ShSequencer::num_steps_;
 uint8_t ShSequencer::sequence_data_[kShSequencerNumSteps];
@@ -82,7 +82,11 @@ const prog_AppInfo ShSequencer::app_info_ PROGMEM = {
 
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
+#ifdef MIDIBUD_FIRMWARE
+  &OnSwitch, // uint8_t (*OnSwitch)(uint8_t);
+#else
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+#endif
   &OnRedraw, // uint8_t (*OnRedraw)();
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   NULL, // uint8_t (*GetParameter)(uint8_t);
@@ -116,7 +120,7 @@ void ShSequencer::OnRawMidiData(
    uint8_t data_size,
    uint8_t accepted_channel) {
   // Forward everything except note on for the selected channel.
-  if (status != (0x80 | channel_) && 
+  if (status != (0x80 | channel_) &&
       status != (0x90 | channel_)) {
     app.Send(status, data, data_size);
   }
@@ -156,7 +160,7 @@ uint8_t ShSequencer::OnRedraw() {
     UnsafeItoa(num_steps_, 2, &line_buffer[1]);
     PadRight(&line_buffer[1], 2, ' ');
     line_buffer[3] = '|';
-    
+
     ResourcesManager::LoadStringResource(
         STR_RES_REST + rec_mode_menu_option_,
         &line_buffer[4], 4);
@@ -296,7 +300,7 @@ void ShSequencer::OnNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       just_started = 1;
     }
   }
-  
+
   if (!was_running && !just_started) {
     app.Send3(0x90 | channel, note, velocity);
   }
@@ -311,7 +315,7 @@ void ShSequencer::OnNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
       channel != channel_) {
     return;
   }
-  
+
   if (!running_) {
     app.Send3(0x80 | channel, note, velocity);
   }
@@ -370,7 +374,7 @@ void ShSequencer::Tick() {
       bool slid = slide_data_[accent_slide_index] & accent_slide_mask;
       note &= 0x7f;
       note = Clip(static_cast<int16_t>(note) + last_note_ - root_note_, 0, 127);
-      
+
       if (pending_note_ != 0xff && !slid) {
         app.Send3(0x80 | channel_, pending_note_, 0);
       }
@@ -398,5 +402,30 @@ void ShSequencer::SaveAndAdvanceStep() {
   ++num_steps_;
   app.SaveSetting(8);
 }
+
+#ifdef MIDIBUD_FIRMWARE
+/* static */
+uint8_t ShSequencer::OnSwitch(uint8_t sw) {
+
+  if (!recording_)
+    return 0;
+
+  switch (sw) {
+  case SWITCH_1: rec_mode_menu_option_ = 0; break;
+  case SWITCH_2: rec_mode_menu_option_ = 1; break;
+  case SWITCH_3:
+  case SWITCH_4:
+  case SWITCH_5: rec_mode_menu_option_ = 2; break;
+  }
+
+  OnClick();
+
+  if (sw == SWITCH_4 || sw == SWITCH_5) {
+    Start();
+  }
+
+  return 1;
+}
+#endif
 
 } }  // namespace midipal::apps

@@ -32,16 +32,28 @@ using namespace avrlib;
 
 /* <static> */
 RotaryEncoder<EncoderALine, EncoderBLine, EncoderClickLine> Ui::encoder_;
+#ifdef MIDIBUD_FIRMWARE
+DebouncedSwitch<Switch1Line> Ui::switch1_;
+DebouncedSwitch<Switch2Line> Ui::switch2_;
+DebouncedSwitch<Switch3Line> Ui::switch3_;
+DebouncedSwitch<Switch4Line> Ui::switch4_;
+DebouncedSwitch<Switch5Line> Ui::switch5_;
+#else
 PotScanner<8, 0, 8, 7> Ui::pots_;
+#endif
 EventQueue<32> Ui::queue_;
 PageDefinition Ui::pages_[48];
 uint8_t Ui::num_declared_pages_;
 uint8_t Ui::num_pages_;
 uint8_t Ui::page_;
 uint8_t Ui::stride_;
-uint8_t Ui::pot_value_[8];
 uint8_t Ui::editing_;
+#ifdef MIDIBUD_FIRMWARE
+uint8_t Ui::read_switch_;
+#else
+uint8_t Ui::pot_value_[8];
 uint8_t Ui::read_pots_;
+#endif
 uint16_t Ui::encoder_hold_time_;
 /* </static> */
 
@@ -51,10 +63,22 @@ Ui ui;
 /* static */
 void Ui::Init() {
   encoder_.Init();
+#ifdef MIDIBUD_FIRMWARE
+  switch1_.Init();
+  switch2_.Init();
+  switch3_.Init();
+  switch4_.Init();
+  switch5_.Init();
+#else
   pots_.Init();
+#endif
   lcd.Init();
   display.Init();
+#ifdef MIDIBUD_FIRMWARE
+  read_switch_ = 0;
+#else
   read_pots_ = 0;
+#endif
   num_declared_pages_ = 0;
   num_pages_ = 0;
   stride_ = 0;
@@ -97,6 +121,30 @@ void Ui::AddRepeatedPage(
   ++stride_;
 }
 
+#ifdef MIDIBUD_FIRMWARE
+/* static */
+void Ui::SetPage(uint8_t page)
+{
+  // If editing, save current page and stop editing
+  if (editing_) {
+    app.SaveSetting(page_);
+    editing_ = 0;
+  }
+
+  uint8_t current_page = page_;
+  page_ = page;
+  if (page_ >= num_pages_) {
+    page_ = num_pages_ - 1;
+  }
+  uint8_t page_status = app.CheckPageStatus(page_);
+  if (page_status == PAGE_GOOD) {
+    ;
+  } else if (page_status == PAGE_LAST) {
+    page_ = current_page;
+  }
+}
+#endif
+
 /* static */
 void Ui::Poll() {
   int8_t increment = encoder_.Read();
@@ -117,6 +165,22 @@ void Ui::Poll() {
     }
     encoder_hold_time_ = 0;
   }
+#ifdef MIDIBUD_FIRMWARE
+  // Ui::Poll() is called at 2KHz, however DebouncedSwitch::Read() is supposed to
+  // be called at rate < 1000Hz, so read one switch per call at 400Hz
+  switch (read_switch_) {
+  case SWITCH_1: switch1_.Read(); if (switch1_.lowered()) goto ReportSwitch; break;
+  case SWITCH_2: switch2_.Read(); if (switch2_.lowered()) goto ReportSwitch; break;
+  case SWITCH_3: switch3_.Read(); if (switch3_.lowered()) goto ReportSwitch; break;
+  case SWITCH_4: switch4_.Read(); if (switch4_.lowered()) goto ReportSwitch; break;
+  case SWITCH_5: switch5_.Read(); if (switch5_.lowered()) goto ReportSwitch; break;
+ReportSwitch: queue_.AddEvent(CONTROL_SWITCH, read_switch_, 0);
+  }
+
+  if (++read_switch_ >= SWITCH_COUNT) {
+    read_switch_ = 0;
+  }
+#else
   if (read_pots_) {
     pots_.Read();
     uint8_t index = pots_.last_read();
@@ -126,6 +190,7 @@ void Ui::Poll() {
       queue_.AddEvent(CONTROL_POT, index, value);
     }
   }
+#endif
   lcd.Tick();
 }
 
@@ -210,8 +275,15 @@ void Ui::DoEvents() {
       } else {
         app.Launch(0);
       }
+#ifdef MIDIBUD_FIRMWARE
+    } else if (e.control_type == CONTROL_SWITCH) {
+      if (!app.OnSwitch(e.control_id)) {
+        SetPage(e.control_id);
+      }
+#else
     } else if (e.control_type == CONTROL_POT) {
       app.OnPot(e.control_id, e.value);
+#endif
     }
   }
   
