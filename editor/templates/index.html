@@ -78,7 +78,7 @@ function toggleMessage(index) {
       <td><label>Match</label></td>
       <td width="200px">
         {% for channel in filter.channels %}
-        <div class="channel_block"><input name="filter_{{ filter.index }}_channel_{{ channel.index }}" id="filter_{{ filter.index }}_channel_{{ channel.index }}" type="checkbox" {{ channel.checked }} />{{ channel.text }}</div>
+        <div class="channel_block"><input name="filter_{{ filter.index }}_channel_{{ channel.index }}" id="filter_{{ filter.index }}_channel_{{ channel.index }}" type="checkbox" {{ channel.checked }} />{{ channel.text|safe }}</div>
         {% endfor %}
         <input type="button" onclick="toggleChannel({{ filter.index }});" value="toggle">
       </td>
@@ -89,12 +89,12 @@ function toggleMessage(index) {
         <input type="button" onclick="toggleMessage({{ filter.index }});" value="toggle">
       </td>
       <td>
-        <label>min</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_min" value="{{ filter.ranges.value_a_min }}" />
-        <label>max</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_max" value="{{ filter.ranges.value_a_max }}" />
+        <label>min</label> <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_min" value="{{ filter.ranges.value_a_min }}" />
+        <label>max</label> <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_a_max" value="{{ filter.ranges.value_a_max }}" />
       </td>
       <td>
-        <label>min</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_min" value="{{ filter.ranges.value_b_min }}" />
-        <label>max</label><input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_max" value="{{ filter.ranges.value_b_max }}" />
+        <label>min</label> <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_min" value="{{ filter.ranges.value_b_min }}" />
+        <label>max</label> <input type="text" class="fixed_width" size="4" name="filter_{{ filter.index }}_value_b_max" value="{{ filter.ranges.value_b_max }}" />
       </td>
     </tr>
     <tr>
@@ -137,7 +137,7 @@ function toggleMessage(index) {
       {% for vt in filter.value_transformations %}
       <td>
         <div id="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_cell2">
-        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_preserve_zero" type="checkbox" value="1" {{ vt.preserve_zero }} />Preserve zero</input><br/>
+        <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_preserve_zero" type="checkbox" value="1" {{ vt.preserve_zero }} />Preserve zero</input><br />
         <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_wrap" type="checkbox" value="1" {{ vt.wrap }} />Binary wrapping</input><br/>
         <input name="filter_{{ filter.index }}_value_transformation_{{ vt.index }}_swap" type="checkbox" value="1" {{ vt.swap }} />Swap source</input>
         </div>

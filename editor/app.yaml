@@ -1,7 +1,8 @@
 application: midipal-editor
 version: 1
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: true
 
 handlers:
 - url: /static
@@ -12,7 +13,7 @@ handlers:
   upload: static/favicon.ico
 
 - url: .*
-  script: main.py
+  script: main.application
 
 - url: /retrieve
-  script: main.py
+  script: main.application

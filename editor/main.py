@@ -17,6 +17,8 @@
 import os
 import cStringIO
 
+import webapp2
+
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
@@ -199,7 +201,7 @@ class Modifier(object):
     for i in xrange(16):
       channels.append({
           'index': i,
-          'text': str(i + 1) + ('<br/>' if (i % 4) == 3 else ''),
+          'text': str(i + 1) + ('<br />' if (i % 4) == 3 else ''),
           'checked': 'checked' if (1 << i) & self._channel_bitmask else ''
       })
     d['channels'] = channels
@@ -356,10 +358,4 @@ class MainHandler(webapp.RequestHandler):
     self.response.out.write(self.convert_to_sysex(modifiers))
 
 
-def main():
-  application = webapp.WSGIApplication([('/', MainHandler), ('/retrieve', RetrieveHandler)], debug=True)
-  util.run_wsgi_app(application)
-
-
-if __name__ == '__main__':
-  main()
+application = webapp.WSGIApplication([('/', MainHandler), ('/syx', RetrieveHandler)])
