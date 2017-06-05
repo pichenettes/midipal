@@ -71,7 +71,11 @@ const prog_AppInfo ClockSource::app_info_ PROGMEM = {
 
   &OnIncrement, // uint8_t (*OnIncrement)(int8_t);
   &OnClick, // uint8_t (*OnClick)();
+#ifdef MIDIBUD_FIRMWARE
+  NULL, // uint8_t (*OnSwitch)(uint8_t);
+#else
   NULL, // uint8_t (*OnPot)(uint8_t, uint8_t);
+#endif
   NULL, // uint8_t (*OnRedraw)();
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   &GetParameter, // uint8_t (*GetParameter)(uint8_t);

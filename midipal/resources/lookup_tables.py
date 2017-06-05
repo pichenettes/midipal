@@ -183,7 +183,7 @@ def EuclidianPattern(k, n):
     k, pattern = cut, [pattern[i] + pattern[k + i] for i in xrange(cut)] + \
         pattern[cut:k] + pattern[k + cut:]
   return pattern
-  
+
 table = []
 durations = [0, 1, 2, 3, 4, 6, 7, 8, 10, 12, 14, 16]
 for num_steps in durations:
@@ -214,7 +214,7 @@ unprocessed_scales = [
   [0, 3, 5, 6, 7, 10],     # Blues minor
   [0, 2, 4, 7, 9],         # Pentatonic major
   [0, 3, 5, 7, 10],        # Pentatonic minor
-  
+
   [0, 1, 4, 5, 7, 8, 11],     # Bhairav
   [0, 1, 4, 6, 7, 8, 11],     # Shri
   [0, 1, 3, 5, 7, 10, 11],    # Rupavati
@@ -228,7 +228,7 @@ unprocessed_scales = [
   [0, 1, 3, 4, 5, 7, 8, 10],  # Folk
   [0, 1, 5, 7, 8],            # Japanese
   [0, 1, 3, 7, 8],            # Gamelan
-  [0, 2, 4, 6, 8, 10],        # Whole tone 
+  [0, 2, 4, 6, 8, 10],        # Whole tone
 ]
 
 for index, unprocessed_scale in enumerate(unprocessed_scales):

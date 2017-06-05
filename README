@@ -1,3 +1,16 @@
+
+MidiBud version of MidiPal firmware: adds support for five push buttons
+
+Changes are:
+
+* Pressing a button selects one of the first five parameters of the current app
+* In User Program pressing a button selects one of the four user programs
+* In SH-01 sequencer recording mode pressing button 1 inserts a rest, button 2 inserts a tie,
+  button 3 stops recording and button 5 stops recording and starts playback.
+* No Controller app (MidiBud does not have analogue inputs)
+
+---
+
 Midipal, the MIDI swiss army knife.
 
 A midi in, a midi out, a small display, an encoder ; 20 awesome features:
@@ -21,4 +34,4 @@ A midi in, a midi out, a small display, an encoder ; 20 awesome features:
 * Tempo-synchronized note delay (with transposition and decay velocity)
 * Slave start/stop synchronizer (à la Mungo Sync)
 * Scale processor / harmonizer
-* Ear training game
+
