@@ -51,6 +51,7 @@ class ClockSource {
   static uint8_t bpm_;
   static uint8_t groove_template_;
   static uint8_t groove_amount_;
+  static uint8_t continuous_;
   
   static uint8_t num_taps_;
   static uint32_t elapsed_time_;

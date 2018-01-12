@@ -134,8 +134,7 @@ void ShSequencer::SetParameter(uint8_t key, uint8_t value) {
   if (key == 1) {
     Stop();
     memset(sequence_data_, 60, sizeof(sequence_data_));
-    memset(slide_data_, 0, sizeof(slide_data_));
-    memset(accent_data_, 0, sizeof(accent_data_));
+    memset(slide_data_, 0, sizeof(slide_data_) * 2);
     recording_ = 1;
     rec_mode_menu_option_ = 0;
     num_steps_ = 0;
@@ -241,15 +240,22 @@ void ShSequencer::OnClock(uint8_t clock_source) {
 }
 
 /* static */
+void ShSequencer::AddSlideAccent(uint8_t is_accent) {
+  uint8_t accent_slide_index = num_steps_ >> 3;
+  uint8_t accent_slide_mask = 1 << (num_steps_ & 0x7);
+  if (is_accent) {
+    accent_slide_index += kShSequencerNumSteps / 8 + 1;
+  }
+  slide_data_[accent_slide_index] |= accent_slide_mask;
+}
+
+/* static */
 void ShSequencer::OnPitchBend(uint8_t channel, uint16_t value) {
   if (channel != channel_ || !recording_) {
     return;
   }
   if ((value > 8192 + 2048 || value < 8192 - 2048)) {
-    uint8_t accent_slide_index = num_steps_ >> 3;
-    uint8_t accent_slide_mask = 1 << (num_steps_ & 0x7);
-    slide_data_[accent_slide_index] |= accent_slide_mask;
-    app.SaveSetting(9 + kShSequencerNumSteps + accent_slide_index);
+    AddSlideAccent(0);
   }
 }
 
@@ -262,12 +268,7 @@ void ShSequencer::OnControlChange(
     return;
   }
   if (controller == midi::kModulationWheelMsb && value > 0x40)  {
-    uint8_t accent_slide_index = num_steps_ >> 3;
-    uint8_t accent_slide_mask = 1 << (num_steps_ & 0x7);
-    accent_data_[accent_slide_index] |= accent_slide_mask;
-    app.SaveSetting(
-        9 + kShSequencerNumSteps + (kShSequencerNumSteps / 8 + 1) + \
-        accent_slide_index);
+    AddSlideAccent(1);
   }
 }
 
@@ -366,8 +367,8 @@ void ShSequencer::Tick() {
     } else {
       uint8_t accent_slide_index = step_ >> 3;
       uint8_t accent_slide_mask = 1 << (step_ & 0x7);
-      bool accented = accent_data_[accent_slide_index] & accent_slide_mask;
-      bool slid = slide_data_[accent_slide_index] & accent_slide_mask;
+      uint8_t accented = accent_data_[accent_slide_index] & accent_slide_mask;
+      uint8_t slid = slide_data_[accent_slide_index] & accent_slide_mask;
       note &= 0x7f;
       note = Clip(static_cast<int16_t>(note) + last_note_ - root_note_, 0, 127);
       

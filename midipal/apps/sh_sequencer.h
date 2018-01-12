@@ -63,6 +63,7 @@ class ShSequencer {
   static void Start();
   static void Tick();
   static void SaveAndAdvanceStep();
+  static void AddSlideAccent(uint8_t is_accent);
   
   static uint8_t running_;
   static uint8_t recording_;

@@ -28,8 +28,8 @@
 
 namespace midipal { namespace apps {
 
-const prog_uint8_t clock_source_factory_data[4] PROGMEM = {
-  0, 120, 0, 0
+const prog_uint8_t clock_source_factory_data[5] PROGMEM = {
+  0, 120, 0, 0, 0
 };
 
 /* static */
@@ -43,6 +43,9 @@ uint8_t ClockSource::groove_template_;
 
 /* static */
 uint8_t ClockSource::groove_amount_;
+
+/* static */
+uint8_t ClockSource::continuous_;
 
 /* static */
 uint8_t ClockSource::num_taps_;
@@ -76,7 +79,7 @@ const prog_AppInfo ClockSource::app_info_ PROGMEM = {
   &SetParameter, // void (*SetParameter)(uint8_t, uint8_t);
   &GetParameter, // uint8_t (*GetParameter)(uint8_t);
   NULL, // uint8_t (*CheckPageStatus)(uint8_t);
-  4, // settings_size
+  5, // settings_size
   SETTINGS_CLOCK_SOURCE, // settings_offset
   &running_, // settings_data
   clock_source_factory_data, // factory_data
@@ -90,10 +93,14 @@ void ClockSource::OnInit() {
   ui.AddPage(STR_RES_BPM, UNIT_INTEGER, 40, 240);
   ui.AddPage(STR_RES_GRV, STR_RES_SWG, 0, 5);
   ui.AddPage(STR_RES_AMT, UNIT_INTEGER, 0, 127);
+  ui.AddPage(STR_RES_CONT_, STR_RES_OFF, 0, 1);
   ui.AddPage(STR_RES_TAP, UNIT_INTEGER, 40, 240);
   clock.Update(bpm_, groove_template_, groove_amount_);
   running_ = 0;
   num_taps_ = 0;
+  if (continuous_) {
+    clock.Start();
+  }
 }
 
 /* static */
@@ -115,6 +122,15 @@ void ClockSource::SetParameter(uint8_t key, uint8_t value) {
     }
   }
   if (key == 4) {
+    if (!running_) {
+      if (value == 1) {
+        clock.Start();
+      } else {
+        clock.Stop();
+      }
+    }
+  }
+  if (key == 5) {
     key = 1;
   }
   static_cast<uint8_t*>(&running_)[key] = value;
@@ -123,7 +139,7 @@ void ClockSource::SetParameter(uint8_t key, uint8_t value) {
 
 /* static */
 uint8_t ClockSource::GetParameter(uint8_t key) {
-  if (key == 4) {
+  if (key == 5) {
     key = 1;
   }
   return static_cast<uint8_t*>(&running_)[key];
@@ -131,7 +147,7 @@ uint8_t ClockSource::GetParameter(uint8_t key) {
 
 /* static */
 uint8_t ClockSource::OnClick() {
-  if (ui.page() == 4) {
+  if (ui.page() == 5) {
     uint32_t t = clock.value();
     clock.Reset();
     if (num_taps_ > 0 && t < 400000L) {
@@ -181,7 +197,9 @@ void ClockSource::OnClock(uint8_t clock_source) {
 /* static */
 void ClockSource::Stop() {
   if (running_) {
-    clock.Stop();
+    if (!continuous_) {
+      clock.Stop();
+    }
     app.SendNow(0xfc);
     running_ = 0;
   }
@@ -190,7 +208,9 @@ void ClockSource::Stop() {
 /* static */
 void ClockSource::Start() {
   if (!running_) {
-    clock.Start();
+    if (!continuous_) {
+      clock.Start();
+    }
     app.SendNow(0xfa);
     running_ = 1;
   }
