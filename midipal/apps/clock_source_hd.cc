@@ -1,4 +1,4 @@
-// Author: Olivier Gillet (ol.gillet@gmail.com) +
+// Author: Emilie Gillet (emilie.o.gillet@gmail.com) +
 // Contribution from: https://github.com/wackazong/midipal
 //
 // This program is free software: you can redistribute it and/or modify
