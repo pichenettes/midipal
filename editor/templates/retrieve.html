@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>MIDIpal custom filters programmer</h1>
+
+<p>Upload a .syx file here to retrieve filters settings from it.</p>
+<form action="/" method="post" enctype="multipart/form-data">
+  <input type="file" name="syx">
+  <input type="submit" value="Retrieve filters settings from .syx file" />
+</form>
+
+{% endblock %}

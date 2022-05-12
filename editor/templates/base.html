@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>{{ title }}</title>
+<link type="text/css" rel="stylesheet" href="/static/main.css" />
+</head>
+<body {{ extra_body_tags }} >
+  <div id='page'>
+    <img src="https://mutable-instruments.net/images/archive_logos/midipal.png" alt="Home" id="logo-image" />
+    {% block content %}
+    {% endblock %}
+    <div id='footer'>
+      <p>Mutable Instruments, 2022. <a href="https://github.com/pichenettes/midipal/tree/master/editor">Source code</a>.</p>
+    </div>
+  </div>
+</body>
+</html>

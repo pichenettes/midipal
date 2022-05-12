@@ -1,0 +1,1 @@
+MIDIpal-editor is a python 3 AppEngine web app for programming MIDI filters on the MIDIpal. Configure a filter/remapping, and grab a .syx file to send to the MIDIpal!
