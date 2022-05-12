@@ -1,5 +1,9 @@
 # Precompiled python modules
-*.pyc
+__pycache__/
+*.py[cod]
+
+# python environment
+env/
 
 # Eagle backups
 *.s#?
